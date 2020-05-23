@@ -1,0 +1,101 @@
+PODS:
+  - Alamofire (4.3.0)
+  - Firebase/Analytics (3.12.0):
+    - Firebase/Core
+  - Firebase/Core (3.12.0):
+    - FirebaseAnalytics (= 3.6.0)
+    - FirebaseCore (= 3.4.7)
+  - FirebaseAnalytics (3.6.0):
+    - FirebaseCore (~> 3.4)
+    - FirebaseInstanceID (~> 1.0)
+    - GoogleInterchangeUtilities (~> 1.2)
+    - GoogleSymbolUtilities (~> 1.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+  - FirebaseCore (3.4.7):
+    - GoogleInterchangeUtilities (~> 1.2)
+    - GoogleSymbolUtilities (~> 1.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+  - FirebaseInstanceID (1.0.9)
+  - FLAnimatedImage (1.0.12)
+  - FontAwesome.swift (1.0.0)
+  - GoogleInterchangeUtilities (1.2.2):
+    - GoogleSymbolUtilities (~> 1.1)
+  - GoogleSymbolUtilities (1.1.2)
+  - GoogleToolboxForMac/Defines (2.1.1)
+  - "GoogleToolboxForMac/NSData+zlib (2.1.1)":
+    - GoogleToolboxForMac/Defines (= 2.1.1)
+  - HMSegmentedControl (1.5.3)
+  - IQKeyboardManagerSwift (6.5.5)
+  - Macaw (0.9.5):
+    - SWXMLHash
+  - MXPagerView (0.1.4)
+  - MXParallaxHeader (0.6.0)
+  - MXSegmentedPager (3.2.1):
+    - HMSegmentedControl (~> 1.5.3)
+    - MXPagerView (~> 0.1.4)
+    - MXParallaxHeader (~> 0.6.0)
+  - Reachability (3.2)
+  - ReachabilitySwift (3)
+  - SkyFloatingLabelTextField (2.0.1)
+  - SWXMLHash (3.0.4)
+
+DEPENDENCIES:
+  - Alamofire
+  - Firebase/Analytics
+  - FLAnimatedImage
+  - FontAwesome.swift
+  - IQKeyboardManagerSwift
+  - Macaw (= 0.9.5)
+  - MXSegmentedPager
+  - Reachability
+  - ReachabilitySwift
+  - SkyFloatingLabelTextField
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseInstanceID
+    - FLAnimatedImage
+    - FontAwesome.swift
+    - GoogleInterchangeUtilities
+    - GoogleSymbolUtilities
+    - GoogleToolboxForMac
+    - HMSegmentedControl
+    - IQKeyboardManagerSwift
+    - Macaw
+    - MXPagerView
+    - MXParallaxHeader
+    - MXSegmentedPager
+    - Reachability
+    - ReachabilitySwift
+    - SkyFloatingLabelTextField
+    - SWXMLHash
+
+SPEC CHECKSUMS:
+  Alamofire: 856a113053a7bc9cbe5d6367a555d773fc5cfef7
+  Firebase: 8e99eb1ff553ad5bcc6072cc3d925bb89c1244d6
+  FirebaseAnalytics: 9c67af0ebeb8d2146c9b4ea2616439affa947b58
+  FirebaseCore: 46afaf2c2e0419ea7d3acfb08cf26a461a75fe85
+  FirebaseInstanceID: 2d0518b1378fe9d685ef40cbdd63d2fdc1125339
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
+  FontAwesome.swift: 2d32a3d62195343c2004b7c9043294ed2948553a
+  GoogleInterchangeUtilities: d5bc4d88d5b661ab72f9d70c58d02ca8c27ad1f7
+  GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
+  GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
+  HMSegmentedControl: 7c6145afb50f26cec5f3243082f6f12b9f41318f
+  IQKeyboardManagerSwift: 0fb93310284665245591f50f7a5e38de615960b7
+  Macaw: 10bf9e327cb75f24e3225d5229a80ed544df85f0
+  MXPagerView: 8798126c2e629695474eb16cbe1a6da6e0b02915
+  MXParallaxHeader: 2997592b8349baf8557ae0e4346f6b17e141de39
+  MXSegmentedPager: 6b6a9fc77887e6fdb09a940f37827466e6d677c8
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  ReachabilitySwift: f5b9bb30a0777fac8f09ce8b067e32faeb29bb64
+  SkyFloatingLabelTextField: 070e749632ffd608d6fd9db3fa488a822524997c
+  SWXMLHash: 29d20b84692fc319ea8ed933058fe7d8d005139b
+
+PODFILE CHECKSUM: 448d6d16025eb414fe148dea53d1698d51cb0999
+
+COCOAPODS: 1.5.3

@@ -1,0 +1,17 @@
+target 'ShowTalent' do
+ use_frameworks!
+ pod "MXSegmentedPager"
+ pod 'SkyFloatingLabelTextField'
+pod 'FontAwesome.swift'
+
+pod 'Alamofire'
+
+pod 'ReachabilitySwift'
+pod 'IQKeyboardManagerSwift'
+pod 'Firebase/Analytics'
+pod "Macaw", "0.9.5"
+pod "FLAnimatedImage"
+pod "Reachability"
+
+
+end
