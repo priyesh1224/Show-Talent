@@ -167,6 +167,10 @@
 		84B32CF324012454007CC9FE /* JoinedeventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B32CF224012454007CC9FE /* JoinedeventsViewController.swift */; };
 		84B56E6C2407CB39000E6DBE /* ChoosewinnersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B56E6B2407CB39000E6DBE /* ChoosewinnersViewController.swift */; };
 		84B56E6E2407CB59000E6DBE /* WinnerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B56E6D2407CB59000E6DBE /* WinnerCollectionViewCell.swift */; };
+		A44F2A9F247D18A10064FC13 /* WinnersmodifiedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44F2A9E247D18A10064FC13 /* WinnersmodifiedCollectionViewCell.swift */; };
+		A4551F8C247FB67F008AAD86 /* EventbookingformViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4551F8B247FB67F008AAD86 /* EventbookingformViewController.swift */; };
+		A4551F8E24800C7A008AAD86 /* EventBookingHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4551F8D24800C7A008AAD86 /* EventBookingHistoryViewController.swift */; };
+		A4551F9024800C9F008AAD86 /* EventBookingHistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4551F8F24800C9F008AAD86 /* EventBookingHistoryTableViewCell.swift */; };
 		A4616DAC2458C83F005EBE02 /* PreviewContestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4616DAB2458C83F005EBE02 /* PreviewContestViewController.swift */; };
 		A4616DAE2458C85A005EBE02 /* PreviewcontestTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4616DAD2458C85A005EBE02 /* PreviewcontestTableViewCell.swift */; };
 		A46BCF632472A01500988B13 /* ThemefixedcellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46BCF622472A01500988B13 /* ThemefixedcellTableViewCell.swift */; };
@@ -182,6 +186,9 @@
 		A486037F2473CCC90021FE87 /* AllyourjuryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A486037E2473CCC90021FE87 /* AllyourjuryCollectionViewCell.swift */; };
 		A4A27CB52449A76A0068DBFE /* ShowtalentothercontactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A27CB42449A76A0068DBFE /* ShowtalentothercontactsViewController.swift */; };
 		A4A27CB72449A7870068DBFE /* ShowtalentothercontactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A27CB62449A7870068DBFE /* ShowtalentothercontactsTableViewCell.swift */; };
+		A4A823A524810A7600E1D49E /* UpdateUserCategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A823A424810A7600E1D49E /* UpdateUserCategoryTableViewCell.swift */; };
+		A4A823A724810A9300E1D49E /* Updateuercategory2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A823A624810A9300E1D49E /* Updateuercategory2TableViewCell.swift */; };
+		A4A823A924810AB000E1D49E /* UpdateUserCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A823A824810AB000E1D49E /* UpdateUserCategoryViewController.swift */; };
 		A4ADF390243F4A300013722A /* InvitepeopleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4ADF38F243F4A2F0013722A /* InvitepeopleViewController.swift */; };
 		A4B0919A2445C89900F59A29 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B091992445C89900F59A29 /* HelpViewController.swift */; };
 		A4B0919C2445C8AD00F59A29 /* HelpTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B0919B2445C8AD00F59A29 /* HelpTableViewCell.swift */; };
@@ -360,6 +367,10 @@
 		84B56E6B2407CB39000E6DBE /* ChoosewinnersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoosewinnersViewController.swift; sourceTree = "<group>"; };
 		84B56E6D2407CB59000E6DBE /* WinnerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinnerCollectionViewCell.swift; sourceTree = "<group>"; };
 		9AD6ED3078CAD248B303B11F /* Pods-ShowTalent.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShowTalent.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ShowTalent/Pods-ShowTalent.debug.xcconfig"; sourceTree = "<group>"; };
+		A44F2A9E247D18A10064FC13 /* WinnersmodifiedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WinnersmodifiedCollectionViewCell.swift; sourceTree = "<group>"; };
+		A4551F8B247FB67F008AAD86 /* EventbookingformViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventbookingformViewController.swift; sourceTree = "<group>"; };
+		A4551F8D24800C7A008AAD86 /* EventBookingHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBookingHistoryViewController.swift; sourceTree = "<group>"; };
+		A4551F8F24800C9F008AAD86 /* EventBookingHistoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBookingHistoryTableViewCell.swift; sourceTree = "<group>"; };
 		A4616DAB2458C83F005EBE02 /* PreviewContestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContestViewController.swift; sourceTree = "<group>"; };
 		A4616DAD2458C85A005EBE02 /* PreviewcontestTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewcontestTableViewCell.swift; sourceTree = "<group>"; };
 		A46BCF622472A01500988B13 /* ThemefixedcellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemefixedcellTableViewCell.swift; sourceTree = "<group>"; };
@@ -375,6 +386,9 @@
 		A486037E2473CCC90021FE87 /* AllyourjuryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllyourjuryCollectionViewCell.swift; sourceTree = "<group>"; };
 		A4A27CB42449A76A0068DBFE /* ShowtalentothercontactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowtalentothercontactsViewController.swift; sourceTree = "<group>"; };
 		A4A27CB62449A7870068DBFE /* ShowtalentothercontactsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowtalentothercontactsTableViewCell.swift; sourceTree = "<group>"; };
+		A4A823A424810A7600E1D49E /* UpdateUserCategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUserCategoryTableViewCell.swift; sourceTree = "<group>"; };
+		A4A823A624810A9300E1D49E /* Updateuercategory2TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updateuercategory2TableViewCell.swift; sourceTree = "<group>"; };
+		A4A823A824810AB000E1D49E /* UpdateUserCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUserCategoryViewController.swift; sourceTree = "<group>"; };
 		A4ADF38F243F4A2F0013722A /* InvitepeopleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitepeopleViewController.swift; sourceTree = "<group>"; };
 		A4B091992445C89900F59A29 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		A4B0919B2445C8AD00F59A29 /* HelpTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpTableViewCell.swift; sourceTree = "<group>"; };
@@ -574,6 +588,9 @@
 				848AC20D23EE869C005A7110 /* ProfileTablePostsViewController.swift */,
 				849EFEBD2410D08F0013DD83 /* JuryprofileViewController.swift */,
 				849EFEBF2410D0AF0013DD83 /* JuryprofileCollectionViewCell.swift */,
+				A4A823A424810A7600E1D49E /* UpdateUserCategoryTableViewCell.swift */,
+				A4A823A624810A9300E1D49E /* Updateuercategory2TableViewCell.swift */,
+				A4A823A824810AB000E1D49E /* UpdateUserCategoryViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -659,6 +676,10 @@
 				A46BCF6E2472A08900988B13 /* ThemetypesixTableViewCell.swift */,
 				A486037C2473CCAC0021FE87 /* WinnerpriceCollectionViewCell.swift */,
 				A486037E2473CCC90021FE87 /* AllyourjuryCollectionViewCell.swift */,
+				A44F2A9E247D18A10064FC13 /* WinnersmodifiedCollectionViewCell.swift */,
+				A4551F8B247FB67F008AAD86 /* EventbookingformViewController.swift */,
+				A4551F8D24800C7A008AAD86 /* EventBookingHistoryViewController.swift */,
+				A4551F8F24800C9F008AAD86 /* EventBookingHistoryTableViewCell.swift */,
 			);
 			path = "Groups&Events";
 			sourceTree = "<group>";
@@ -912,8 +933,10 @@
 				18D201A82341E6D900C7C6D2 /* UploadFileRequest.swift in Sources */,
 				848ECD4623EBF38B00D7EAE1 /* Customlabel.swift in Sources */,
 				18F9BC9424249FB300A1DF38 /* ContestshareupperTableViewCell.swift in Sources */,
+				A4A823A524810A7600E1D49E /* UpdateUserCategoryTableViewCell.swift in Sources */,
 				8492B5CB23D2E6090072C852 /* Editprofile1TableViewCell.swift in Sources */,
 				849E8DC023D6B0A500629000 /* NewEventViewController.swift in Sources */,
+				A4A823A924810AB000E1D49E /* UpdateUserCategoryViewController.swift in Sources */,
 				849EFEBE2410D08F0013DD83 /* JuryprofileViewController.swift in Sources */,
 				180F95EC2420CA200018DA83 /* UpperCollectionViewCell.swift in Sources */,
 				8419063123DEA90900BDB96F /* AllLikesTableViewCell.swift in Sources */,
@@ -937,12 +960,14 @@
 				848CE8BF23E3E398008491F3 /* FilterImageCollectionViewCell.swift in Sources */,
 				18F9BC9624249FC600A1DF38 /* ContestsharebottonTableViewCell.swift in Sources */,
 				84B56E6E2407CB59000E6DBE /* WinnerCollectionViewCell.swift in Sources */,
+				A4551F8E24800C7A008AAD86 /* EventBookingHistoryViewController.swift in Sources */,
 				847962AB23F3B892001CEC15 /* Talentshowcase3viewcontroller.swift in Sources */,
 				8491667B23E82CE600A592F9 /* LoginmasterCollectionViewCell.swift in Sources */,
 				849E8DCC23D6F65100629000 /* GroupsandEventsTableViewCell.swift in Sources */,
 				849E8DCA23D6F11A00629000 /* GroupandEventsViewController.swift in Sources */,
 				846EC08023E142ED0041039A /* TalentshowcaseTableViewCell2.swift in Sources */,
 				A46BCF6B2472A05600988B13 /* ThemetypefourTableViewCell.swift in Sources */,
+				A44F2A9F247D18A10064FC13 /* WinnersmodifiedCollectionViewCell.swift in Sources */,
 				84A8DF9923D857D30054FE6B /* MainGroupDynamicTableViewCell.swift in Sources */,
 				A4B75178244B35D200EA0911 /* ReviewandRatingsTableViewCell.swift in Sources */,
 				844D985623E2B89B0021F710 /* ChooseEachCategoryTableViewCell.swift in Sources */,
@@ -976,6 +1001,7 @@
 				18AD7E672328BEAC00904E21 /* PostUserRegister.swift in Sources */,
 				849EFEC42411059B0013DD83 /* JuryContestoneTableViewCell.swift in Sources */,
 				187382E42413B7D200640000 /* ShowwinnerafterclosedTableViewCell.swift in Sources */,
+				A4551F8C247FB67F008AAD86 /* EventbookingformViewController.swift in Sources */,
 				180F95EA2420CA020018DA83 /* CustomeventViewController.swift in Sources */,
 				8482752023E94258000D4909 /* OtpEnterViewController.swift in Sources */,
 				18D377BE2359B03A00C3B644 /* Connectivity.swift in Sources */,
@@ -1007,6 +1033,7 @@
 				18D018DF2318F9B2003AC6DC /* AppDelegate.swift in Sources */,
 				8491454323D03B6C005489B7 /* DashboardCollectionViewCell.swift in Sources */,
 				180F95F02420CA570018DA83 /* LowerCollectionViewCell.swift in Sources */,
+				A4551F9024800C9F008AAD86 /* EventBookingHistoryTableViewCell.swift in Sources */,
 				849D3C0123F6B9DD000B3E79 /* ShowAllinviteesViewController.swift in Sources */,
 				A4B0919A2445C89900F59A29 /* HelpViewController.swift in Sources */,
 				8490DF3923ED3ED900E3FD7A /* ProfileMainScreenCollectionViewCell.swift in Sources */,
@@ -1021,6 +1048,7 @@
 				180185B723265E71002C6A19 /* TextFieldTableViewCell.swift in Sources */,
 				A4616DAC2458C83F005EBE02 /* PreviewContestViewController.swift in Sources */,
 				849E8DC423D6CC4F00629000 /* EventDetailsfeedViewController.swift in Sources */,
+				A4A823A724810A9300E1D49E /* Updateuercategory2TableViewCell.swift in Sources */,
 				A46BCF6F2472A08900988B13 /* ThemetypesixTableViewCell.swift in Sources */,
 				84A3640A23D56CA4006A9A42 /* TalentshowcaseTableViewCell.swift in Sources */,
 				180ED004237293CE0078C1FB /* UploadVideoRequest.swift in Sources */,

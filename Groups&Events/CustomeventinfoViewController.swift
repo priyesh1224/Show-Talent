@@ -20,6 +20,7 @@ class CustomeventinfoViewController: UIViewController , UIScrollViewDelegate  {
     @IBOutlet var scrollheight: NSLayoutConstraint!
     
     
+    @IBOutlet weak var bookbtn: CustomButton!
     
     @IBOutlet weak var eventimage: UIImageView!
     
@@ -63,7 +64,7 @@ class CustomeventinfoViewController: UIViewController , UIScrollViewDelegate  {
     
     @IBOutlet weak var tandc: UITextView!
     
-    
+    var alreadybooked = false
     
     
     
@@ -150,6 +151,14 @@ class CustomeventinfoViewController: UIViewController , UIScrollViewDelegate  {
         var scrollWidth = self.view.frame.size.width
         var scrollHeight = self.view.frame.size.height - 64
         view.addSubview(scroll)
+        if alreadybooked {
+            self.bookbtn.setTitle("Booked", for: .normal)
+            self.bookbtn.isEnabled = false
+        }
+        else {
+            self.bookbtn.setTitle("Book", for: .normal)
+            self.bookbtn.isEnabled = true
+        }
 
         scroll.isScrollEnabled = true
 //        scrollwidth.constant = scrollWidth
@@ -177,6 +186,9 @@ class CustomeventinfoViewController: UIViewController , UIScrollViewDelegate  {
 
     }
     
+    @IBAction func bookeventtapped(_ sender: Any) {
+        performSegue(withIdentifier: "bookevent", sender: nil)
+    }
     
     
     
@@ -193,7 +205,14 @@ class CustomeventinfoViewController: UIViewController , UIScrollViewDelegate  {
     }
     
     
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let seg = segue.destination as? EventbookingformViewController {
+            if let i = self.gotevent?.id as? Int {
+                seg.eventid = i
+            }
+            
+        }
+    }
     
 
 }

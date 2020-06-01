@@ -351,9 +351,13 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
                             if let cn = each["TermAndCondition"] as? String {
                                 tandc = cn
                             }
+                            var noofwinn = 0
+                            if let cn = each["NoOfWinner"] as? Int {
+                                runningstatusid = cn
+                            }
 
                             if self.categoryname == allowcategory.lowercased() || self.categoryname == "all" {
-                                var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: contestimage, termsandcondition: tandc)
+                                var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: contestimage, termsandcondition: tandc, noofwinners: noofwinn)
                                 
                                 var y = customstrevent(x: x, joined: joined, joinedstatus: joinedstatus, winners: [], creatoruserid: creatorid, creatorname: creatorname, creatorprofileimage: creatorimage, contestimage: contestimage, reviews: reviews, totalparticipants: participants, themename: thmname, allowedtopost: allowedtopost)
                                 if self.segmentcontroll.selectedSegmentIndex == 1 {
@@ -440,7 +444,7 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
         return UITableViewCell()
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 390
+        return 340
     }
     
     

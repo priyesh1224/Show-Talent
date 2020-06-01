@@ -263,3 +263,4 @@ class ThemetypefiveTableViewCell: UITableViewCell , UICollectionViewDelegate , U
     }
 
 }
+

@@ -26,6 +26,15 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     @IBOutlet weak var confirmbtn: UIButton!
     
     
+    @IBOutlet weak var nopostsavailable: Customlabel!
+    
+    
+    
+    @IBOutlet weak var popupheading: UILabel!
+    static var currentshowingrank = 1
+    
+    var rankallocatedfeeds : Dictionary<Int,feeds>  = [:]
+    
     var loadthisvideo = false
     
     var joined = false
@@ -35,11 +44,12 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     var selectedsection = "contestdetails"
     
     var contestid = 25
+    var postid = 0
     var allfeeds : [feeds] = []
     
     var winningfeeds : [feeds] = []
-    
-    var totalwinners = 1
+    var tappedfeed : feeds?
+    var totalwinners = 2
     var totalparticipants = 0
     var videoallowed = false
     @IBOutlet weak var submitbtn: UIButton!
@@ -55,10 +65,13 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.nopostsavailable.isHidden = true
+        self.popupheading.text = "Please tap on position \(JurycontestViewController.currentshowingrank)"
         table.delegate = self
         table.dataSource = self
         winnertableview.delegate = self
         winnertableview.dataSource = self
+        self.confirmbtn.isEnabled = false
         self.spinner.isHidden = true
         self.spinner.stopAnimating()
         self.geteventdata(id: self.contestid)
@@ -69,7 +82,6 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
         self.cancelbtn.layer.cornerRadius = self.cancelbtn.frame.size.height/2
         self.confirmbtn.layer.cornerRadius = self.confirmbtn.frame.size.height/2
 
-        
 
        
     }
@@ -81,54 +93,73 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     
     
     @IBAction func cancelwinnerpopup(_ sender: Any) {
+        self.rankallocatedfeeds.removeAll()
+        self.winnertableview.reloadData()
+        self.table.reloadData()
         self.outercover.isHidden = true
     }
     
     
     @IBAction func confirmwinnerpopup(_ sender: Any) {
-        var url = Constants.K_baseUrl + Constants.addwinner
-        var params : [Dictionary<String,Any>] = []
-        for each in self.winningfeeds {
-            params.append(["ContestID" : self.contestid , "WinnerUserId" : each.userid ,"Position" : 1])
-            
-        }
-        print(url)
-        print(params)
-       
-
-            var request = URLRequest(url: try! url.asURL())
-            request.httpMethod = "POST"
-        request.setValue("Bearer \(UserDefaults.standard.value(forKey: "token") as! String)",
-                             forHTTPHeaderField: "Authorization")
-        
-        print("Bearer \(UserDefaults.standard.value(forKey: "token") as! String)")
-
-            request.setValue("application/json", forHTTPHeaderField: "Accept")
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-
-            request.httpBody = try! JSONSerialization.data(withJSONObject: params)
-       
-
-            Alamofire.request(request).responseJSON { response in
-                if let r = response.result.value as? Dictionary<String,Any> {
-                    print(r)
-                    if let s  = r["ResponseStatus"] as? Int {
-                        if s == 0 {
-                            let alertController = UIAlertController(title: "Winners Added", message: "Winners of the contest are added", preferredStyle: UIAlertController.Style.alert)
-                               let dismissAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { (action) -> Void in
-                                self.performSegue(withIdentifier: "winneradded", sender: nil)
-                               }
-                            alertController.addAction(dismissAction)
-                            self.present(alertController, animated: true, completion: nil)
-                        }
-                    }
-
+        if let endingdata = self.currentevent?.resulton as? String {
+            var tl = self.currentevent?.resulton
+            var t2 = self.currentevent?.conteststart
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303'"
+            let date = dateFormatter.date(from: endingdata)
+            let date2 = dateFormatter.date(from: t2 ?? "")
+            let interval = date?.timeIntervalSince(Date())
+            if interval?.isLess(than: 0) ?? false {
+                var url = Constants.K_baseUrl + Constants.addwinner
+                var params : [Dictionary<String,Any>] = []
+                for each in self.rankallocatedfeeds {
+                    params.append(["ContestID" : self.contestid , "WinnerUserId" : each.value.userid ,"Position" : each.key])
+                    
                 }
+                print(url)
+                print(params)
                 
                 
+                var request = URLRequest(url: try! url.asURL())
+                request.httpMethod = "POST"
+                request.setValue("Bearer \(UserDefaults.standard.value(forKey: "token") as! String)",
+                    forHTTPHeaderField: "Authorization")
                 
+                print("Bearer \(UserDefaults.standard.value(forKey: "token") as! String)")
+                
+                request.setValue("application/json", forHTTPHeaderField: "Accept")
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                
+                
+                request.httpBody = try! JSONSerialization.data(withJSONObject: params)
+                
+                
+                Alamofire.request(request).responseJSON { response in
+                    if let r = response.result.value as? Dictionary<String,Any> {
+                        print(r)
+                        if let s  = r["ResponseStatus"] as? Int {
+                            if s == 0 {
+                                let alertController = UIAlertController(title: "Winners Added", message: "Winners of the contest are added", preferredStyle: UIAlertController.Style.alert)
+                                let dismissAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default) { (action) -> Void in
+                                    self.performSegue(withIdentifier: "backtozero", sender: nil)
+                                }
+                                alertController.addAction(dismissAction)
+                                self.present(alertController, animated: true, completion: nil)
+                            }
+                        }
+                        
+                    }
+                    
+                    
+                    
+                }
             }
+            else {
+                self.present(customalert.showalert(x: "You can not post winners until contest is over."), animated: true, completion: nil)
+            }
+        }
+
         
     }
     
@@ -298,6 +329,10 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                                         if let cn = each["TermAndCondition"] as? String {
                                             tandc = cn
                                         }
+                                        var noofwinn = 0
+                                        if let cn = each["NoOfWinner"] as? Int {
+                                            noofwinn = cn
+                                        }
                                         
                                         if let wn = each["Winners"] as? [Dictionary<String,Any>]{
                                             for each in wn {
@@ -325,7 +360,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                                             }
                                         }
                                                 
-                                        var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc)
+                                        var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn)
                                                 
                                         self.currentevent = x
                                         self.screentitle.text = contestname.capitalized
@@ -439,7 +474,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                                 if let s =  each["ProfileImage"] as? String {
                                     pimage = s
                                 }
-                                if let s =  each["UserID"] as? String {
+                                if let s =  each["UserID"]  as? String {
                                     uid = s
                                 }
                                 if let s =  each["UserComment"] as? String {
@@ -590,6 +625,12 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                          
                          
                      }
+                    if self.allfeeds.count == 0 {
+                        self.nopostsavailable.isHidden = false
+                    }
+                    else {
+                        self.nopostsavailable.isHidden = true
+                    }
                      d(true)
                  }
              }
@@ -630,7 +671,23 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if tableView.tag == 5 {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "winnerjury", for: indexPath) as? WinnerjuryTableViewCell {
-                cell.updatecell(x : self.winningfeeds[indexPath.row] , y : indexPath.row , z : self.currentevent?.contestprice ?? "")
+                cell.takebackrankedfeed = {a,b in
+                    self.rankallocatedfeeds[a] = b
+                    print(self.rankallocatedfeeds)
+                    print(self.currentevent?.noofwinners)
+                    print(self.rankallocatedfeeds.count)
+                    if let t = self.currentevent?.noofwinners as? Int {
+                        if self.rankallocatedfeeds.count == t {
+                            self.confirmbtn.isEnabled = true
+                            self.popupheading.text = "Tap on confirm to submit winners."
+                        }
+                        else {
+                            self.confirmbtn.isEnabled = false
+                        }
+                    }
+                   
+                }
+                cell.updatecell(x : self.winningfeeds[indexPath.row] , y : indexPath.row , z : self.currentevent?.contestprice ?? "" , a : self.currentevent?.noofwinners ?? 0 , b : self.rankallocatedfeeds.count)
                 return cell
             }
         }
@@ -641,13 +698,14 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                 cell.passbacktapped = { a in
                     self.selectedsection = a
                     self.table.reloadData()
-                    
+                    self.nopostsavailable.isHidden = true
                     if a == "participantsvideos" {
                         if self.winningfeeds.count > 0 {
-                            
+                            self.nopostsavailable.isHidden = false
                         }
                         else {
                             if self.allfeeds.count == 0 {
+                                
                                 self.fetchfeeds { (st) in
                                     if st {
                                         self.table.reloadData()
@@ -685,6 +743,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                 self.videoallowed = true
             }
             
+            
             if let cell = tableView.dequeueReusableCell(withIdentifier: "jurythree", for: indexPath) as? JurycontestthreeTableViewCell {
                 cell.passwinner = {a in
                     if self.winningfeeds.count < self.totalwinners {
@@ -702,6 +761,26 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                     print("Winning feeds count \(self.winningfeeds.count)")
                    
                 }
+                
+                
+                
+                cell.sendclickedevent = { a,b,c in
+                    self.postid = b
+                    self.tappedfeed = c
+                    if a == "comment"
+                    {
+                        self.performSegue(withIdentifier: "jurycomments", sender: nil)
+                    }
+                    else if a == "review"
+                    {
+                        self.performSegue(withIdentifier: "juryreviews", sender: nil)
+                    }
+                }
+                
+                
+                
+                
+                
                 cell.removewinner = { a in
                     for var k in 0 ..< self.winningfeeds.count {
                         if self.winningfeeds[k].acticityid == a.acticityid {
@@ -737,8 +816,9 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                 if loadthisvideo == false && indexPath.row != 0{
                     makevideoefetch = false
                 }
-
+                
                 cell.updatecell(x: self.allfeeds[indexPath.row],y : shouldcheck , z : furtherselectionallowed , w : makevideoefetch)
+                print("Survived Error")
                 return cell
             }
         }
@@ -759,7 +839,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
             return 420
         }
         else {
-            return 400
+            return self.view.frame.size.height * 0.7
         }
         return 280
     }
@@ -768,16 +848,47 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         print("Me removed \(indexPath.row)")
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "jurythree", for: indexPath) as? JurycontestthreeTableViewCell {
+        if let cell = tableView.cellForRow(at: indexPath) as? JurycontestthreeTableViewCell {
             if let p = cell.player  {
                 p.isMuted = true
                 p.pause()
+            }
+
+        }
+    }
+    
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print(indexPath.row)
+        if let cell = tableView.cellForRow(at: indexPath) as? JurycontestthreeTableViewCell {
+            print("Yo")
+            if let p = cell.player  {
+               print("hey")
+                p.play()
             }
             
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if self.rankallocatedfeeds.count < self.currentevent?.noofwinners ?? 0 {
+        
+        if let cell = tableView.cellForRow(at: indexPath) as? WinnerjuryTableViewCell {
+            cell.assingrank()
+            JurycontestViewController.currentshowingrank = JurycontestViewController.currentshowingrank + 1
+            if self.rankallocatedfeeds.count == self.currentevent?.noofwinners ?? 0 {
+                self.popupheading.text = "Tap on confirm to submit results"
+
+            }
+            else {
+                self.popupheading.text = "Please select position \(JurycontestViewController.currentshowingrank)"
+
+            }
+            
+        }
+        }
+        
         if let cell = tableView.cellForRow(at: indexPath) as? JurycontestthreeTableViewCell {
             if let p = cell.player  {
                 
@@ -791,6 +902,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         print("Scrolling Over")
         loadthisvideo = true
+        
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -808,6 +920,46 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
         if let s = segue.destination as? JoinedeventsViewController {
             s.eventid = self.contestid
         }
+        if let seg = segue.destination as? AllcommentsViewController {
+            seg.postid = self.postid
+            if let cm = self.tappedfeed as? feeds {
+                if let cmm = cm.comments as? [comment] {
+                    seg.tappedcommentlist = cmm
+                }
+            }
+            seg.sendbackupdatedlist = {a,b in
+                
+            }
+            seg.commentposted = {a,b in
+                //                var c = 0
+                //                for var k in self.alldata {
+                //
+                //                    if k.activityid == a?.activityid {
+                //                        if let lc = self.table.cellForRow(at: IndexPath(row: c, section: 0)) as? TalentshowcaseTableViewCell {
+                //
+                //                            lc.leadcommentuser.text = a?.profilename.capitalized
+                //                            lc.leadcomment.text = a?.comment.capitalized
+                //
+                //                            lc.leadcomment.text = "Hello"
+                //                            lc.downloadprofileimage(url: a!.profileimage) { (ik) in
+                //                                lc.leadcommentuserimage.image = ik
+                //                            }
+                //                        }
+                //
+                //                        k.comments.append(a!)
+                //                        self.table.reloadData()
+                //                    }
+                //                    c=c+1
+                //                }
+            }
+            
+        }
+
+        if let s = segue.destination as? ReviewsandRatingsViewController {
+            s.contestid = self.contestid
+            s.postid = self.postid
+        }
+        
     }
   
 

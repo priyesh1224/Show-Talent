@@ -11,7 +11,9 @@ import UIKit
 class CustomeventViewController: UIViewController , UITableViewDelegate , UITableViewDataSource {
 
     
+    @IBOutlet weak var nodatawarning: Customlabel!
     
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     
     @IBOutlet var notificationindicator: UIView!
@@ -20,6 +22,8 @@ class CustomeventViewController: UIViewController , UITableViewDelegate , UITabl
     @IBOutlet var table: UITableView!
     
     static var passdata : ((_ : [languagewiseevent] ) -> Void)?
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +31,9 @@ class CustomeventViewController: UIViewController , UITableViewDelegate , UITabl
         table.dataSource = self
         table.reloadData()
         table.allowsSelection = true
+        self.nodatawarning.isHidden = true
+        self.spinner.isHidden = false
+        self.spinner.startAnimating()
         notificationindicator.layer.cornerRadius = 10
         // Do any additional setup after loading the view.
     }
@@ -47,7 +54,25 @@ class CustomeventViewController: UIViewController , UITableViewDelegate , UITabl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "cecell", for: indexPath) as? CustomeventTableViewCell {
+                cell.startfetching = { a in
+                    if a {
+                        self.spinner.isHidden = false
+                        self.spinner.startAnimating()
+                    }
+                    else {
+                        self.spinner.isHidden = true
+                        self.spinner.stopAnimating()
+                    }
+                }
                 cell.passback = {a in
+                    self.spinner.stopAnimating()
+                    self.spinner.isHidden = true
+                    if a.count == 0 {
+                        self.nodatawarning.isHidden = false
+                    }
+                    else {
+                        self.nodatawarning.isHidden = true
+                    }
                     CustomeventViewController.passdata!(a)
                 }
                 cell.update()

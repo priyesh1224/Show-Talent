@@ -289,11 +289,15 @@ class Editprofile1ViewController: UIViewController, UITableViewDelegate , UITabl
                     performSegue(withIdentifier: "notifications", sender: nil)
                 }
                 
+                
             }
             else {
                 var x = self.content2[indexPath.row]
                 if x == "logout" {
                     logout()
+                }
+                else if x == "change category" {
+                    performSegue(withIdentifier: "updatecategories", sender: nil)
                 }
             }
         }

@@ -11,7 +11,7 @@ import AVKit
 import Alamofire
 
 
-class JoinedeventfeedsTableViewCell: UITableViewCell {
+class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
 
     @IBOutlet weak var profileimage: UIImageView!
     
@@ -187,16 +187,16 @@ class JoinedeventfeedsTableViewCell: UITableViewCell {
             }
             self.feedimage.isHidden = true
             self.musicurl = x.activitypath
-             btn = UIButton(frame: CGRect(x: 16, y: CGFloat(70 + ht), width: 60, height: 60))
+             btn = UIButton(frame: CGRect(x: 16, y: CGFloat(40 + ht), width: 60, height: 60))
             btn?.setTitle("", for: .normal)
-            btn?.setImage(#imageLiteral(resourceName: "017-play-1"), for: .normal)
+            btn?.setImage(#imageLiteral(resourceName: "Group 1622"), for: .normal)
             if let b = btn as? UIButton {
               self.addSubview(b)
             }
             
             btn?.addTarget(self, action: #selector(playaudio), for: .touchUpInside)
             
-             pv = UIProgressView(frame: CGRect(x: 84, y: CGFloat(100 + ht), width: self.frame.size.width - 92, height: 60))
+             pv = UIProgressView(frame: CGRect(x: 84, y: CGFloat(60 + ht), width: self.frame.size.width - 92, height: 60))
             pv.setProgress(0, animated: true)
             self.addSubview(pv)
             
@@ -252,13 +252,23 @@ class JoinedeventfeedsTableViewCell: UITableViewCell {
         
     }
     
+    
+    
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if let b = self.btn as? UIButton {
+            b.setImage(#imageLiteral(resourceName: "Group 1622"), for: .normal)
+        }
+        pv.setProgress(0, animated: false)
+    }
+    
     @objc func playaudio()
     {
         if let a = audio as? AVAudioPlayer {
+            a.delegate = self
             if a.isPlaying {
                 a.pause()
                 if let b = self.btn as? UIButton {
-                    b.setImage(#imageLiteral(resourceName: "017-play-1"), for: .normal)
+                    b.setImage(#imageLiteral(resourceName: "Group 1622"), for: .normal)
                 }
                 
             }
@@ -277,6 +287,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell {
                     let fileURL = NSURL(string:mp3URL)
                     let soundData = NSData(contentsOf:fileURL! as URL)
                     self.audio = try AVAudioPlayer(data: soundData! as Data)
+                    
                     audio?.play()
 //                    audio = try AVAudioPlayer(contentsOf: NSURL(string: v) as! URL)
                     // 3
@@ -298,6 +309,9 @@ class JoinedeventfeedsTableViewCell: UITableViewCell {
         {
             // Update progress
             pv.setProgress(Float(audio!.currentTime/audio!.duration), animated: true)
+            if Float(audio!.currentTime/audio!.duration) == 1.0 {
+                pv.setProgress(0, animated: false)
+            }
         }
     }
     

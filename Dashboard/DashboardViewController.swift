@@ -117,7 +117,9 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
             self.aboveiphone5s.isHidden = true
         }
         
-        
+        DispatchQueue.global(qos: .background).async {
+            CoreDataManager.shared.deletecrossedgroups()
+        }
         
         print("popup height is \(self.view.frame.size.height/2.5)")
     if self.view.frame.size.height/2.5 < 350 {

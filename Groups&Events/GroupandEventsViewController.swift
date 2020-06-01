@@ -41,20 +41,30 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
     var alldata : [streventcover] = []
     var jurydata : [streventcover] = []
     
-    var copygroupdata : [groupevent] = []
-    var copyunpublishedevents : [strevent] = []
-    var copyevents : [strevent] = []
-    var copyjoinedevents : [streventcover] = []
-    var copyjoinedgroups : [groupevent] = []
-    var copyrecommendedcontests : [streventcover] = []
+    static var copygroupdata : [groupevent] = []
+    static var copyunpublishedevents : [strevent] = []
+    static var copyevents : [strevent] = []
+    static var copyjoinedevents : [streventcover] = []
+    static var copyclosedcontests : [streventcover] = []
+    static var copyjoinedgroups : [groupevent] = []
+    static var copyrecommendedcontests : [streventcover] = []
     
-    var copyjuryevents : [streventcover] = []
+    static var copyjuryevents : [streventcover] = []
     
     @IBOutlet weak var table: UITableView!
     override func viewDidLoad() {
         
+        GroupandEventsViewController.copygroupdata  = []
+        GroupandEventsViewController.copyunpublishedevents  = []
+        GroupandEventsViewController.copyevents  = []
+        GroupandEventsViewController.copyjoinedevents = []
+        GroupandEventsViewController.copyclosedcontests = []
+        GroupandEventsViewController.copyjoinedgroups = []
+        GroupandEventsViewController.copyrecommendedcontests = []
+        GroupandEventsViewController.copyjuryevents = []
+        
         if self.isother {
-            sections = ["unpublished contests","i am jury in","events","joined events" ,"recommended contests"]
+            sections = ["unpublished contests","i am jury in","events","joined events","closed contests" ,"recommended contests"]
             self.creategroupupperbutton.setTitle("Create Contest", for: .normal)
         }
         else {
@@ -66,7 +76,7 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
         table.dataSource = self
         table.reloadData()
         setupviews()
-        
+        fetchmasterdata()
         var lat = CLLocationDegrees(exactly: 0)
         var longi = CLLocationDegrees(exactly: 0)
         
@@ -83,6 +93,1280 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
         }
 
  
+    }
+    
+    
+    func fetchmasterdata()
+    {
+         if self.isother {
+            let url = Constants.K_baseUrl + Constants.contestdashboard
+            let r = BaseServiceClass()
+            var uid = UserDefaults.standard.value(forKey: "refid") as! String
+            let params : Dictionary<String,Any> = ["UserId": "\(uid)",
+                                                   "Latitude": 0,
+                                                   "Longitude": 0,
+                                                   "Distance": 0,
+                                                   "ParticipentUserId" : "\(uid)"]
+            r.postApiRequest(url: url, parameters: params) { (response, err) in
+                if let res = response?.result.value as? Dictionary<String,Any> {
+                    if let rr = res["Results"] as? Dictionary<String,Any> {
+                        if let cc = rr["CreatedContest"] as? Dictionary<String,Any> {
+                            if let dt = cc["Data"] as? [Dictionary<String,Any>] {
+                                self.arrangecreatedcontests(data: dt)
+                            }
+                        }
+                        
+                        if let cc = rr["UnPublish"] as? Dictionary<String,Any> {
+                            if let dt = cc["Data"] as? [Dictionary<String,Any>] {
+                                self.arrangecreatedunpublishedcontests(data: dt)
+                            }
+                        }
+                        
+                        if let cc = rr["JoinedContest"] as? Dictionary<String,Any> {
+                            if let dt = cc["Data"] as? [Dictionary<String,Any>] {
+                                
+                                self.arrangejoinedcontest(data: dt)
+                            }
+                        }
+                        
+                        if let cc = rr["ImJury"] as? Dictionary<String,Any> {
+                            if let dt = cc["Data"] as? [Dictionary<String,Any>] {
+                                self.arrangejurycontests(data: dt)
+                            }
+                        }
+                        
+                        if let cc = rr["ClosedContest"] as? Dictionary<String,Any> {
+                            if let dt = cc["Data"] as? [Dictionary<String,Any>] {
+                                self.arrangeclosedcontests(data: dt)
+                            }
+                        }
+                        
+                        
+                        
+                        if let cc = rr["SuggestedContest"] as? Dictionary<String,Any> {
+                            if let dt = cc["Data"] as? [Dictionary<String,Any>] {
+                                self.arrangesuggestedcontest(data: dt)
+                            }
+                        }
+                        
+                        
+                        self.table.reloadData()
+                    }
+                }
+            }
+        }
+         else {
+            var uid = UserDefaults.standard.value(forKey: "refid") as! String
+
+            let url = "\(Constants.K_baseUrl)\(Constants.groupdashboard)?userId=\(uid)"
+            let r = BaseServiceClass()
+            print(url)
+            
+            r.getApiRequest(url: url, parameters: [:]) { (response, err) in
+                if let res = response?.result.value as? Dictionary<String,Any> {
+                  
+                    if let rr = res["Results"] as? Dictionary<String,Any> {
+                        if let cc = rr["CreatedGroup"] as? Dictionary<String,Any> {
+                            if let dt = cc["Data"] as? [Dictionary<String,Any>] {
+                                self.arrengecreatedgroup(data: dt)
+                                print(dt)
+                                print("-----------------------------")
+                            }
+                        }
+                        
+                        if let cc = rr["JoinedGroup"] as? Dictionary<String,Any> {
+                            if let dt = cc["Data"] as? [Dictionary<String,Any>] {
+                                self.arrangejoinedgroup(data: dt)
+                                print("-----------------------------")
+                            }
+                        }
+                        
+                        
+                        
+                        if let cc = rr["ImJury"] as? Dictionary<String,Any> {
+                            if let dt = cc["Data"] as? [Dictionary<String,Any>] {
+                                self.arrangejurycontests(data: dt)
+                                print("-----------------------------")
+                            }
+                        }
+                        
+                       self.table.reloadData()
+                        
+                        
+                        
+                    }
+                }
+            }
+
+        }
+        
+    }
+    
+    func arrengecreatedgroup(data : [Dictionary<String,Any>]) {
+                                        for each in data {
+                                            var gn = ""
+                                            var gid = 0
+                                            var gim = ""
+                                            var ref = 0
+                                            var grpbel = ""
+                                            var createdon = ""
+                                            var youare = ""
+                                            var othbelong = ""
+                                            var part = 0
+                                            var isverify = false
+                                            var refuid = ""
+                                            var memb : [groupparticipant] = []
+                                            if let g = each["GroupName"] as? String {
+                                                gn = g
+                                            }
+                                            if let g = each["GroupImage"] as? String {
+                                                gim = g
+                                            }
+                                            if let g = each["GroupBelong"] as? String {
+                                                grpbel = g
+                                            }
+                                            else if let g = each["BelongTo"] as? String {
+                                                grpbel = g
+                                            }
+                                            if let g = each["CreatedOn"] as? String {
+                                                createdon = g
+                                            }
+                                            if let g = each["YouAre"] as? String {
+                                                youare = g
+                                            }
+                                            if let g = each["OtherBelong"] as? String {
+                                                othbelong = g
+                                            }
+                                            if let g = each["GroupID"] as? Int {
+                                                gid = g
+                                            }
+                                            if let g = each["Ref_BelongGroup"] as? Int {
+                                                ref = g
+                                            }
+                                            if let g = each["TotalMembers"] as? Int {
+                                                part = g
+                                            }
+                                            if let g = each["IsVerify"] as? Bool {
+                                                isverify = g
+                                            }
+                                            if let g = each["Ref_UserId"] as? String {
+                                                refuid = g
+                                            }
+                                            if let g = each["Members"] as? [Dictionary<String,Any>] {
+                                                for mem in g {
+                                                    var id = 0
+                                                    var name = ""
+                                                    var pim = ""
+                                                    var uid = ""
+                                                    var countrycode = ""
+                                                    var mobile = ""
+                                                    if let f = mem["ID"] as? Int {
+                                                        id = f
+                                                    }
+                                                    if let f = mem["Name"] as? String {
+                                                        name = f
+                                                    }
+                                                    if let f = mem["ProfileImage"] as? String {
+                                                        pim = f
+                                                    }
+                                                    if let f = mem["UserId"] as? String {
+                                                        uid = f
+                                                    }
+                                                    if let f = mem["CountryCode"] as? String {
+                                                        countrycode = f
+                                                    }
+                                                    if let f = mem["Mobile"] as? String {
+                                                        mobile = f
+                                                    }
+                                                    var gm = groupparticipant(id: id, name: name, profileimage: pim, userid: uid, countrycode: countrycode, mobile: mobile)
+                                                    memb.append(gm)
+                                                }
+                                            }
+        
+                                            var x = groupevent(groupid: gid, ref_belongto: ref, group_belong: grpbel, groupimage: gim, createdon: createdon, youare: youare, groupname: gn, groupparticipation: part, isverify: isverify , refuserid: refuid , members: memb)
+                                            print(x)
+                                            print("------------&&&&&&&&&&----------")
+                                            GroupandEventsViewController.copygroupdata.append(x)
+        
+        
+        
+                                        }
+    }
+    
+    func arrangejoinedgroup(data : [Dictionary<String,Any>]) {
+                                         for each in data {
+                                             var gn = ""
+                                             var gid = 0
+                                             var gim = ""
+                                             var ref = 0
+                                             var grpbel = ""
+                                             var createdon = ""
+                                             var youare = ""
+                                             var othbelong = ""
+                                             var part = 0
+                                            var isverify = false
+                                            var refuid = ""
+                                            var memb : [groupparticipant] = []
+                                             if let g = each["GroupName"] as? String {
+                                                 gn = g
+                                             }
+                                             if let g = each["GroupImage"] as? String {
+                                                 gim = g
+                                             }
+                                             if let g = each["GroupBelong"] as? String {
+                                                 grpbel = g
+                                             }
+                                             else if let g = each["BelongTo"] as? String {
+                                                grpbel = g
+                                            }
+                                             if let g = each["CreatedOn"] as? String {
+                                                 createdon = g
+                                             }
+                                             if let g = each["YouAre"] as? String {
+                                                 youare = g
+                                             }
+                                             if let g = each["OtherBelong"] as? String {
+                                                 othbelong = g
+                                             }
+                                             if let g = each["GroupID"] as? Int {
+                                                 gid = g
+                                             }
+                                             if let g = each["Ref_BelongGroup"] as? Int {
+                                                 ref = g
+                                             }
+                                            if let g = each["TotalMembers"] as? Int {
+                                                    part = g
+                                                }
+                                            if let g = each["IsVerify"] as? Bool {
+                                                isverify = g
+                                            }
+                                            if let g = each["Ref_UserId"] as? String {
+                                                refuid = g
+                                            }
+                                            if let g = each["Members"] as? [Dictionary<String,Any>] {
+                                                for mem in g {
+                                                    var id = 0
+                                                    var name = ""
+                                                    var pim = ""
+                                                    var uid = ""
+                                                    var countrycode = ""
+                                                    var mobile = ""
+                                                    if let f = mem["ID"] as? Int {
+                                                        id = f
+                                                    }
+                                                    if let f = mem["Name"] as? String {
+                                                        name = f
+                                                    }
+                                                    if let f = mem["ProfileImage"] as? String {
+                                                        pim = f
+                                                    }
+                                                    if let f = mem["UserId"] as? String {
+                                                        uid = f
+                                                    }
+                                                    if let f = mem["CountryCode"] as? String {
+                                                        countrycode = f
+                                                    }
+                                                    if let f = mem["Mobile"] as? String {
+                                                        mobile = f
+                                                    }
+                                                    var gm = groupparticipant(id: id, name: name, profileimage: pim, userid: uid, countrycode: countrycode, mobile: mobile)
+                                                    memb.append(gm)
+                                                }
+                                            }
+                                            var x = groupevent(groupid: gid, ref_belongto: ref, group_belong: grpbel, groupimage: gim, createdon: createdon, youare: youare, groupname: gn, groupparticipation: part, isverify: isverify , refuserid: refuid , members: memb)
+        
+                                             GroupandEventsViewController.copyjoinedgroups.append(x)
+        
+        
+        
+        //                                     print(each["GroupName"])
+                                         }
+    }
+    
+    
+    func arrangesuggestedcontest(data : [Dictionary<String,Any>])
+    {
+
+        for each in data {
+            var contestid = 0
+            var contestname = ""
+            var allowcategoryid = 0
+            var allowcategory = ""
+            var organisationallow = false
+            var invitationtypeid = 0
+            var invitationtype = ""
+            var entryallowed = 0
+            var entrytype = ""
+            var entryfee = 0
+            var conteststart = ""
+            var contestlocation = ""
+            var description = ""
+            var resulton = ""
+            var contestprice = ""
+            var contestwinnerpricetypeid = 0
+            var contestpricetype = ""
+            var resulttypeid = 0
+            var resulttype = ""
+            var userid = ""
+            var groupid = 0
+            var createon = ""
+            var isactive = false
+            var status = false
+            var runningstatusid = 0
+            var runningstatus = ""
+            var juries : [juryorwinner] = []
+            var cim  = ""
+            if let cn = each["ContestId"] as? Int {
+                contestid = cn
+            }
+            
+            if let cn = each["ContestName"] as? String {
+                contestname = cn
+            }
+            if let cn = each["AllowCategoryId"] as? Int {
+                allowcategoryid = cn
+            }
+            if let cn = each["AllowCategory"] as? String {
+                allowcategory = cn
+            }
+            if let cn = each["OrganizationAllow"] as? Bool {
+                organisationallow = cn
+            }
+            if let cn = each["InvitationTypeId"] as? Int {
+                invitationtypeid = cn
+            }
+            if let cn = each["InvitationType"] as? String {
+                invitationtype = cn
+            }
+            if let cn = each["EntryAllowed"] as? Int {
+                entryallowed = cn
+            }
+            if let cn = each["EntryType"] as? String {
+                entrytype = cn
+            }
+            if let cn = each["EntryFee"] as? Int {
+                entryfee = cn
+            }
+            if let cn = each["ContestStart"] as? String {
+                conteststart = cn
+            }
+            if let cn = each["ContestLocation"] as? String {
+                contestlocation = cn
+            }
+            if let cn = each["Description"] as? String {
+                description = cn
+            }
+            if let cn = each["ResultOn"] as? String {
+                resulton = cn
+            }
+            if let cn = each["ContestPrice"] as? String {
+                contestprice = cn
+            }
+            if let cn = each["ContestWinnerPriceTypeId"] as? Int {
+                contestwinnerpricetypeid = cn
+            }
+            if let cn = each["ContestWinnerPriceType"] as? String {
+                contestpricetype  = cn
+            }
+            if let cn = each["ResultTypeId"] as? Int {
+                resulttypeid = cn
+            }
+            if let cn = each["ResultType"] as? String {
+                resulttype = cn
+            }
+            if let cn = each["UserId"] as? String {
+                userid = cn
+            }
+            if let cn = each["GroupId"] as? Int {
+                groupid = cn
+            }
+            if let cn = each["CreateOn"] as? String {
+                createon = cn
+            }
+            if let cn = each["IsActive"] as? Bool {
+                isactive = cn
+            }
+            if let cn = each["Status"] as? Bool {
+                status = cn
+            }
+            if let cn = each["RunningStatusId"] as? Int {
+                runningstatusid = cn
+            }
+            if let cn = each["RunningStatus"] as? String {
+                runningstatus = cn
+            }
+            if let cn = each["Juries"] as? [juryorwinner] {
+                juries = cn
+            }
+            if let cfn = each["FileType"] as? String {
+                if cfn == "Video" {
+                    if let cn = each["Thumbnail"] as? String {
+                        cim = cn
+                    }
+                }
+                else {
+                    if let cn = each["ContestImage"] as? String {
+                        cim = cn
+                    }
+                }
+                
+            }
+            else {
+                if let cn = each["ContestImage"] as? String {
+                    cim = cn
+                }
+            }
+            var tandc = ""
+            if let cn = each["TermAndCondition"] as? String {
+                tandc = cn
+            }
+            var noofwinn = 0
+            if let cn = each["NoOfWinner"] as? Int {
+                noofwinn = cn
+            }
+            var joined = false
+            var joinstatus = false
+            
+            if let cn = each["Joined"] as? Bool {
+                joined = cn
+            }
+            
+            if let cn = each["JoinStatus"] as? Bool {
+                joinstatus = cn
+            }
+            
+            var pa = false
+            if let cn = each["ParticipantPostAllow"] as? Bool {
+                pa = cn
+            }
+            var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn, participationpostallow: pa)
+            
+            var y = streventcover(a: x, b: joined, c: joinstatus)
+            GroupandEventsViewController.copyrecommendedcontests.append(y)
+            
+            
+        }
+        print("count Suggested contest \(GroupandEventsViewController.copyrecommendedcontests.count)")
+    }
+    
+    
+    
+    
+    func arrangeclosedcontests(data : [Dictionary<String,Any>])
+    {
+
+        for each in data {
+            var contestid = 0
+            var contestname = ""
+            var allowcategoryid = 0
+            var allowcategory = ""
+            var organisationallow = false
+            var invitationtypeid = 0
+            var invitationtype = ""
+            var entryallowed = 0
+            var entrytype = ""
+            var entryfee = 0
+            var conteststart = ""
+            var contestlocation = ""
+            var description = ""
+            var resulton = ""
+            var contestprice = ""
+            var contestwinnerpricetypeid = 0
+            var contestpricetype = ""
+            var resulttypeid = 0
+            var resulttype = ""
+            var userid = ""
+            var groupid = 0
+            var createon = ""
+            var isactive = false
+            var status = false
+            var runningstatusid = 0
+            var runningstatus = ""
+            var juries : [juryorwinner] = []
+            var cim  = ""
+            if let cn = each["ContestId"] as? Int {
+                contestid = cn
+            }
+            
+            if let cn = each["ContestName"] as? String {
+                contestname = cn
+            }
+            if let cn = each["AllowCategoryId"] as? Int {
+                allowcategoryid = cn
+            }
+            if let cn = each["AllowCategory"] as? String {
+                allowcategory = cn
+            }
+            if let cn = each["OrganizationAllow"] as? Bool {
+                organisationallow = cn
+            }
+            if let cn = each["InvitationTypeId"] as? Int {
+                invitationtypeid = cn
+            }
+            if let cn = each["InvitationType"] as? String {
+                invitationtype = cn
+            }
+            if let cn = each["EntryAllowed"] as? Int {
+                entryallowed = cn
+            }
+            if let cn = each["EntryType"] as? String {
+                entrytype = cn
+            }
+            if let cn = each["EntryFee"] as? Int {
+                entryfee = cn
+            }
+            if let cn = each["ContestStart"] as? String {
+                conteststart = cn
+            }
+            if let cn = each["ContestLocation"] as? String {
+                contestlocation = cn
+            }
+            if let cn = each["Description"] as? String {
+                description = cn
+            }
+            if let cn = each["ResultOn"] as? String {
+                resulton = cn
+            }
+            if let cn = each["ContestPrice"] as? String {
+                contestprice = cn
+            }
+            if let cn = each["ContestWinnerPriceTypeId"] as? Int {
+                contestwinnerpricetypeid = cn
+            }
+            if let cn = each["ContestWinnerPriceType"] as? String {
+                contestpricetype  = cn
+            }
+            if let cn = each["ResultTypeId"] as? Int {
+                resulttypeid = cn
+            }
+            if let cn = each["ResultType"] as? String {
+                resulttype = cn
+            }
+            if let cn = each["UserId"] as? String {
+                userid = cn
+            }
+            if let cn = each["GroupId"] as? Int {
+                groupid = cn
+            }
+            if let cn = each["CreateOn"] as? String {
+                createon = cn
+            }
+            if let cn = each["IsActive"] as? Bool {
+                isactive = cn
+            }
+            if let cn = each["Status"] as? Bool {
+                status = cn
+            }
+            if let cn = each["RunningStatusId"] as? Int {
+                runningstatusid = cn
+            }
+            if let cn = each["RunningStatus"] as? String {
+                runningstatus = cn
+            }
+            if let cn = each["Juries"] as? [juryorwinner] {
+                juries = cn
+            }
+            if let cfn = each["FileType"] as? String {
+                if cfn == "Video" {
+                    if let cn = each["Thumbnail"] as? String {
+                        cim = cn
+                    }
+                }
+                else {
+                    if let cn = each["ContestImage"] as? String {
+                        cim = cn
+                    }
+                }
+                
+            }
+            else {
+                if let cn = each["ContestImage"] as? String {
+                    cim = cn
+                }
+            }
+            var tandc = ""
+            if let cn = each["TermAndCondition"] as? String {
+                tandc = cn
+            }
+            var noofwinn = 0
+            if let cn = each["NoOfWinner"] as? Int {
+                noofwinn = cn
+            }
+            var joined = false
+            var joinstatus = false
+            
+            if let cn = each["Joined"] as? Bool {
+                joined = cn
+            }
+            
+            if let cn = each["JoinStatus"] as? Bool {
+                joinstatus = cn
+            }
+            var pa = false
+            if let cn = each["ParticipantPostAllow"] as? Bool {
+                pa = cn
+            }
+            
+            var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn, participationpostallow: pa)
+            
+            var y = streventcover(a: x, b: joined, c: joinstatus)
+            GroupandEventsViewController.copyclosedcontests.append(y)
+            
+            
+        }
+        print("count Suggested contest \(GroupandEventsViewController.copyclosedcontests.count)")
+    }
+    
+    
+    
+    func arrangejurycontests(data : [Dictionary<String,Any>])
+    {
+  
+        for each in data {
+            var contestid = 0
+            var contestname = ""
+            var allowcategoryid = 0
+            var allowcategory = ""
+            var organisationallow = false
+            var invitationtypeid = 0
+            var invitationtype = ""
+            var entryallowed = 0
+            var entrytype = ""
+            var entryfee = 0
+            var conteststart = ""
+            var contestlocation = ""
+            var description = ""
+            var resulton = ""
+            var contestprice = ""
+            var contestwinnerpricetypeid = 0
+            var contestpricetype = ""
+            var resulttypeid = 0
+            var resulttype = ""
+            var userid = ""
+            var groupid = 0
+            var createon = ""
+            var isactive = false
+            var status = false
+            var runningstatusid = 0
+            var runningstatus = ""
+            var juries : [juryorwinner] = []
+            var cim  = ""
+            if let cn = each["ContestId"] as? Int {
+                contestid = cn
+            }
+            
+            if let cn = each["ContestName"] as? String {
+                contestname = cn
+            }
+            if let cn = each["AllowCategoryId"] as? Int {
+                allowcategoryid = cn
+            }
+            if let cn = each["AllowCategory"] as? String {
+                allowcategory = cn
+            }
+            if let cn = each["OrganizationAllow"] as? Bool {
+                organisationallow = cn
+            }
+            if let cn = each["InvitationTypeId"] as? Int {
+                invitationtypeid = cn
+            }
+            if let cn = each["InvitationType"] as? String {
+                invitationtype = cn
+            }
+            if let cn = each["EntryAllowed"] as? Int {
+                entryallowed = cn
+            }
+            if let cn = each["EntryType"] as? String {
+                entrytype = cn
+            }
+            if let cn = each["EntryFee"] as? Int {
+                entryfee = cn
+            }
+            if let cn = each["ContestStart"] as? String {
+                conteststart = cn
+            }
+            if let cn = each["ContestLocation"] as? String {
+                contestlocation = cn
+            }
+            if let cn = each["Description"] as? String {
+                description = cn
+            }
+            if let cn = each["ResultOn"] as? String {
+                resulton = cn
+            }
+            if let cn = each["ContestPrice"] as? String {
+                contestprice = cn
+            }
+            if let cn = each["ContestWinnerPriceTypeId"] as? Int {
+                contestwinnerpricetypeid = cn
+            }
+            if let cn = each["ContestWinnerPriceType"] as? String {
+                contestpricetype  = cn
+            }
+            if let cn = each["ResultTypeId"] as? Int {
+                resulttypeid = cn
+            }
+            if let cn = each["ResultType"] as? String {
+                resulttype = cn
+            }
+            if let cn = each["UserId"] as? String {
+                userid = cn
+            }
+            if let cn = each["GroupId"] as? Int {
+                groupid = cn
+            }
+            if let cn = each["CreateOn"] as? String {
+                createon = cn
+            }
+            if let cn = each["IsActive"] as? Bool {
+                isactive = cn
+            }
+            if let cn = each["Status"] as? Bool {
+                status = cn
+            }
+            if let cn = each["RunningStatusId"] as? Int {
+                runningstatusid = cn
+            }
+            if let cn = each["RunningStatus"] as? String {
+                runningstatus = cn
+            }
+            if let cn = each["Juries"] as? [juryorwinner] {
+                juries = cn
+            }
+            if let cfn = each["FileType"] as? String {
+                if cfn == "Video" {
+                    if let cn = each["Thumbnail"] as? String {
+                        cim = cn
+                    }
+                }
+                else {
+                    if let cn = each["ContestImage"] as? String {
+                        cim = cn
+                    }
+                }
+                
+            }
+            else {
+                if let cn = each["ContestImage"] as? String {
+                    cim = cn
+                }
+            }
+            var tandc = ""
+            if let cn = each["TermAndCondition"] as? String {
+                tandc = cn
+            }
+            var noofwinn = 0
+            if let cn = each["NoOfWinner"] as? Int {
+                noofwinn = cn
+            }
+            var joined = false
+            var joinstatus = false
+            
+            if let cn = each["Joined"] as? Bool {
+                joined = cn
+            }
+            
+            if let cn = each["JoinStatus"] as? Bool {
+                joinstatus = cn
+            }
+            var pa = false
+            if let cn = each["ParticipantPostAllow"] as? Bool {
+                pa = cn
+            }
+            var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn, participationpostallow: pa)
+            
+            var y = streventcover(a: x, b: joined, c: joinstatus)
+            GroupandEventsViewController.copyjuryevents.append(y)
+            
+            
+        }
+        print("count JURY contest \(GroupandEventsViewController.copyjuryevents.count)")
+
+    }
+    
+    
+    
+    func arrangejoinedcontest(data : [Dictionary<String,Any>])
+    {
+        print("Hurrah I got one")
+        print(data)
+        for each in data {
+            var contestid = 0
+            var contestname = ""
+            var allowcategoryid = 0
+            var allowcategory = ""
+            var organisationallow = false
+            var invitationtypeid = 0
+            var invitationtype = ""
+            var entryallowed = 0
+            var entrytype = ""
+            var entryfee = 0
+            var conteststart = ""
+            var contestlocation = ""
+            var description = ""
+            var resulton = ""
+            var contestprice = ""
+            var contestwinnerpricetypeid = 0
+            var contestpricetype = ""
+            var resulttypeid = 0
+            var resulttype = ""
+            var userid = ""
+            var groupid = 0
+            var createon = ""
+            var isactive = false
+            var status = false
+            var runningstatusid = 0
+            var runningstatus = ""
+            var juries : [juryorwinner] = []
+            var cim  = ""
+            var paaa = true
+            if let cn = each["ContestId"] as? Int {
+                contestid = cn
+            }
+            if let cn = each["ParticipantPostAllow"] as? Bool {
+                paaa = cn
+            }
+            
+            if let cn = each["ContestName"] as? String {
+                contestname = cn
+            }
+            if let cn = each["AllowCategoryId"] as? Int {
+                allowcategoryid = cn
+            }
+            if let cn = each["AllowCategory"] as? String {
+                allowcategory = cn
+            }
+            if let cn = each["OrganizationAllow"] as? Bool {
+                organisationallow = cn
+            }
+            if let cn = each["InvitationTypeId"] as? Int {
+                invitationtypeid = cn
+            }
+            if let cn = each["InvitationType"] as? String {
+                invitationtype = cn
+            }
+            if let cn = each["EntryAllowed"] as? Int {
+                entryallowed = cn
+            }
+            if let cn = each["EntryType"] as? String {
+                entrytype = cn
+            }
+            if let cn = each["EntryFee"] as? Int {
+                entryfee = cn
+            }
+            if let cn = each["ContestStart"] as? String {
+                conteststart = cn
+            }
+            if let cn = each["ContestLocation"] as? String {
+                contestlocation = cn
+            }
+            if let cn = each["Description"] as? String {
+                description = cn
+            }
+            if let cn = each["ResultOn"] as? String {
+                resulton = cn
+            }
+            if let cn = each["ContestPrice"] as? String {
+                contestprice = cn
+            }
+            if let cn = each["ContestWinnerPriceTypeId"] as? Int {
+                contestwinnerpricetypeid = cn
+            }
+            if let cn = each["ContestWinnerPriceType"] as? String {
+                contestpricetype  = cn
+            }
+            if let cn = each["ResultTypeId"] as? Int {
+                resulttypeid = cn
+            }
+            if let cn = each["ResultType"] as? String {
+                resulttype = cn
+            }
+            if let cn = each["UserId"] as? String {
+                userid = cn
+            }
+            if let cn = each["GroupId"] as? Int {
+                groupid = cn
+            }
+            if let cn = each["CreateOn"] as? String {
+                createon = cn
+            }
+            if let cn = each["IsActive"] as? Bool {
+                isactive = cn
+            }
+            if let cn = each["Status"] as? Bool {
+                status = cn
+            }
+            if let cn = each["RunningStatusId"] as? Int {
+                runningstatusid = cn
+            }
+            if let cn = each["RunningStatus"] as? String {
+                runningstatus = cn
+            }
+            if let cn = each["Juries"] as? [juryorwinner] {
+                juries = cn
+            }
+            if let cfn = each["FileType"] as? String {
+                if cfn == "Video" {
+                    if let cn = each["Thumbnail"] as? String {
+                        cim = cn
+                    }
+                }
+                else {
+                    if let cn = each["ContestImage"] as? String {
+                        cim = cn
+                    }
+                }
+                
+            }
+            else {
+                if let cn = each["ContestImage"] as? String {
+                    cim = cn
+                }
+            }
+            var tandc = ""
+            if let cn = each["TermAndCondition"] as? String {
+                tandc = cn
+            }
+            var noofwinn = 0
+            if let cn = each["NoOfWinner"] as? Int {
+                noofwinn = cn
+            }
+            var joined = false
+            var joinstatus = false
+            
+            if let cn = each["Joined"] as? Bool {
+                joined = cn
+            }
+            
+            if let cn = each["JoinStatus"] as? Bool {
+                joinstatus = cn
+            }
+            
+       
+           
+            var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn, participationpostallow: paaa)
+            
+            var y = streventcover(a: x, b: joined, c: joinstatus)
+            GroupandEventsViewController.copyjoinedevents.append(y)
+            print("PPA \(contestname) \(paaa)")
+            
+        }
+        print("Joined contests......!!!")
+        
+        print("count joined contest \(GroupandEventsViewController.copyjoinedevents.count)")
+
+    }
+    
+    
+    func arrangecreatedcontests(data : [Dictionary<String,Any>])
+    {
+
+        for each in data {
+            var contestid = 0
+            var contestname = ""
+            var allowcategoryid = 0
+            var allowcategory = ""
+            var organisationallow = false
+            var invitationtypeid = 0
+            var invitationtype = ""
+            var entryallowed = 0
+            var entrytype = ""
+            var entryfee = 0
+            var conteststart = ""
+            var contestlocation = ""
+            var description = ""
+            var resulton = ""
+            var contestprice = ""
+            var contestwinnerpricetypeid = 0
+            var contestpricetype = ""
+            var resulttypeid = 0
+            var resulttype = ""
+            var userid = ""
+            var groupid = 0
+            var createon = ""
+            var isactive = false
+            var status = true
+            var runningstatusid = 0
+            var runningstatus = ""
+            var juries : [juryorwinner] = []
+            var cim  = ""
+            if let cn = each["ContestId"] as? Int {
+                contestid = cn
+            }
+            
+            if let cn = each["ContestName"] as? String {
+                contestname = cn
+            }
+            if let cn = each["AllowCategoryId"] as? Int {
+                allowcategoryid = cn
+            }
+            if let cn = each["AllowCategory"] as? String {
+                allowcategory = cn
+            }
+            if let cn = each["OrganizationAllow"] as? Bool {
+                organisationallow = cn
+            }
+            if let cn = each["InvitationTypeId"] as? Int {
+                invitationtypeid = cn
+            }
+            if let cn = each["InvitationType"] as? String {
+                invitationtype = cn
+            }
+            if let cn = each["EntryAllowed"] as? Int {
+                entryallowed = cn
+            }
+            if let cn = each["EntryType"] as? String {
+                entrytype = cn
+            }
+            if let cn = each["EntryFee"] as? Int {
+                entryfee = cn
+            }
+            if let cn = each["ContestStart"] as? String {
+                conteststart = cn
+            }
+            if let cn = each["ContestLocation"] as? String {
+                contestlocation = cn
+            }
+            if let cn = each["Description"] as? String {
+                description = cn
+            }
+            if let cn = each["ResultOn"] as? String {
+                resulton = cn
+            }
+            if let cn = each["ContestPrice"] as? String {
+                contestprice = cn
+            }
+            if let cn = each["ContestWinnerPriceTypeId"] as? Int {
+                contestwinnerpricetypeid = cn
+            }
+            if let cn = each["ContestWinnerPriceType"] as? String {
+                contestpricetype  = cn
+            }
+            if let cn = each["ResultTypeId"] as? Int {
+                resulttypeid = cn
+            }
+            if let cn = each["ResultType"] as? String {
+                resulttype = cn
+            }
+            if let cn = each["UserId"] as? String {
+                userid = cn
+            }
+            if let cn = each["GroupId"] as? Int {
+                groupid = cn
+            }
+            if let cn = each["CreateOn"] as? String {
+                createon = cn
+            }
+            if let cn = each["IsActive"] as? Bool {
+                isactive = cn
+            }
+            if let cn = each["Status"] as? Bool {
+                status = cn
+            }
+            if let cn = each["RunningStatusId"] as? Int {
+                runningstatusid = cn
+            }
+            if let cn = each["RunningStatus"] as? String {
+                runningstatus = cn
+            }
+            if let cn = each["Juries"] as? [juryorwinner] {
+                juries = cn
+            }
+            if let cfn = each["FileType"] as? String {
+                if cfn == "Video" {
+                    if let cn = each["Thumbnail"] as? String {
+                        cim = cn
+                    }
+                }
+                else {
+                    if let cn = each["ContestImage"] as? String {
+                        cim = cn
+                    }
+                }
+                
+            }
+            else {
+                if let cn = each["ContestImage"] as? String {
+                    cim = cn
+                }
+            }
+            var tandc = ""
+            if let cn = each["TermAndCondition"] as? String {
+                tandc = cn
+            }
+            var noofwinn = 0
+            if let cn = each["NoOfWinner"] as? Int {
+                noofwinn = cn
+            }
+            var pa = false
+            if let cn = each["ParticipantPostAllow"] as? Bool {
+                pa = cn
+            }
+            var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn, participationpostallow: pa)
+            
+            
+            GroupandEventsViewController.copyevents.append(x)
+            
+            
+        }
+        print("count created contest \(GroupandEventsViewController.copyevents.count)")
+
+    }
+    
+    
+    func arrangecreatedunpublishedcontests(data : [Dictionary<String,Any>])
+    {
+
+        for each in data {
+            var contestid = 0
+            var contestname = ""
+            var allowcategoryid = 0
+            var allowcategory = ""
+            var organisationallow = false
+            var invitationtypeid = 0
+            var invitationtype = ""
+            var entryallowed = 0
+            var entrytype = ""
+            var entryfee = 0
+            var conteststart = ""
+            var contestlocation = ""
+            var description = ""
+            var resulton = ""
+            var contestprice = ""
+            var contestwinnerpricetypeid = 0
+            var contestpricetype = ""
+            var resulttypeid = 0
+            var resulttype = ""
+            var userid = ""
+            var groupid = 0
+            var createon = ""
+            var isactive = false
+            var status = false
+            var runningstatusid = 0
+            var runningstatus = ""
+            var juries : [juryorwinner] = []
+            var cim  = ""
+            if let cn = each["ContestId"] as? Int {
+                contestid = cn
+            }
+            
+            if let cn = each["ContestName"] as? String {
+                contestname = cn
+            }
+            if let cn = each["AllowCategoryId"] as? Int {
+                allowcategoryid = cn
+            }
+            if let cn = each["AllowCategory"] as? String {
+                allowcategory = cn
+            }
+            if let cn = each["OrganizationAllow"] as? Bool {
+                organisationallow = cn
+            }
+            if let cn = each["InvitationTypeId"] as? Int {
+                invitationtypeid = cn
+            }
+            if let cn = each["InvitationType"] as? String {
+                invitationtype = cn
+            }
+            if let cn = each["EntryAllowed"] as? Int {
+                entryallowed = cn
+            }
+            if let cn = each["EntryType"] as? String {
+                entrytype = cn
+            }
+            if let cn = each["EntryFee"] as? Int {
+                entryfee = cn
+            }
+            if let cn = each["ContestStart"] as? String {
+                conteststart = cn
+            }
+            if let cn = each["ContestLocation"] as? String {
+                contestlocation = cn
+            }
+            if let cn = each["Description"] as? String {
+                description = cn
+            }
+            if let cn = each["ResultOn"] as? String {
+                resulton = cn
+            }
+            if let cn = each["ContestPrice"] as? String {
+                contestprice = cn
+            }
+            if let cn = each["ContestWinnerPriceTypeId"] as? Int {
+                contestwinnerpricetypeid = cn
+            }
+            if let cn = each["ContestWinnerPriceType"] as? String {
+                contestpricetype  = cn
+            }
+            if let cn = each["ResultTypeId"] as? Int {
+                resulttypeid = cn
+            }
+            if let cn = each["ResultType"] as? String {
+                resulttype = cn
+            }
+            if let cn = each["UserId"] as? String {
+                userid = cn
+            }
+            if let cn = each["GroupId"] as? Int {
+                groupid = cn
+            }
+            if let cn = each["CreateOn"] as? String {
+                createon = cn
+            }
+            if let cn = each["IsActive"] as? Bool {
+                isactive = cn
+            }
+            if let cn = each["Status"] as? Bool {
+                status = cn
+            }
+            if let cn = each["RunningStatusId"] as? Int {
+                runningstatusid = cn
+            }
+            if let cn = each["RunningStatus"] as? String {
+                runningstatus = cn
+            }
+            if let cn = each["Juries"] as? [juryorwinner] {
+                juries = cn
+            }
+            if let cfn = each["FileType"] as? String {
+                if cfn == "Video" {
+                    if let cn = each["Thumbnail"] as? String {
+                        cim = cn
+                    }
+                }
+                else {
+                    if let cn = each["ContestImage"] as? String {
+                        cim = cn
+                    }
+                }
+                
+            }
+            else {
+                if let cn = each["ContestImage"] as? String {
+                    cim = cn
+                }
+            }
+            var tandc = ""
+            if let cn = each["TermAndCondition"] as? String {
+                tandc = cn
+            }
+            var noofwinn = 0
+            if let cn = each["NoOfWinner"] as? Int {
+                noofwinn = cn
+            }
+            var pa = false
+            if let cn = each["ParticipantPostAllow"] as? Bool {
+                pa = cn
+            }
+            var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn, participationpostallow: pa)
+            
+            
+            GroupandEventsViewController.copyunpublishedevents.append(x)
+            
+            
+        }
+        print("count unpublished contest \(GroupandEventsViewController.copyunpublishedevents.count)")
+        
     }
     
     
@@ -112,8 +1396,22 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
             cell.updatecell(x: sections[indexPath.section].lowercased(),w:self.view.frame.size.width/2,h:self.table.frame.size.height)
             
             
-            cell.isblannk = {a, b,c in
-                if c == cell.tag {
+            cell.createtapped = {a in
+                if a  == "group" {
+                     self.performSegue(withIdentifier: "creatinggroup", sender: nil)
+                }
+                else if a == "contest" {
+                    self.performSegue(withIdentifier: "creatingnewcontest", sender: nil)
+                }
+            }
+            
+            cell.isblannk = { a , b , c in
+                print("Hey")
+            }
+            
+            
+//            cell.isblannk = {a, b,c in
+//                if c == cell.tag {
 //                if a {
 //                    if b == "group" {
 //                        cell.nodataimage.isHidden = false
@@ -139,30 +1437,30 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
 //                        cell.nodataimage.image = UIImage(named: "nocontestsplaceholder")
 //                    }
 //                }
-                }
-            }
+//                }
+//            }
             
             
             cell.passalljoinedgroups = {a in
-                self.copyjoinedgroups = a
+//                self.copyjoinedgroups = a
             }
             cell.passallrecommendedevents = { a in
-                self.copyrecommendedcontests = a
+//                self.copyrecommendedcontests = a
             }
             cell.passallevents = {a in
-                self.copyevents = a
+//                self.copyevents = a
             }
             cell.passalljoinedevents = {a in
-                self.copyjoinedevents = a
+//                self.copyjoinedevents = a
             }
             cell.passallgroups = {a in
-                self.copygroupdata = a
+//                self.copygroupdata = a
             }
             cell.passalljuryevents = {a in
-                self.copyjuryevents = a
+//                self.copyjuryevents = a
             }
             cell.passallunpublishedevents = { a in
-                self.copyunpublishedevents = a
+//                self.copyunpublishedevents = a
             }
             
             cell.passcounts = {a in
@@ -259,8 +1557,8 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
     
     @IBAction func creategrouptapped(_ sender: Any) {
         if self.isother {
-            print("Right place \(self.copyunpublishedevents.count)")
-            if self.copyunpublishedevents.count > 3 {
+            print("Right place \(GroupandEventsViewController.copyunpublishedevents.count)")
+            if GroupandEventsViewController.copyunpublishedevents.count > 3 {
                self.present(customalert.showalert(x: "Please publish or delete your unpublished contests before creating a new contest."), animated: true, completion: nil)
             }
             else {
@@ -313,45 +1611,45 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
             
                 if self.choosensectionforseeall == 0 {
                     s.typeoffetch = "juryevents"
-                    s.juryevents = self.copyjuryevents
+                    s.juryevents = GroupandEventsViewController.self.copyjuryevents
                 }
                 else if self.choosensectionforseeall == 1 {
                     s.typeoffetch = "joinedgroups"
-                    s.joinedgroups = self.copyjoinedgroups
+                    s.joinedgroups = GroupandEventsViewController.copyjoinedgroups
                 }
                 else if self.choosensectionforseeall == 2 {
                     s.typeoffetch = "yourgroups"
 
-                    s.yourgroups = self.copygroupdata
+                    s.yourgroups = GroupandEventsViewController.copygroupdata
                 }
             
             }
             else {
                 if self.choosensectionforseeall == 0 {
                     s.typeoffetch = "unpublished contests"
-                    s.unpublisedcontests = self.copyunpublishedevents
+                    s.unpublisedcontests = GroupandEventsViewController.copyunpublishedevents
                 }
                 else if self.choosensectionforseeall == 1 {
                     s.typeoffetch = "juryevents"
-                    s.juryevents = self.copyjuryevents
+                    s.juryevents = GroupandEventsViewController.copyjuryevents
                 }
                 if self.choosensectionforseeall == 2 {
                     s.typeoffetch = "yourevents"
-                    s.yourevents = self.copyevents
+                    s.yourevents = GroupandEventsViewController.copyevents
                 }
                 else if self.choosensectionforseeall == 3{
                     s.typeoffetch = "joinedevents"
                     print("Here check for joined events data")
-                    print(self.copyjoinedevents)
+                    print(GroupandEventsViewController.copyjoinedevents)
 
-                    s.joinedevents = self.copyjoinedevents
+                    s.joinedevents = GroupandEventsViewController.copyjoinedevents
                 }
                 else if self.choosensectionforseeall == 4{
                     s.typeoffetch = "joinedevents"
                     print("Here check for joined events data")
                     
                     
-                    s.joinedevents = self.copyrecommendedcontests
+                    s.joinedevents = GroupandEventsViewController.copyrecommendedcontests
                 }
             }
         }
@@ -369,6 +1667,7 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
         }
         if let s = segue.destination as? JurycontestViewController {
             s.contestid = self.receivedevent?.contestid ?? 0
+            s.totalwinners = self.receivedevent?.noofwinners ?? 0
         }
     }
     

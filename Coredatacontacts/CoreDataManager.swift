@@ -20,6 +20,14 @@ struct apicontact
     var onserver : Bool
 }
 
+struct apicontestsharedon
+{
+    var groupid : Int
+    var groupname : String
+    var date : Date
+    var contestid : Int
+}
+
 class CoreDataManager
 {
       public static let shared = CoreDataManager()
@@ -201,6 +209,109 @@ class CoreDataManager
     }
     
     
+//    public func createContestShare(groupname: String, groupid: Int, sharedon: Date  ){
+//
+//        let context = persistentContainer.viewContext
+//        let contact = NSEntityDescription.insertNewObject(forEntityName: "Contestsharedingroup", into: context)
+//        contact.groupid = groupname
+//        contact.groupname = groupid
+//        contact.sharedon = sharedon
+//
+//
+//
+//        do {
+//            try context.save()
+//            print("✅ Contest saved succesfuly with name \(groupname) groupid \(groupid) and sharedon \(sharedon)")
+//
+//        } catch let error {
+//            print("❌ Failed to create Person: \(error.localizedDescription)")
+//        }
+//    }
+    public func notifycoredataaboutshare(shareon : [groupevent] , cid : Int )
+    {
+        print("Reached CoreData")
+        
+        let context = persistentContainer.viewContext
+        for each in shareon {
+            let entity = NSEntityDescription.entity(forEntityName: "Contestsharedingroup", in: context)
+            let newUser = NSManagedObject(entity: entity!, insertInto: context)
+            var t = NSNumber(integerLiteral: each.groupid)
+            var u = NSNumber(integerLiteral: cid)
+            newUser.setValue(t, forKey: "groupid")
+            newUser.setValue("\(each.groupname)", forKey: "groupname")
+            newUser.setValue(Date(), forKey: "sharedon")
+            newUser.setValue(u, forKey: "contestid")
+            do {
+                try context.save()
+                print("Saved")
+            } catch {
+                print("Failed saving")
+            }
+        }
+        
+        
+    }
+    
+    public func deletecrossedgroups()
+    {
+        
+        let context = persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Contestsharedingroup")
+        
+        request.returnsObjectsAsFaults = false
+        do {
+            let result = try context.fetch(request)
+            
+            for data in result as! [NSManagedObject] {
+                
+                var z = data.value(forKey: "sharedon") as? Date
+                if Date().timeIntervalSince(z ?? Date()) > (24 * 60 * 60) {
+                    print("Deleting \(data)")
+                    context.delete(data)
+                }
+                
+            }
+           
+            
+        } catch {
+            
+            print("Failed")
+        }
+        
+    }
+    
+    
+    public func readfromcoredata() -> [apicontestsharedon]
+    {
+        var datafromapi : [apicontestsharedon] = []
+        
+        let context = persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Contestsharedingroup")
+        
+        request.returnsObjectsAsFaults = false
+        do {
+            let result = try context.fetch(request)
+            
+            for data in result as! [NSManagedObject] {
+                var x = data.value(forKey: "groupname") as? String
+                var y = data.value(forKey: "groupid") as? Int
+                var z = data.value(forKey: "sharedon") as? Date
+                var w = data.value(forKey: "contestid") as? Int ?? 0
+                var xx = apicontestsharedon(groupid: y ?? 0, groupname: x ?? "" , date: z ?? Date(), contestid: w)
+                datafromapi.append(xx)
+            }
+            print("Date Obtained From ApI")
+            return datafromapi
+            print(datafromapi)
+            
+        } catch {
+            
+            print("Failed")
+        }
+        return []
+    }
+    
+    
     public func createPerson(fn: String, ln: String, nu: String , onser : Bool ){
             
             let context = persistentContainer.viewContext
@@ -245,6 +356,11 @@ class CoreDataManager
                  return newarr
             }
         }
+    
+    
+  
+
+    
     
     
     public func togglestatus(fn:String,ln:String,cnt:String,onServ : Bool) {

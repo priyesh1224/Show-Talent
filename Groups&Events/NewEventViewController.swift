@@ -17,12 +17,13 @@ struct juryorwinner
     var userid : String
     var name : String
     var profile : String
-    
+    var price : Int = 0
+    var position : Int = 0 
 }
 
 
 
-class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
+class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
@@ -703,8 +704,12 @@ class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,
                                         if let cn = each["TermAndCondition"] as? String {
                                             tandc = cn
                                         }
+                                        var noofwinn = 0
+                                        if let cn = each["NoOfWinner"] as? Int {
+                                            noofwinn = cn
+                                        }
                                                 
-                                        var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc)
+                                        var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn)
                                                 
                                         self.currentevent = x
                                           print(x)

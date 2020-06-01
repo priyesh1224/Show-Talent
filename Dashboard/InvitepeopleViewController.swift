@@ -21,16 +21,18 @@ class InvitepeopleViewController: UIViewController {
     
     
     @IBOutlet weak var bannerview: UIView!
+    var rfc = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         notifindicator.layer.cornerRadius = 10
         outerreferalcodeview.layer.borderColor = UIColor.white.cgColor
         outerreferalcodeview.layer.borderWidth = 1
-        self.bannerheight.constant = self.view.frame.size.height/3
+        self.bannerheight.constant = self.view.frame.size.height/2.7
         let m = self.applygradient(a: #colorLiteral(red: 0.3215686275, green: 0.3058823529, blue: 0.7803921569, alpha: 1), b: #colorLiteral(red: 0.1960784314, green: 0.4784313725, blue: 0.6666666667, alpha: 1))
         self.bannerview.layer.insertSublayer(m, at: 0)
-
+        self.referalcode.text = rfc
+        fetchprofile()
         // Do any additional setup after loading the view.
     }
     
@@ -50,6 +52,31 @@ class InvitepeopleViewController: UIViewController {
         }
     }
     
+    
+    func fetchprofile()
+    {
+        if let u = UserDefaults.standard.value(forKey: "referalcode") as? String {
+            print("Found")
+            self.referalcode.text = u
+        }
+        else {
+            print("Not found")
+            var uid = UserDefaults.standard.value(forKey: "refid") as! String
+            var url = "\(Constants.K_baseUrl)\(Constants.profile)\(uid),All"
+            var r = BaseServiceClass()
+            r.postApiRequest(url: url, parameters: [:]) { (response, err) in
+                if let res = response?.result.value as? Dictionary<String,Any> {
+                    if let rv = res["Results"] as? Dictionary<String,Any> {
+                        if let refcode = rv["ReferralCode"] as? String {
+                            self.rfc = refcode
+                            self.referalcode.text = self.rfc
+                            UserDefaults.standard.set(refcode, forKey: "referalcode")
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     
     

@@ -112,7 +112,7 @@ import UserNotifications
         switch authorizationStatus {
         case .authorized:
             completionHandler(true)
-     
+        
         case .denied, .notDetermined:
             self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (access, accessError) -> Void in
                 if access {
@@ -285,7 +285,7 @@ import UserNotifications
     
 }
 
-extension UIButton{
+extension UIButton {
    @IBInspectable
     var isHeading: Bool {
         get {

@@ -65,6 +65,14 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     var juryeditmode = "new"
     
+    var tablemode = "details"
+    
+    
+    @IBOutlet weak var showcontestdetails: UIButton!
+    
+    @IBOutlet weak var showcontestposts: UIButton!
+    
+    
     static var holder : Dictionary<String,UIImage> = [:]
     
     static var justuploaded : ((_ done : Bool) -> Void)?
@@ -107,7 +115,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     var currentcelltype = "one"
     var currentpostbtncolor = ""
     @IBOutlet weak var deletebtn: UIButton!
-    
+    let gradientLayer = CAGradientLayer()
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     var totalparticpants = 0
 
@@ -157,6 +165,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         if self.tthemename.lowercased() == "hip-hop" {
             self.tthemename = "hip hop"
         }
+        self.showcontestdetails.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
         self.editlayer.isHidden = false
         var xt : Dictionary<String,Dictionary<String,Any>> = ["jazz" : ["primary" : "#000000" , "secondary" : "#644761"] , "hip hop" : ["primary" : "#644761" , "secondary" : "#2C1C00"] ,  "cultural dance" : ["primary" : "#171D1A" , "secondary" : "#171D1A"] ]
         
@@ -247,6 +256,23 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                         self.deletebtn.isHidden = true
                     }
                     
+                    
+                    if self.eventjoined?.participationpostallow == true {
+                        var alreasypostedinview = UIView(frame: CGRect(x: self.view.frame.size.width/3.5, y: 32, width: self.view.frame.size.width/1.3, height: 30))
+                        alreasypostedinview.layer.cornerRadius = 15
+                        alreasypostedinview.backgroundColor = UIColor.red
+                        var imv = UIImageView(frame: CGRect(x: 4, y: 0, width: 26, height: 30))
+                        imv.image = #imageLiteral(resourceName: "Group 1744")
+                        imv.contentMode = .scaleAspectFit
+                        alreasypostedinview.addSubview(imv)
+                        
+                        var ic = UILabel(frame: CGRect(x: 30, y: 0, width: self.view.frame.size.width/1.6, height: 30))
+                        ic.text = "Post Pending"
+                        ic.textColor =  UIColor.white
+                        alreasypostedinview.addSubview(ic)
+                        self.coverview.addSubview(alreasypostedinview)
+                    }
+                    
 //                    self.table.reloadData()
                     if self.contestfiletype == "Image" {
                         self.downloadimage(url: self.contestimage) { (im) in
@@ -317,7 +343,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         let gradientBackgroundColors = [topColor.cgColor, bottomColor.cgColor]
         let gradientLocations = [0.0,1.0]
         
-        let gradientLayer = CAGradientLayer()
+        
         gradientLayer.colors = gradientBackgroundColors
         gradientLayer.locations = gradientLocations as [NSNumber]
         
@@ -326,6 +352,29 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         self.view.layer.insertSublayer(gradientLayer, at: 0)
         //        sender.backgroundView = backgroundView
     }
+    
+    
+    
+    @IBAction func showcontestdetailspressed(_ sender: Any) {
+        self.tablemode = "details"
+        self.showcontestdetails.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
+        self.showcontestposts.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
+        self.table.reloadData()
+    }
+    
+    
+    
+    
+    @IBAction func showcontestpostspressed(_ sender: Any) {
+        self.tablemode = "posts"
+        self.showcontestdetails.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
+        self.showcontestposts.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
+        self.gradientLayer.removeFromSuperlayer()
+        self.table.reloadData()
+    }
+    
+    
     
     
     
@@ -387,6 +436,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             self.coverview.clipsToBounds = true
             
             self.coverview.layer.insertSublayer(layer, at: 0)
+            self.coverview.layer.insertSublayer(self.editlayer.layer, at: 1)
         }
         
         if let p = self.player {
@@ -847,8 +897,13 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                             var userid = ""
                             var name = ""
                             var profile = ""
+                            var price = 0
+                            var position = 0
                             if let i = each["ID"] as? Int {
                                 id = i
+                            }
+                            if let i = each["Price"] as? Int {
+                                price = i
                             }
                             if let i = each["UserId"] as? String {
                                 userid = i
@@ -859,11 +914,16 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                             if let i = each["Profile"] as? String {
                                 profile = i
                             }
-                            var x = juryorwinner(id: id, userid: userid, name: name, profile: profile)
+                            if let i = each["Position"] as? Int {
+                                position = i
+                            }
+                            var x = juryorwinner(id: id, userid: userid, name: name, profile: profile , price: price , position: position)
                             self.allwinners.append(x)
                             
                         }
                     }
+                    print("All winners")
+                    print(self.allwinners)
                     
                     if let p = each["WinnerWisePrices"] as? [Dictionary<String,Any>] {
                         for each in p {
@@ -993,8 +1053,11 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                     if let cn = each["ParticipantPostAllow"] as? Bool {
                         self.isallowedtopost = cn
                     }
-                    
-                    var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: self.contestimage, termsandcondition: tandc)
+                    var noofwinn = 0
+                    if let cn = each["NoOfWinner"] as? Int {
+                        noofwinn = cn
+                    }
+                    var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: self.contestimage, termsandcondition: tandc, noofwinners: noofwinn)
                    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
                     print(x)
                     print(self.isallowedtopost)
@@ -1106,11 +1169,11 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+        if tablemode == "details" {
             return 2
         }
         else
@@ -1129,7 +1192,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             self.videoallowed = true
         }
 
-        if indexPath.section == 0 {
+        if indexPath.section == 0 && tablemode == "details" {
             if indexPath.row == 0 {
                 if let cell = tableView.dequeueReusableCell(withIdentifier: "thf", for: indexPath) as? ThemefixedcellTableViewCell {
                     
@@ -1330,7 +1393,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                     
                     
                      if let e = self.eventjoined {
-                        cell.update(x : e, p: self.currentpostbtncolor,s : "#FE6F00",b : self.joined ,c : self.joinstatus , isallowed : self.isallowedtopost, timetopublish : self.timetopublish  )
+                        cell.update(x : e, p: self.currentpostbtncolor,s : "#FE6F00",b : self.joined ,c : self.joinstatus , isallowed : self.isallowedtopost, timetopublish : self.timetopublish, winnerlist: self.allwinners  )
                     }
                     return cell
                 }
@@ -1432,7 +1495,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
 
         }
         }
-        else if indexPath.section == 0 {
+        else if indexPath.section == 0 && tablemode == "details" {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "joininfocell", for: indexPath) as? JoinedeventinformationTableViewCell {
 
 
@@ -1663,6 +1726,9 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
 
                 
                 
+                
+                
+                
                 cell.sendbackactualcomments = {a,b in
                         self.tappedpostid = a
                         self.tappedcommentlist = b
@@ -1809,9 +1875,15 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
+        if indexPath.section == 0 && self.tablemode == "details" {
             if indexPath.row == 0 {
-                return 250
+                if let s = self.eventjoined as? strevent {
+                    print("Height \(s.runningstatus.lowercased())   \(self.allwinners.count)")
+                    if s.runningstatus.lowercased() == "closed" && self.allwinners.count > 0 {
+                        return 550
+                    }
+                }
+                return 280
             }
             else {
                 return 1300
@@ -1832,28 +1904,32 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             return CGFloat(x)
         }
         else {
+            if indexPath.row < self.allfeeds.count {
+            print(indexPath.row)
             if self.allfeeds[indexPath.row].type.lowercased() == "audio" {
                 var tc = self.allfeeds[indexPath.row].description.count
                 var nl = CGFloat(tc/55)
                 if nl == 0 {
-                    return (200 + (35 * 1.3))
+                    return (200 + (45 * 1.3))
                 }
                 if nl < 1 || tc == 0 {
-                    return (460 + (35 * 1.3))
+                    return (460 + (45 * 1.3))
                 }
-                return (480 + (35 * nl))
+                return (480 + (45 * nl))
             }
             
             var tc = self.allfeeds[indexPath.row].description.count
             var nl = CGFloat(tc/55)
             if nl == 0 {
-                return (460 + (35 * 1.3))
+                return (460 + (45 * 1.3))
             }
             if nl < 1 || tc == 0 {
-                return (660 + (35 * 1.3))
+                return (660 + (45 * 1.3))
             }
-            return (680 + (35 * nl))
+            return (680 + (45 * nl))
+            }
         }
+        return 800
     }
     
     

@@ -32,6 +32,7 @@ class Customtable2TableViewCell: UITableViewCell , UICollectionViewDelegate , UI
             print("Rechead here")
             print(a)
             self.alldata = a
+//            self.alldata.insert(languagewiseevent(about: "", address1: "", address2: "", agelimit: "", artist: "", category: "", city: "", createby: "", createon: "", eventtime: "", eventtype: "", fee: 0, fromdate: "", heading: "", id: 0, imagepath: "", isactive: 0, langauge: "all", refcategory: 0, reflanguage: 0, termsandconditions: "", thumbnail: "", todate: ""), at: 0)
             self.colle.reloadData()
             
         }

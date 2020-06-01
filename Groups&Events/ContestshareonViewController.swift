@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ContestshareonViewController: UIViewController , UITableViewDelegate , UITableViewDataSource{
 
@@ -18,6 +19,9 @@ class ContestshareonViewController: UIViewController , UITableViewDelegate , UIT
     
     
     @IBOutlet var table: UITableView!
+    
+    
+    var datafromapi : [apicontestsharedon] = []
     
     var mygroups : [groupevent] = []
     var joinedgroups : [groupevent] = []
@@ -37,7 +41,8 @@ class ContestshareonViewController: UIViewController , UITableViewDelegate , UIT
         self.table.dataSource = self
         self.contestshare.text = self.eventname.capitalized
         self.sharebtn.layer.cornerRadius = 25
-        
+        print("Data From CoreData")
+         datafromapi = CoreDataManager.shared.readfromcoredata()
         
         
         
@@ -76,6 +81,7 @@ class ContestshareonViewController: UIViewController , UITableViewDelegate , UIT
                     if code == 0 {
                         let alert2 = UIAlertController(title: "Contest Shared", message: "", preferredStyle: .actionSheet)
                         alert2.addAction(UIAlertAction(title: "Ok", style: .default, handler: { _ in
+                            CoreDataManager.shared.notifycoredataaboutshare(shareon: self.shareon , cid : self.eventid)
                             self.dismiss(animated: true, completion: nil)
                             
                         }));
@@ -193,6 +199,20 @@ class ContestshareonViewController: UIViewController , UITableViewDelegate , UIT
                                              
         //                                     print(each["GroupName"])
                                          }
+                                        for var k in 0 ..< self.joinedgroups.count {
+                                            for a in 0 ..< self.datafromapi.count {
+                                                print("Indexess \(k) and \(a)")
+                                                if k < self.joinedgroups.count && a < self.datafromapi.count {
+                                                    if self.joinedgroups[k].groupid == self.datafromapi[a].groupid && self.eventid == self.datafromapi[a].contestid {
+                                                        var timediff = Date().timeIntervalSince(self.datafromapi[a].date)
+                                                        print("Time Interval is \(timediff) sd \(Date()) and shared date \(self.datafromapi[a].date)")
+                                                        if timediff < (24 * 60 * 60) {
+                                                            self.joinedgroups.remove(at: k)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                          done(true)
                                      }
                                  }
@@ -305,6 +325,18 @@ class ContestshareonViewController: UIViewController , UITableViewDelegate , UIT
                                             
                                             
                                         }
+                                        for var k in 0 ..< self.mygroups.count {
+                                            for a in 0 ..< self.datafromapi.count {
+                                                 if k < self.mygroups.count && a < self.datafromapi.count {
+                                                if self.mygroups[k].groupid == self.datafromapi[a].groupid && self.eventid == self.datafromapi[a].contestid{
+                                                    var timediff = Date().timeIntervalSince(self.datafromapi[a].date)
+                                                    if timediff < (24 * 60 * 60) {
+                                                        self.mygroups.remove(at: k)
+                                                    }
+                                                }
+                                                }
+                                            }
+                                        }
                                         done(true)
                                 
                                     }
@@ -312,6 +344,14 @@ class ContestshareonViewController: UIViewController , UITableViewDelegate , UIT
                             }
                         }
     }
+    
+    
+    
+    
+   
+    
+    
+    
     
     
     func numberOfSections(in tableView: UITableView) -> Int {

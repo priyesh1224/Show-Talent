@@ -68,6 +68,7 @@ class CustomeventTableViewCell: UITableViewCell , UICollectionViewDelegate , UIC
     var tempdata = [languagewiseevent]()
     
     var passback : ((_ : [languagewiseevent]) -> Void)?
+    var startfetching : ((_ x : Bool) -> Void)?
     
     
     @IBOutlet var banner: UIImageView!
@@ -106,7 +107,7 @@ class CustomeventTableViewCell: UITableViewCell , UICollectionViewDelegate , UIC
         
         
         
-        
+        self.fetchallresponses(language: languages(id: 0, language: "all"), date: "all", page: 0)
         
         
             
@@ -146,7 +147,7 @@ class CustomeventTableViewCell: UITableViewCell , UICollectionViewDelegate , UIC
             print(day)
         }
         self.coll1.reloadData()
-        
+       
     
         
             
@@ -156,7 +157,7 @@ class CustomeventTableViewCell: UITableViewCell , UICollectionViewDelegate , UIC
     
     func fetchlanuages(pg : Int)
     {
-
+        
         var url = Constants.K_baseUrl + Constants.alllanguages
         var params = ["Page": pg,"PageSize": 10]
         var r  = BaseServiceClass()
@@ -189,8 +190,14 @@ class CustomeventTableViewCell: UITableViewCell , UICollectionViewDelegate , UIC
                                 if beforecount == self.alllanguages.count {
                                     self.canfetchmore = false
                                 }
+                                if self.alllanguages[0].language != "all" {
+                                    self.alllanguages.insert(languages(id: 0, language: "all"), at: 0)
+                                }
                                 self.coll2.reloadData()
                                 print(self.alllanguages)
+                                if self.tempdata.count > 0 {
+                                    self.startfetching!(false)
+                                }
                             }
                         }
                     }
@@ -204,6 +211,7 @@ class CustomeventTableViewCell: UITableViewCell , UICollectionViewDelegate , UIC
     
     func fetchallresponses(language: languages, date : String ,page : Int)
     {
+        self.startfetching!(true)
         if page == 0 {
             tempdata = []
         }
@@ -214,7 +222,12 @@ class CustomeventTableViewCell: UITableViewCell , UICollectionViewDelegate , UIC
         var url = "\(Constants.K_baseUrl)\(Constants.alleventsfetch)?"
         if let l = language as? languages {
             if l.language != "" && l.language != " " {
-                url = "\(url)languageId=\(l.id)"
+                if l.language == "all" {
+                    
+                }
+                else {
+                    url = "\(url)languageId=\(l.id)"
+                }
                 langindex = l.language
                 if let d = date as? String {
                     if d != "" && d != "all" {
@@ -397,6 +410,9 @@ class CustomeventTableViewCell: UITableViewCell , UICollectionViewDelegate , UIC
                                     
                                     
                                     
+                                }
+                                if self.alllanguages.count > 0 {
+                                    self.startfetching!(false)
                                 }
                                 self.passback!(self.tempdata)
                             }

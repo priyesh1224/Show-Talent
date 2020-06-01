@@ -66,7 +66,7 @@ struct Constants {
     static let sharethiscontest = "/Groups/ShareContest"
     
     static let shareamonggroups = "/Groups/ShareContestInSelectedGroup"
-    
+    static let groupdashboard = "/Groups/Dashboard"
 
     
     static let getprerequisitecontests = "/Contest/PrerequisiteContest"
@@ -92,11 +92,14 @@ struct Constants {
     static let leavecontest = "/Contest/LeaveDeleteMember"
     static let recommendedcontests = "/Contest/GetNearByContest"
    // static let newprofiledata = "/ProfileService/Profile/{userid},{activityType}
+    static let contestdashboard = "/Contest/Dashboard"
     
     static let allpromotions = "/Promostion/Getpromotion"
     
     static let alllanguages = "/Language/GetAllLanguages"
     static let alleventsfetch = "/EventPublisher/GetEvents"
+    static let bookevent = "/EventPublisher/BookEvent"
+    static let getbookedevents = "/EventPublisher/GetEventBookingList"
     
     static let searchmembers = "/SearchMember/SearchMembers"
    
@@ -107,6 +110,8 @@ struct Constants {
     static let publishunpublish = "/Contest/PublishUnpublish"
     static let deletecontest = "/Contest/DeleteContest"
     
+    static let getusercategories = "/Category/GetUserCategoryChoice"
+    static let updatecategorychoice = "/Category/UpdateUserCategoryChoice"
     
   //  /api/v{version}/Category/GetUserCategoryChoice
     static let blueColor = UIColor.init(red: 102.0/255, green: 178.0/255, blue: 255.0/255, alpha: 1)

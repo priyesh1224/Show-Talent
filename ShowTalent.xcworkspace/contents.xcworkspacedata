@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Contestsharedingroup+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:Contestsharedingroup+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
       location = "group:ShowTalent.xcodeproj">
    </FileRef>
    <FileRef

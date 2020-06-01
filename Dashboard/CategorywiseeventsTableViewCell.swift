@@ -154,7 +154,8 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
     
     func updatecell2(x : grouppost)
     {
-        
+        self.eventimage.clipsToBounds = true
+
         mode = x.posttype.lowercased()
         self.knowmorebtn.isHidden = true
 //        reviewsbtn.isHidden = true
@@ -341,7 +342,7 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
     
     func updatecell(x : customstrevent)
     {
-        
+        self.eventimage.clipsToBounds = true
         self.participatebtn.layer.cornerRadius = 15
         self.participatebtn.layer.borderColor = UIColor.white.cgColor
         self.participatebtn.layer.borderWidth = 2

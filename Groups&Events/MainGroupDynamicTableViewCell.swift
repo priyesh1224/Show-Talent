@@ -290,7 +290,9 @@ class MainGroupDynamicTableViewCell: UITableViewCell {
             muteunmute?.setTitle("", for: .normal)
             muteunmute?.setImage(#imageLiteral(resourceName: "mute"), for: .normal)
             if let b = muteunmute as? UIButton {
+                DispatchQueue.main.async {
                 self.contentView.addSubview(b)
+                }
             }
             muteunmute?.addTarget(self, action: #selector(muteunmuteaudio), for: .touchUpInside)
         }

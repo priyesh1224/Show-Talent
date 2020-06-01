@@ -8,7 +8,9 @@
 
 import UIKit
 
-class ThemefixedcellTableViewCell: UITableViewCell {
+class ThemefixedcellTableViewCell: UITableViewCell, UICollectionViewDelegate , UICollectionViewDataSource , UICollectionViewDelegateFlowLayout {
+    
+    
     
     
     
@@ -26,6 +28,19 @@ class ThemefixedcellTableViewCell: UITableViewCell {
     @IBOutlet weak var contestname: UILabel!
     
     
+    @IBOutlet weak var winnersannpuncement: UIView!
+    
+    
+    @IBOutlet weak var winnersnameview: UIView!
+    
+    
+    @IBOutlet weak var collection: UICollectionView!
+    
+    
+    
+    
+    
+    
     @IBOutlet weak var contestpostedin: UITextView!
     
     
@@ -41,7 +56,7 @@ class ThemefixedcellTableViewCell: UITableViewCell {
     var currentpretheme : pretheme?
     var pc  = ""
     var sc = ""
-    
+    var winnerlist : [juryorwinner] = []
     
     var timer:Timer?
     var timeLeft = 0
@@ -170,8 +185,27 @@ class ThemefixedcellTableViewCell: UITableViewCell {
     
     
     
-    func update(x : strevent , p : String , s : String , b : Bool , c : Bool , isallowed : Bool , timetopublish : Bool )
+    func update(x : strevent , p : String , s : String , b : Bool , c : Bool , isallowed : Bool , timetopublish : Bool , winnerlist : [juryorwinner] )
     {
+        print("At time of update \(x.runningstatus.lowercased()) and \(winnerlist.count)")
+        if x.runningstatus.lowercased() == "closed" && winnerlist.count > 0 {
+        self.winnersannpuncement.clipsToBounds = true
+            winnersannpuncement.isHidden = false
+        self.winnerlist = winnerlist
+        winnersannpuncement.layer.cornerRadius = 10
+        winnersnameview.layer.cornerRadius = 25
+        collection.delegate = self
+        collection.dataSource = self
+        var l = UICollectionViewFlowLayout()
+        l.scrollDirection = .horizontal
+        l.itemSize = CGSize(width: 200, height: 120)
+        collection.reloadData()
+        collection.collectionViewLayout = l
+        collection.reloadData()
+        }
+        else {
+            winnersannpuncement.isHidden = true
+        }
        
         pc = p
         sc = s
@@ -252,6 +286,24 @@ class ThemefixedcellTableViewCell: UITableViewCell {
         
         
         
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+       
+            return CGSize(width: 200, height: 120)
+       
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.winnerlist.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "winnmodified", for: indexPath) as? WinnersmodifiedCollectionViewCell {
+            cell.update(x : self.winnerlist[indexPath.row] , y : self.currentevent)
+            return cell
+        }
+        return UICollectionViewCell()
     }
     
     func setupextraview()

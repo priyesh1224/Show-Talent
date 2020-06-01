@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14838.16" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="NO" userDefinedModelVersionIdentifier="">
+    <entity name="Contestsharedingroup" representedClassName="Contestsharedingroup" syncable="YES" codeGenerationType="class">
+        <attribute name="contestid" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="groupid" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="groupname" optional="YES" attributeType="String"/>
+        <attribute name="sharedon" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
     <entity name="Customcontact" representedClassName="Customcontact" syncable="YES" codeGenerationType="class">
         <attribute name="lastname" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -8,5 +14,6 @@
     </entity>
     <elements>
         <element name="Customcontact" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="Contestsharedingroup" positionX="-63" positionY="9" width="128" height="103"/>
     </elements>
 </model>

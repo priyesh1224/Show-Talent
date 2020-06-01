@@ -129,10 +129,14 @@ class ThemePreviewViewController: UIViewController , UITableViewDelegate , UITab
     var gotevent2 : pretheme?
     var categoryselected = "dance"
     var catname = ["dance","mimicry","music band","story telling","singing","acting"]
+    var postbtncolor = ["#012C5E","#012C5E","006F9A","#62AA3C","012C5E","#348FDF"]
+
     var celltype = ["two","three","four","six","five","one"]
     var primarycoloroptions = ["#410014","#0F0515","#000000","#0ABCD8","#00C5CC","#07EAC3"]
     var secondarycoloroptions = ["#011C39","#16069C","#DC2E23","#4CC100","#004784","#16069C"]
     var currentcelltype = "one"
+    var currentpostbtncolor = ""
+
     var insidecolors : Dictionary<String,Dictionary<String,Dictionary<String,Any>>> = [:]
     
     var tn = "Demo Theme"
@@ -177,6 +181,7 @@ class ThemePreviewViewController: UIViewController , UITableViewDelegate , UITab
         for var k in 0 ..< catname.count {
             if catname[k] == self.categoryselected.lowercased() {
                 self.currentcelltype = celltype[k]
+                self.currentpostbtncolor = postbtncolor[k]
             }
         }
         
@@ -397,7 +402,7 @@ class ThemePreviewViewController: UIViewController , UITableViewDelegate , UITab
             if let cell = tableView.dequeueReusableCell(withIdentifier: "thf", for: indexPath) as? ThemefixedcellTableViewCell {
                 
                 if let e = self.tobepassedtheme {
-                    cell.update2(x : e, p: "#FF00FF",s : "#FFF000" , creatingcontest : self.createmode)
+                    cell.update2(x : e, p: self.currentpostbtncolor,s : "#FE6F00" , creatingcontest : self.createmode)
                 }
                 return cell
             }

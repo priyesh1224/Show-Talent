@@ -120,8 +120,9 @@ class AudioUploadViewController: UIViewController , AVAudioRecorderDelegate , AV
         super.viewDidLoad()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(onTimerFires), userInfo: nil, repeats: true)
         
-        
         RunLoop.current.add(timer!, forMode: .common)
+        timer?.invalidate()
+        self.timerlabel.text = "0:0:0"
         playbtn.isHidden = true
         donebtn.layer.cornerRadius = 25
         headphonesbtn.layer.cornerRadius = 50
@@ -188,6 +189,7 @@ class AudioUploadViewController: UIViewController , AVAudioRecorderDelegate , AV
             audiopreviewview.isHidden = false
             self.donebtn.isEnabled = true
             self.timer?.invalidate()
+            
         }
         
         

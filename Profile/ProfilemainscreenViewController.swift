@@ -27,6 +27,11 @@ class ProfilemainscreenViewController: UIViewController , UICollectionViewDelega
  
     
     
+    @IBOutlet weak var eventbookinghistoryouterview: UIView!
+    
+    
+    
+    
     var basic : basicprofile?
     
     var imgtypes : [String] = []
@@ -99,6 +104,8 @@ class ProfilemainscreenViewController: UIViewController , UICollectionViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         setupview()
+        self.setTableViewBackgroundGradient(UIColor.init(hexString: "#AF1739"), UIColor.init(hexString: "#613A4F"))
+        eventbookinghistoryouterview.layer.cornerRadius = 10
         collection.delegate = self
         collection.dataSource = self
         pickercontroller.allowsEditing = true
@@ -113,8 +120,36 @@ class ProfilemainscreenViewController: UIViewController , UICollectionViewDelega
     }
     
     
+    func setTableViewBackgroundGradient( _ topColor:UIColor, _ bottomColor:UIColor) {
+        
+        let gradientBackgroundColors = [topColor.cgColor, bottomColor.cgColor]
+        let gradientLocations = [0.0,1.0]
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = gradientBackgroundColors
+        gradientLayer.locations = gradientLocations as [NSNumber]
+        
+        gradientLayer.frame = CGRect(x: 0, y: 0, width: self.eventbookinghistoryouterview.frame.size.width, height: self.eventbookinghistoryouterview.frame.size.height)
+        
+        self.eventbookinghistoryouterview.layer.insertSublayer(gradientLayer, at: 0)
+        //        sender.backgroundView = backgroundView
+    }
+    
+    
     @IBAction func editprofilepressed(_ sender: UIButton) {
         performSegue(withIdentifier: "gotoedit", sender: nil)
+    }
+    
+    
+    
+    @IBAction func eventbookinghistoryone(_ sender: Any) {
+        self.performSegue(withIdentifier: "showmybookedevents", sender: nil)
+    }
+    
+    
+    
+    @IBAction func eventbookinghistorytwo(_ sender: Any) {
+        self.performSegue(withIdentifier: "showmybookedevents", sender: nil)
     }
     
     
