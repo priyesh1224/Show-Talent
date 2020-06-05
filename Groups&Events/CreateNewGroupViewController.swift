@@ -31,8 +31,17 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
 
     
     var pickerdata : [groupbelong] = []
+    var groupauthority : [groupbelong] = []
+    
+    var selectedbelong : groupbelong?
+    var selectedauthority : groupbelong?
+    
+    var mode = "youare"
     
     @IBOutlet weak var notificationindicator: UIView!
+    
+    
+    @IBOutlet weak var scroll: UIScrollView!
     
     
     @IBOutlet weak var groupname: UITextField!
@@ -40,7 +49,7 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
     @IBOutlet weak var createdby: UITextField!
     
     @IBOutlet weak var others: UITextField!
-    @IBOutlet weak var youarea: UITextField!
+    @IBOutlet weak var youarea: UILabel!
     
     @IBOutlet weak var groupbelongingoutput: UILabel!
     
@@ -49,7 +58,13 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
     
     @IBOutlet weak var picker: UIPickerView!
     
+    
+    @IBOutlet weak var piecker2: UIPickerView!
+    
     @IBOutlet weak var picketouterview: UIView!
+    
+    @IBOutlet weak var pickerouterview2: UIView!
+    
     
     var selectedgroupbelongto : groupbelong?
     
@@ -63,12 +78,20 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
         picketouterview.isHidden = true
         picker.delegate = self
         picker.dataSource = self
+        piecker2.delegate = self
+        piecker2.dataSource = self
+        self.scroll.contentSize = CGSize(width: self.view.frame.size.width, height: 900)
+        self.scroll.isScrollEnabled = true
+        var fn = UserDefaults.standard.value(forKey: "firstname") as! String
+        var ln = UserDefaults.standard.value(forKey: "lastname") as! String
+        self.createdby.text = "\(fn) \(ln)"
+        
+        
         picker.tintColor = UIColor.white
         fetchgroupbelongto()
         groupname.delegate = self
         createdby.delegate = self
         others.delegate = self
-        youarea.delegate = self
         self.others.isEnabled = false
        
     }
@@ -90,18 +113,40 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
                print("-----------------")
             if let dv = data?.result.value as? Dictionary<String,AnyObject> {
                 if let inv =  dv["Results"] as? Dictionary<String,AnyObject> {
-                    if let innv =  inv["Data"] as? [Dictionary<String,AnyObject>] {
-                        for each in innv {
-                            var id = 0
-                            var name = ""
-                            if let i = each["ID"] as? Int,let n = each["GroupName"] as? String {
-                                id = i
-                                name = n
-                                var x = groupbelong(id: i, name: n)
-                                self.pickerdata.append(x)
+                     if let inev =  inv["BelongGroupMaster"] as? Dictionary<String,AnyObject> {
+                        if let innv =  inev["Data"] as? [Dictionary<String,AnyObject>] {
+                            for each in innv {
+                                var id = 0
+                                var name = ""
+                                if let i = each["ID"] as? Int,let n = each["GroupName"] as? String {
+                                    id = i
+                                    name = n
+                                    var x = groupbelong(id: i, name: n)
+                                    self.pickerdata.append(x)
+                                }
                             }
+                            self.picker.reloadAllComponents()
                         }
-                        self.picker.reloadAllComponents()
+                    }
+                    
+                    if let inev =  inv["GroupAuthority"] as? Dictionary<String,AnyObject> {
+                        if let innv =  inev["Data"] as? [Dictionary<String,AnyObject>] {
+                            for each in innv {
+                                var id = 0
+                                var name = ""
+                                if let i = each["ID"] as? Int,let n = each["Authority"] as? String , let m = each["IsActive"] as? Bool {
+                                    id = i
+                                    name = n
+                                    var x = groupbelong(id: i, name: n)
+                                    if m {
+                                        self.groupauthority.append(x)
+                                    }
+                                }
+                            }
+                            self.piecker2.reloadAllComponents()
+                        }
+                        
+                        print(self.groupauthority)
                     }
                 }
             }
@@ -122,7 +167,7 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
         var gn = ""
         var ref = 0
         var obelong = ""
-        var youare = ""
+        var youare = 0
         
         if let n = self.groupname.text as? String {
             gn = n
@@ -136,7 +181,7 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
                 obelong = o
             }
         }
-        if let y = self.youarea.text as? String {
+        if let y = self.selectedauthority?.id as? Int {
             youare = y
         }
         let params : Dictionary<String,Any> = ["GroupName":gn  ,"Ref_BelongGroup": ref ,"OtherBelong": obelong   ,"YouAre":youare ]
@@ -222,22 +267,54 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
         groupname.resignFirstResponder()
         createdby.resignFirstResponder()
         others.resignFirstResponder()
-        youarea.resignFirstResponder()
         
         return true
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
+         if pickerView.tag == 1 {
+            return 1
+        }
+         else  if pickerView.tag == 2 {
+            return 1
+        }
+       return 0
     }
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerdata.count
+        if pickerView.tag == 1 {
+            return pickerdata.count
+        }
+        else if pickerView.tag == 2 {
+            print("Will render \(groupauthority.count)")
+            return groupauthority.count
+        }
+        return 0
     }
     
-    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        var c =  #colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1)
-        return NSAttributedString(string: pickerdata[row].name.capitalized, attributes: [NSAttributedString.Key.foregroundColor: c ])
+//    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+//        var c =  #colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1)
+//        if pickerView.tag == 1 {
+//           return NSAttributedString(string: pickerdata[row].name.capitalized, attributes: [NSAttributedString.Key.foregroundColor: c ])
+//        }
+//        else if pickerView.tag == 2 {
+//            return NSAttributedString(string: groupauthority[row].name.capitalized, attributes: [NSAttributedString.Key.foregroundColor: c ])
+//        }
+//        return NSAttributedString(string: "")
+//
+//    }
+    
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+          if pickerView.tag == 1 {
+            return pickerdata[row].name.capitalized
+        }
+        else if pickerView.tag == 2 {
+        return groupauthority[row].name.capitalized
+        }
+        return ""
+    
     }
+    
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return 50
@@ -245,7 +322,20 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
     
     
     @IBAction func groupbenongtoclicked(_ sender: UIButton) {
+        print("B")
+
         self.picketouterview.isHidden = false
+        self.pickerouterview2.isHidden = true
+    }
+    
+    
+    
+    @IBAction func youareapressed(_ sender: Any) {
+        self.mode == "youare"
+        print("A")
+
+        self.pickerouterview2.isHidden = false
+        self.picketouterview.isHidden = true
     }
     
    
@@ -265,15 +355,19 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
             self.present(customalert.showalert(x: "You need to select Group Belong To"), animated: true, completion: nil)
             return
         }
+        if let c = self.selectedauthority as? groupbelong {
+            
+        }
+        else {
+            self.present(customalert.showalert(x: "You need to select your role."), animated: true, completion: nil)
+            return
+        }
         
         if self.groupname.text == "" || self.groupname.text == " " {
             self.present(customalert.showalert(x: "Enter Group Name"), animated: true, completion: nil)
             return
         }
-        if self.youarea.text == "" || self.youarea.text == " " {
-            self.present(customalert.showalert(x: "Enter your role"), animated: true, completion: nil)
-            return
-        }
+        
         
         if self.others.isEnabled == true && (self.others.text == "" || self.others.text == " ") {
             self.present(customalert.showalert(x: "You need to enter Others field if the selected group belong to is Other"), animated: true, completion: nil)
@@ -286,7 +380,22 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
     
     
     
+    @IBAction func pickerok2(_ sender: Any) {
+        self.selectedauthority = groupauthority[piecker2.selectedRow(inComponent: 0)]
+        
+        self.youarea.text = selectedauthority?.name.capitalized
+        self.pickerouterview2.isHidden = true
+        
+    }
+    
+    
+    @IBAction func cancel2pressed(_ sender: Any) {
+        self.pickerouterview2.isHidden = true
+    }
+    
+    
     @IBAction func pickerok(_ sender: Any) {
+        
         self.selectedgroupbelongto = pickerdata[picker.selectedRow(inComponent: 0)]
         print(self.selectedgroupbelongto?.name)
         if selectedgroupbelongto?.name.lowercased() == "other" {
@@ -297,6 +406,9 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
         }
         self.groupbelongingoutput.text = selectedgroupbelongto?.name.capitalized
         self.picketouterview.isHidden = true
+        
+        
+        
     }
     
     

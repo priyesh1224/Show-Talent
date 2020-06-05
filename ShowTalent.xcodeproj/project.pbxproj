@@ -197,6 +197,7 @@
 		A4B75178244B35D200EA0911 /* ReviewandRatingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B75177244B35D200EA0911 /* ReviewandRatingsTableViewCell.swift */; };
 		A4B7517A244B35ED00EA0911 /* ReviewsandRatingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B75179244B35ED00EA0911 /* ReviewsandRatingsViewController.swift */; };
 		A4B88A5C2456FC6400BA4550 /* AudioUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B88A5B2456FC6400BA4550 /* AudioUploadViewController.swift */; };
+		A4B9D7A724867AF100FB0D3C /* BuyProVersionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B9D7A624867AF100FB0D3C /* BuyProVersionViewController.swift */; };
 		A4D998E12464BE8700C1E7D5 /* PrethemefetchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D998E02464BE8700C1E7D5 /* PrethemefetchCollectionViewCell.swift */; };
 		A4E196C22465A5E600121807 /* ThemePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E196C12465A5E600121807 /* ThemePreviewViewController.swift */; };
 		A4F4657A2441C6C800617315 /* CoinsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F465792441C6C800617315 /* CoinsViewController.swift */; };
@@ -397,6 +398,7 @@
 		A4B75177244B35D200EA0911 /* ReviewandRatingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewandRatingsTableViewCell.swift; sourceTree = "<group>"; };
 		A4B75179244B35ED00EA0911 /* ReviewsandRatingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsandRatingsViewController.swift; sourceTree = "<group>"; };
 		A4B88A5B2456FC6400BA4550 /* AudioUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUploadViewController.swift; sourceTree = "<group>"; };
+		A4B9D7A624867AF100FB0D3C /* BuyProVersionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyProVersionViewController.swift; sourceTree = "<group>"; };
 		A4D998E02464BE8700C1E7D5 /* PrethemefetchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrethemefetchCollectionViewCell.swift; sourceTree = "<group>"; };
 		A4E196C12465A5E600121807 /* ThemePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreviewViewController.swift; sourceTree = "<group>"; };
 		A4F465792441C6C800617315 /* CoinsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinsViewController.swift; sourceTree = "<group>"; };
@@ -591,6 +593,7 @@
 				A4A823A424810A7600E1D49E /* UpdateUserCategoryTableViewCell.swift */,
 				A4A823A624810A9300E1D49E /* Updateuercategory2TableViewCell.swift */,
 				A4A823A824810AB000E1D49E /* UpdateUserCategoryViewController.swift */,
+				A4B9D7A624867AF100FB0D3C /* BuyProVersionViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -1002,6 +1005,7 @@
 				849EFEC42411059B0013DD83 /* JuryContestoneTableViewCell.swift in Sources */,
 				187382E42413B7D200640000 /* ShowwinnerafterclosedTableViewCell.swift in Sources */,
 				A4551F8C247FB67F008AAD86 /* EventbookingformViewController.swift in Sources */,
+				A4B9D7A724867AF100FB0D3C /* BuyProVersionViewController.swift in Sources */,
 				180F95EA2420CA020018DA83 /* CustomeventViewController.swift in Sources */,
 				8482752023E94258000D4909 /* OtpEnterViewController.swift in Sources */,
 				18D377BE2359B03A00C3B644 /* Connectivity.swift in Sources */,

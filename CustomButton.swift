@@ -42,14 +42,14 @@ class MinorButton: UIButton {
 
 class UltraMinorButton: UIButton {
     
-    @IBInspectable public var size : CGFloat = 10  {
+    @IBInspectable public var size : CGFloat = 7  {
         didSet {
             self.titleLabel?.font = UIFont(name: "NeusaNextStd-Light", size: size)
         }
     }
 
    override func awakeFromNib() {
-    self.titleLabel?.font = UIFont(name: "NeusaNextStd-Light", size: 8)
+    self.titleLabel?.font = UIFont(name: "NeusaNextStd-Light", size: 6)
       }
 
 

@@ -93,7 +93,8 @@ struct Constants {
     static let recommendedcontests = "/Contest/GetNearByContest"
    // static let newprofiledata = "/ProfileService/Profile/{userid},{activityType}
     static let contestdashboard = "/Contest/Dashboard"
-    
+    static let selfjury = "/Contest/SelfJury"
+    static let juryseen = "/Contest/UpdateJurySeen"
     static let allpromotions = "/Promostion/Getpromotion"
     
     static let alllanguages = "/Language/GetAllLanguages"
@@ -112,6 +113,9 @@ struct Constants {
     
     static let getusercategories = "/Category/GetUserCategoryChoice"
     static let updatecategorychoice = "/Category/UpdateUserCategoryChoice"
+    
+    
+    static let coinsledger = "/CoinSystem/EarnCoinList"
     
   //  /api/v{version}/Category/GetUserCategoryChoice
     static let blueColor = UIColor.init(red: 102.0/255, green: 178.0/255, blue: 255.0/255, alpha: 1)

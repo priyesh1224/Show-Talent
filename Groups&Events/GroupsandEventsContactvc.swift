@@ -200,11 +200,12 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
             var contact = UserDefaults.standard.value(forKey: "mobile") as? String
             var firstname = UserDefaults.standard.value(forKey: "firstname") as? String
             var lastname = UserDefaults.standard.value(forKey: "lastname") as? String
+            var pf = UserDefaults.standard.value(forKey: "profileimage") as? String
             print(contact)
             print(firstname)
             print(lastname)
-            self.addtogroupcontacts.append(customcontact(name: firstname ?? "", lastname: lastname ?? "", userimage: "", profession: "", number: [contact ?? ""], countrycode: "91", type: ""))
-            allinfos.append(["Contact" : contact ?? "","FirstName" :firstname ?? ""  , "LastName" : lastname ?? ""])
+            self.addtogroupcontacts.append(customcontact(name: firstname ?? "", lastname: lastname ?? "", userimage: pf ?? "", profession: "", number: [contact ?? ""], countrycode: "91", type: ""))
+            
             print(allinfos)
             
         }

@@ -2085,6 +2085,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
     
     func fetchthemes()
     {
+        self.allthemes = []
         self.spinner.isHidden = false
         self.spinner.startAnimating()
         print(self.allchoosenfields)

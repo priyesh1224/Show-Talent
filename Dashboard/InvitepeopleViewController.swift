@@ -19,16 +19,23 @@ class InvitepeopleViewController: UIViewController {
     
     @IBOutlet weak var outerreferalcodeview: UIView!
     
+    @IBOutlet weak var stackwidth: NSLayoutConstraint!
     
     @IBOutlet weak var bannerview: UIView!
     var rfc = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.stackwidth.constant = self.view.frame.size.width - 48
         notifindicator.layer.cornerRadius = 10
         outerreferalcodeview.layer.borderColor = UIColor.white.cgColor
         outerreferalcodeview.layer.borderWidth = 1
+         if self.view.frame.size.width > 330 {
         self.bannerheight.constant = self.view.frame.size.height/2.7
+        }
+         else {
+            self.bannerheight.constant = self.view.frame.size.height/2.3
+        }
         let m = self.applygradient(a: #colorLiteral(red: 0.3215686275, green: 0.3058823529, blue: 0.7803921569, alpha: 1), b: #colorLiteral(red: 0.1960784314, green: 0.4784313725, blue: 0.6666666667, alpha: 1))
         self.bannerview.layer.insertSublayer(m, at: 0)
         self.referalcode.text = rfc
@@ -46,9 +53,18 @@ class InvitepeopleViewController: UIViewController {
     
     
     @IBAction func whatsapptapped(_ sender: Any) {
-        var whatsappURL:NSURL? = NSURL(string: "whatsapp://send?text=Hello%2C%20World!")
-        if (UIApplication.shared.canOpenURL(whatsappURL as! URL)) {
-            UIApplication.shared.openURL(whatsappURL as! URL)
+        let date = Date()
+        let msg = "Hi my dear friends\(date)"
+        let urlWhats = "whatsapp://send?text=\(msg)"
+        
+        if let urlString = urlWhats.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) {
+            if let whatsappURL = NSURL(string: urlString) {
+                if UIApplication.shared.canOpenURL(whatsappURL as URL) {
+                    UIApplication.shared.openURL(whatsappURL as URL)
+                } else {
+                    print("please install watsapp")
+                }
+            }
         }
     }
     

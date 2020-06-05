@@ -70,6 +70,9 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
     @IBOutlet weak var popupshowbuttonrightspace: NSLayoutConstraint!
     
     
+    @IBOutlet weak var jurysectionbtn: UltraMinorButton!
+    
+    
     @IBOutlet weak var popup: UIView!
     
     @IBOutlet weak var popupheight: NSLayoutConstraint!
@@ -84,6 +87,8 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
     
     @IBOutlet weak var iphone5s: UIStackView!
     
+    
+    var jurysectionpressed = false
     
     @IBOutlet weak var aboveiphone5s: UIStackView!
     
@@ -108,14 +113,14 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
                     collection.collectionViewLayout = l
            
                    
-        if self.view.frame.size.width > 330 {
-            self.iphone5s.isHidden = true
-            self.aboveiphone5s.isHidden = false
-        }
-        else {
+//        if self.view.frame.size.width > 330 {
+//            self.iphone5s.isHidden = true
+//            self.aboveiphone5s.isHidden = false
+//        }
+//        else {
             self.iphone5s.isHidden = false
             self.aboveiphone5s.isHidden = true
-        }
+//        }
         
         DispatchQueue.global(qos: .background).async {
             CoreDataManager.shared.deletecrossedgroups()
@@ -130,35 +135,96 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
         }
 
         referfriends.layer.cornerRadius = 15
+        referfriends.clipsToBounds = true
         groupbtn.layer.cornerRadius = 15
+        groupbtn.clipsToBounds = true
+        jurysectionbtn.layer.cornerRadius = 15
+        jurysectionbtn.clipsToBounds = true
         var m = self.applygradient(a:  #colorLiteral(red: 0.2941176471, green: 0.3294117647, blue: 0.8235294118, alpha: 1) , b: #colorLiteral(red: 0.3333333333, green: 0.5960784314, blue: 0.9450980392, alpha: 1))
         referfriends.layer.insertSublayer(m, at: 0)
         var tim = UIImageView(frame: CGRect(x: 10, y: 6, width: 20, height: 15))
         tim.image = #imageLiteral(resourceName: "surface1")
         referfriends.addSubview(tim)
-        var tx = UITextView(frame: referfriends.frame)
+        var tx : UITextView
+        var ttx : UITextView
+        var ttxj : UITextView
+        if self.view.frame.size.width > 330 {
+            
+         tx = UITextView(frame: CGRect(x: 32, y: 0, width: 60, height: 30))
+            tx.font = UIFont(name: "NeusaNextStd-Light", size: 6)
+        }
+        else {
+             tx = UITextView(frame: CGRect(x: 22, y: 0, width: 60, height: 30))
+            tx.font = UIFont(name: "NeusaNextStd-Light", size: 4)
+        }
         tx.backgroundColor = UIColor.clear
         tx.isEditable = false
         tx.text = "Contests"
-        tx.font = UIFont(name: "NeusaNextStd-Light", size: 6)
+        
         tx.textAlignment = .right
         tx.textColor = UIColor.white
-//        referfriends.addSubview(tx)
+        referfriends.addSubview(tx)
         referfriends.addTarget(self, action: #selector(rfpressed), for: .touchUpInside)
+        let tpg = UITapGestureRecognizer(target: self, action: #selector(rfpressed))
+        tpg.numberOfTapsRequired = 1
+        tpg.isEnabled = true
+        tx.addGestureRecognizer(tpg)
         var n = self.applygradient(a:  #colorLiteral(red: 0.8235294118, green: 0.2941176471, blue: 0.5411764706, alpha: 1) , b: #colorLiteral(red: 0.9450980392, green: 0.3333333333, blue: 0.3333333333, alpha: 1))
         groupbtn.layer.insertSublayer(n, at: 0)
+        
+        
+        if self.view.frame.size.width > 330 {
+            
+            ttx = UITextView(frame: CGRect(x: 32, y: 0, width: 60, height: 30))
+            ttx.font = UIFont(name: "NeusaNextStd-Light", size: 6)
+        }
+        else {
+            ttx = UITextView(frame: CGRect(x: 22, y: 0, width: 60, height: 30))
+            ttx.font = UIFont(name: "NeusaNextStd-Light", size: 4)
+        }
 
-        var ttx = UITextView(frame: groupbtn.frame)
         ttx.backgroundColor = UIColor.clear
         ttx.isEditable = false
         ttx.text = "Groups"
-        ttx.font = UIFont(name: "NeusaNextStd-Light", size: 6)
         ttx.textAlignment = .right
         ttx.textColor = UIColor.white
-//        groupbtn.addSubview(ttx)
+        let tpgg = UITapGestureRecognizer(target: self, action: #selector(rfpressed2))
+        tpgg.numberOfTapsRequired = 1
+        tpgg.isEnabled = true
+        ttx.addGestureRecognizer(tpgg)
+        groupbtn.addSubview(ttx)
         var ttim = UIImageView(frame: CGRect(x: 10, y: 6, width: 22, height: 16))
           ttim.image = #imageLiteral(resourceName: "ic_group_24px-1")
           groupbtn.addSubview(ttim)
+        
+        var nj = self.applygradient(a:  #colorLiteral(red: 0.3137254902, green: 0.05882352941, blue: 0.5607843137, alpha: 1) , b: #colorLiteral(red: 0.4235294118, green: 0.2352941176, blue: 0.6156862745, alpha: 1))
+        jurysectionbtn.layer.insertSublayer(nj, at: 0)
+        
+        if self.view.frame.size.width > 330 {
+            
+            ttxj = UITextView(frame: CGRect(x: 26, y: 0, width: 80, height: 30))
+            ttxj.font = UIFont(name: "NeusaNextStd-Light", size: 5)
+            ttxj.text = "Jury Section"
+        }
+        else {
+            ttxj = UITextView(frame: CGRect(x: 18, y: 0, width: 60, height: 30))
+            ttxj.font = UIFont(name: "NeusaNextStd-Light", size: 4)
+            ttxj.text = "Jury"
+        }
+        
+        ttxj.backgroundColor = UIColor.clear
+        ttxj.isEditable = false
+        
+        ttxj.textAlignment = .right
+        ttxj.textColor = UIColor.white
+        let tpggg = UITapGestureRecognizer(target: self, action: #selector(rfpressed3))
+        tpggg.numberOfTapsRequired = 1
+        tpggg.isEnabled = true
+        ttxj.addGestureRecognizer(tpggg)
+                jurysectionbtn.addSubview(ttxj)
+        var ttimj = UIImageView(frame: CGRect(x: 10, y: 6, width: 22, height: 16))
+        ttimj.image = UIImage(named: "Group 1777")
+        jurysectionbtn.addSubview(ttimj)
         
        
 
@@ -194,13 +260,53 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
     @objc func rfpressed()
     {
         print("xyz")
+        jurysectionpressed = false
+        if let auth = UserDefaults.standard.value(forKey: "refid") as? String {
+            
+            print("a")
+            contesttapped = true
+            performSegue(withIdentifier: "gotocontestsandgroups", sender: nil)
+        }
+        else {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    @objc func rfpressed2()
+    {
+        print("xyz")
+        jurysectionpressed = false
+        if let auth = UserDefaults.standard.value(forKey: "refid") as? String {
+            
+            print("b")
+            contesttapped = false
+            performSegue(withIdentifier: "gotocontestsandgroups", sender: nil)
+        }
+        else {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    @objc func rfpressed3()
+    {
+        print("xyz")
+        jurysectionpressed = true
+        if let auth = UserDefaults.standard.value(forKey: "refid") as? String {
+            
+            print("b")
+            contesttapped = false
+            performSegue(withIdentifier: "gotocontestsandgroups", sender: nil)
+        }
+        else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     
     func applygradient(a:UIColor , b:UIColor) -> CAGradientLayer
           {
               let gl = CAGradientLayer()
-              gl.frame = referfriends.bounds
+              gl.frame = CGRect(x: 0, y: 0, width: self.jurysectionbtn.frame.size.width * 2, height: 30)
               gl.colors = [a.cgColor,b.cgColor]
             gl.cornerRadius = 15
               return gl
@@ -391,7 +497,7 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
     
     
     @IBAction func referfriendspressed(_ sender: UIButton) {
-        
+        jurysectionpressed = false
         if let auth = UserDefaults.standard.value(forKey: "refid") as? String {
             
             print("a")
@@ -406,6 +512,7 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
     
     
     @IBAction func groupbtnpressed(_ sender: UIButton) {
+        jurysectionpressed = false
         if let auth = UserDefaults.standard.value(forKey: "refid") as? String {
             
             print("b")
@@ -416,6 +523,22 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
             self.dismiss(animated: true, completion: nil)
         }
     }
+    
+    
+    @IBAction func jurysectionpressed(_ sender: Any) {
+        jurysectionpressed = true
+        if let auth = UserDefaults.standard.value(forKey: "refid") as? String {
+            
+            print("b")
+            contesttapped = false
+            performSegue(withIdentifier: "gotocontestsandgroups", sender: nil)
+        }
+        else {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    
     
     
     
@@ -698,7 +821,13 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
             seg.categoryname = self.selectedcategory?.categoryName.lowercased() ?? self.selectedcategory2?.categoryname.lowercased() ?? ""
         }
         if let seg = segue.destination as? GroupandEventsViewController {
-            seg.isother = self.contesttapped
+            print(jurysectionpressed)
+            if jurysectionpressed == true {
+                seg.jurysectionpressed = true
+            }
+            else {
+                seg.isother = self.contesttapped
+            }
         }
     }
 

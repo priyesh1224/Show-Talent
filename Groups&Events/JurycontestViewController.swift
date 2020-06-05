@@ -9,7 +9,9 @@
 import UIKit
 import Alamofire
 
-class JurycontestViewController: UIViewController , UITableViewDelegate , UITableViewDataSource {
+class JurycontestViewController: UIViewController , UITableViewDelegate , UITableViewDataSource , UIPickerViewDelegate , UIPickerViewDataSource {
+   
+    
  
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
@@ -28,7 +30,10 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     
     @IBOutlet weak var nopostsavailable: Customlabel!
     
+    @IBOutlet weak var filterpickerdone: UIButton!
+    @IBOutlet weak var filterpicker: UIPickerView!
     
+    @IBOutlet weak var filterviewpart: UIView!
     
     @IBOutlet weak var popupheading: UILabel!
     static var currentshowingrank = 1
@@ -36,22 +41,29 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     var rankallocatedfeeds : Dictionary<Int,feeds>  = [:]
     
     var loadthisvideo = false
-    
+    var page = 0
     var joined = false
     var eventcreator : juryorwinner?
     var currentevent : strevent?
     
     var selectedsection = "contestdetails"
     
-    var contestid = 25
+    var contestid = 1396
     var postid = 0
     var allfeeds : [feeds] = []
     
     var winningfeeds : [feeds] = []
     var tappedfeed : feeds?
-    var totalwinners = 2
+    var totalwinners = 1
     var totalparticipants = 0
     var videoallowed = false
+    var datalock = true
+    
+    
+    var filterselected = "none"
+    
+    var juryseen = true
+    
     @IBOutlet weak var submitbtn: UIButton!
     
    static var allowedfurtherselection : Bool = true
@@ -59,6 +71,24 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     @IBOutlet weak var screentitle: UILabel!
     
     @IBOutlet weak var table: UITableView!
+    
+    
+    @IBOutlet weak var minipopupcover: UIView!
+    
+    @IBOutlet weak var minipopup: UIView!
+    
+    
+    @IBOutlet weak var minipopuplineone: Customlabel!
+    
+    
+    @IBOutlet weak var minipopuplinetwo: Customlabel!
+    
+    
+    @IBOutlet weak var minipopupokbutton: CustomButton!
+    
+    
+    
+    
     
     
     var alreadypostedwinners : [juryorwinner] = []
@@ -74,17 +104,105 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
         self.confirmbtn.isEnabled = false
         self.spinner.isHidden = true
         self.spinner.stopAnimating()
+        print("Check Point 1")
         self.geteventdata(id: self.contestid)
+        print("Check Point 2")
         self.outercover.isHidden = true
         self.submitbtn.isEnabled = false
         self.submitbtn.setTitleColor(#colorLiteral(red: 0.6666666865, green: 0.6666666865, blue: 0.6666666865, alpha: 1), for: .normal)
         self.winnerspopup.layer.cornerRadius = 20
+        filterpickerdone.layer.cornerRadius = 20
         self.cancelbtn.layer.cornerRadius = self.cancelbtn.frame.size.height/2
         self.confirmbtn.layer.cornerRadius = self.confirmbtn.frame.size.height/2
+        filterpicker.delegate = self
+        filterpicker.dataSource = self
+        filterpicker.reloadComponent(0)
 
+        self.minipopupcover.isHidden = true
+        
+        minipopup.layer.cornerRadius = 10
+        minipopupokbutton.layer.cornerRadius = 15
 
        
     }
+    
+    
+    
+    @IBAction func minipopupokpressed(_ sender: Any) {
+        var url = "\(Constants.K_baseUrl)\(Constants.juryseen)?contestId=\(self.contestid)"
+        var r = BaseServiceClass()
+        r.getApiRequest(url: url, parameters: [:]) { (resp, err) in
+            if let res = resp?.result.value as? Dictionary<String,Any> {
+                print(res)
+                if let code = res["ResponseStatus"] as? Int {
+                    if code == 0 {
+                        self.minipopupcover.isHidden = true
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 3
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 60
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if row == 0 {
+            return "None"
+        }
+        if row == 1 {
+            return "By Likes"
+        }
+        if row == 2 {
+            return "By Comments"
+        }
+        return ""
+    }
+    
+    
+    
+    @IBAction func filterpickerdonepressed(_ sender: Any) {
+        var oldfilterselected = filterselected
+        if filterpicker.selectedRow(inComponent: 0) == 0 {
+            filterselected = "none"
+        }
+        else if filterpicker.selectedRow(inComponent: 0) == 1 {
+            filterselected = "likes"
+        }
+        else {
+            filterselected = "comments"
+        }
+        if oldfilterselected != filterselected {
+            
+            self.fetchfeeds(pg: 0, isfiltering: true) { (st) in
+                oldfilterselected = self.filterselected
+                self.table.reloadData()
+            }
+            
+           
+        }
+        
+        self.outercover.isHidden = true
+    }
+    
+    
+    
+    @IBAction func closefilterviewpart(_ sender: Any) {
+        self.outercover.isHidden = true
+    }
+    
+    
     
     
     @IBAction func backpressed(_ sender: UIButton) {
@@ -165,27 +283,33 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     
     @IBAction func submitwinnerstapped(_ sender: UIButton) {
         self.outercover.isHidden = false
+        self.filterviewpart.isHidden = true
+        self.winnerspopup.isHidden = false
     }
     
     func geteventdata(id : Int)
     {
+        print("Check Point 3")
         self.spinner.isHidden = false
         self.spinner.startAnimating()
         var userid = UserDefaults.standard.value(forKey: "refid") as! String
-        var url = Constants.K_baseUrl + Constants.getparticularevent
+        var url = "\(Constants.K_baseUrl)\(Constants.getparticularevent)?contestId=\(id)&participentUserId=\(userid)"
                     var params : Dictionary<String,Any> = ["contestId": id]
                     print(params)
+        print(url)
                     var r = BaseServiceClass()
-        
-                    r.getApiRequest(url: url, parameters: params) { (response, err) in
+                    print("Check Point 4")
+        r.getApiRequest(url: url, parameters: [:]) { (response, err) in
                         
                         if let resv = response?.result.value as? Dictionary<String,Any> {
                             print(resv)
+                            print("Check Point 5")
                             if let resps = resv["ResponseStatus"] as? Int {
                                 if resps == 1 {
                                     print("Error")
                                 }
                                 else {
+                                    print("Check Point 6")
                                     if let each = resv["Results"] as? Dictionary<String,Any> {
                                         
                                                 var contestid = 0
@@ -285,6 +409,9 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                                                 if let cn = each["CreateOn"] as? String {
                                                     createon = cn
                                                 }
+                                        if let cn = each["JurySeen"] as? Bool {
+                                            self.juryseen = cn
+                                        }
                                         if let cn = each["TotalParticipation"] as? Int {
                                             self.totalparticipants = cn
                                         }
@@ -359,17 +486,34 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                                                 
                                             }
                                         }
+                                        
+                                        print("Check Point 7")
                                                 
                                         var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn)
-                                                
+                                        
+                                        
+                                        print("Check Point 8")
                                         self.currentevent = x
                                         self.screentitle.text = contestname.capitalized
                                           print(x)
                                         self.spinner.isHidden = true
                                         self.spinner.stopAnimating()
+                                        print("Check Point 9")
                                         if self.alreadypostedwinners.count > 0 {
                                             self.submitbtn.isHidden = true
                                         }
+                                        if self.juryseen == false {
+                                        var fn = UserDefaults.standard.value(forKey: "firstname") as! String
+                                        self.minipopuplineone.text = "Welcome \(fn.capitalized) , you are jury in this \(contestname.capitalized) Contest."
+                                            if noofwinn == 1 {
+                                                self.minipopuplinetwo.text = "You can select \(noofwinn) Winner."
+                                            }
+                                            else {
+                                                self.minipopuplinetwo.text = "You can select \(noofwinn) Winners."
+                                            }
+                                            self.minipopupcover.isHidden = false
+                                        }
+                                        print("Check Point 10")
                                         self.table.reloadData()
                                     }
                                 }
@@ -377,6 +521,15 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                         }
                     }
 
+    }
+    
+    
+    func checkforpopup()
+    {
+        if self.juryseen == false {
+            
+        }
+        
     }
     
     
@@ -388,12 +541,33 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
      
      
      
-     func fetchfeeds(d : @escaping progressindata)
+    func fetchfeeds(pg : Int,isfiltering : Bool , d : @escaping progressindata)
      {
-         let url = "\(Constants.K_baseUrl)\(Constants.contestfeeds)?contestId=\(self.contestid)"
+        var lik = 0
+        var comm = 0
+        var views = 0
+        if self.filterselected == "none" {
+            lik = 0
+            comm = 0
+            views = 0
+        }
+        else if self.filterselected == "likes" {
+            lik = 2
+            comm = 0
+            views = 0
+        }
+        else if self.filterselected == "comments" {
+            lik = 0
+            comm = 2
+            views = 0
+        }
+        if isfiltering {
+            self.allfeeds = []
+        }
+         let url = "\(Constants.K_baseUrl)\(Constants.contestfeeds)?contestId=\(self.contestid)&orderByLike=\(lik)&orderByView=\(views)&orderByComment=\(comm)"
          
          let useid = UserDefaults.standard.value(forKey: "refid") as! String
-         var params : Dictionary<String,Any> = [  "Page": 0,"PageSize": 10]
+         var params : Dictionary<String,Any> = [  "Page": pg,"PageSize": 10]
          print(url)
          print(params)
          let r = BaseServiceClass()
@@ -485,7 +659,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                                 }
                                 if let s =  each["ReplyComments"] as? [Dictionary<String,Any>] {
                                     for each in s {
-                                        var id = ""
+                                        var idd = ""
                                         var cid = 0
                                         var  aid = 0
                                         var pname = ""
@@ -518,12 +692,9 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                                         if let s =  each["Ondate"] as? String {
                                             ondate = s
                                         }
-                                        if let s =  each["ReplyComments"] as? [Dictionary<String,Any>] {
-                                            
-                                            
-                                        }
-                                        var cm = comment(id: id, comentid: cid, activityid: aid, profilename: pname, profileimage: pimage, userid: uid, usercomment: ucomment, ondate: ondate, replycomments: [] , status: "reply")
-                                        replycomm.append(cm)
+                                       
+                                        var cmm = comment(id: idd, comentid: cid, activityid: aid, profilename: pname, profileimage: pimage, userid: uid, usercomment: ucomment, ondate: ondate, replycomments: [] , status: "reply")
+                                        replycomm.append(cmm)
                                         
                                     }
 
@@ -695,6 +866,16 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
         
         if indexPath.section == 0 {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "juryone", for: indexPath) as? JuryContestoneTableViewCell {
+                
+                cell.presentfilterlist = {a in
+                    if a {
+                        self.outercover.isHidden = false
+                        self.filterviewpart.isHidden = false
+                        self.winnerspopup.isHidden = true
+                    }
+                }
+                
+                
                 cell.passbacktapped = { a in
                     self.selectedsection = a
                     self.table.reloadData()
@@ -706,11 +887,13 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                         else {
                             if self.allfeeds.count == 0 {
                                 
-                                self.fetchfeeds { (st) in
+                                self.fetchfeeds(pg: 0, isfiltering: false) { (st) in
                                     if st {
                                         self.table.reloadData()
                                     }
                                 }
+                                
+                               
                             }
                         }
                         
@@ -718,7 +901,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                     }
                 }
                 if let e  = self.currentevent as? strevent {
-                    cell.updatecell(x : e )
+                    cell.updatecell(x : e ,b : self.filterselected )
                 }
                 
                 return cell
@@ -756,6 +939,8 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                         self.winnerpopupheight.constant = CGFloat(150 + ( self.winningfeeds.count * 60 ))
                         self.winnertableview.reloadData()
                         self.outercover.isHidden = false
+                        self.filterviewpart.isHidden = true
+                        self.winnerspopup.isHidden = false
                         
                     }
                     print("Winning feeds count \(self.winningfeeds.count)")
@@ -833,7 +1018,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
             return 50
         }
         if indexPath.section == 0 {
-            return 300
+            return 380
         }
         else if indexPath.section == 1 {
             return 420
@@ -846,16 +1031,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     
     
     
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print("Me removed \(indexPath.row)")
-        if let cell = tableView.cellForRow(at: indexPath) as? JurycontestthreeTableViewCell {
-            if let p = cell.player  {
-                p.isMuted = true
-                p.pause()
-            }
-
-        }
-    }
+   
     
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -893,6 +1069,29 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
             if let p = cell.player  {
                 
                 p.isMuted = !p.isMuted
+            }
+            
+        }
+    }
+    
+    
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == self.allfeeds.count - 3 && datalock == false && self.allfeeds.count >= 10 {
+            page = page + 1
+            self.fetchfeeds(pg: page, isfiltering: false) { (st) in
+                self.table.reloadData()
+            }
+            datalock = true
+        }
+        if indexPath.row == self.allfeeds.count {
+            datalock = false
+        }
+        
+        if let cell = tableView.cellForRow(at: indexPath) as? JurycontestthreeTableViewCell {
+            if let p = cell.player  {
+                p.isMuted = true
+                p.pause()
             }
             
         }

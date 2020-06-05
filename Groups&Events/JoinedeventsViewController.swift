@@ -68,6 +68,8 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     var tablemode = "details"
     
     
+    @IBOutlet weak var nopostswarning: UILabel!
+    @IBOutlet weak var postpendingwarning: UIView!
     @IBOutlet weak var showcontestdetails: UIButton!
     
     @IBOutlet weak var showcontestposts: UIButton!
@@ -154,7 +156,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     @IBOutlet weak var backbtnbehindview: UIView!
     
     
-    
+   
     
     @IBOutlet var editlayer: Shadowedbuttonview!
     
@@ -162,6 +164,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         
         super.viewDidLoad()
         JoinedeventsViewController.holder.removeAll()
+        nopostswarning.isHidden = true
         if self.tthemename.lowercased() == "hip-hop" {
             self.tthemename = "hip hop"
         }
@@ -258,19 +261,10 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                     
                     
                     if self.eventjoined?.participationpostallow == true {
-                        var alreasypostedinview = UIView(frame: CGRect(x: self.view.frame.size.width/3.5, y: 32, width: self.view.frame.size.width/1.3, height: 30))
-                        alreasypostedinview.layer.cornerRadius = 15
-                        alreasypostedinview.backgroundColor = UIColor.red
-                        var imv = UIImageView(frame: CGRect(x: 4, y: 0, width: 26, height: 30))
-                        imv.image = #imageLiteral(resourceName: "Group 1744")
-                        imv.contentMode = .scaleAspectFit
-                        alreasypostedinview.addSubview(imv)
-                        
-                        var ic = UILabel(frame: CGRect(x: 30, y: 0, width: self.view.frame.size.width/1.6, height: 30))
-                        ic.text = "Post Pending"
-                        ic.textColor =  UIColor.white
-                        alreasypostedinview.addSubview(ic)
-                        self.coverview.addSubview(alreasypostedinview)
+                       self.postpendingwarning.isHidden = false
+                    }
+                    else {
+                        self.postpendingwarning.isHidden = true
                     }
                     
 //                    self.table.reloadData()
@@ -361,6 +355,12 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         self.showcontestposts.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
         self.view.layer.insertSublayer(gradientLayer, at: 0)
         self.table.reloadData()
+        if self.allfeeds.count == 0 && self.tablemode != "details" {
+            self.nopostswarning.isHidden = false
+        }
+        else {
+            self.nopostswarning.isHidden = true
+        }
     }
     
     
@@ -372,6 +372,12 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         self.showcontestposts.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
         self.gradientLayer.removeFromSuperlayer()
         self.table.reloadData()
+        if self.allfeeds.count == 0 && self.tablemode != "details" {
+            self.nopostswarning.isHidden = false
+        }
+        else {
+            self.nopostswarning.isHidden = true
+        }
     }
     
     
@@ -510,6 +516,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     func fetchfeeds(d : @escaping progressindata)
     {
+      
         let url = "\(Constants.K_baseUrl)\(Constants.contestfeeds)?contestId=\(self.eventid)"
         
         let useid = UserDefaults.standard.value(forKey: "refid") as! String
@@ -768,6 +775,13 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                         
                     }
                     
+                    if self.allfeeds.count == 0 && self.tablemode != "details" {
+                         self.nopostswarning.isHidden = false
+                    }
+                    else {
+                         self.nopostswarning.isHidden = true
+                    }
+                    
                     
                     if let ev = self.eventjoined as? strevent {
                         self.spinner.isHidden = true
@@ -783,6 +797,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     func eventsummary(done : @escaping progressindata)
     {
+        
         var userid = UserDefaults.standard.value(forKey: "refid") as! String
         var url = "\(Constants.K_baseUrl)\(Constants.getparticularevent)?contestId=\(self.eventid)&participentUserId=\(userid)"
         var params : Dictionary<String,Any> = ["contestId": self.eventid]
@@ -791,6 +806,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         self.spinner.startAnimating()
         
         print(params)
+        print(url)
         let r = BaseServiceClass()
         r.getApiRequest(url: url, parameters: params) { (response, err) in
             if let res = response?.result.value as? Dictionary<String,Any> {

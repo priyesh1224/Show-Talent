@@ -158,6 +158,9 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
     var dropdownselectedtype = ""
     
     override func viewDidLoad() {
+        
+        
+        super.viewDidLoad()
         self.spinner.isHidden = true
         self.spinner.stopAnimating()
         okbtn.layer.cornerRadius = 30
@@ -169,8 +172,6 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
             self.createsliderbtn.setTitle("Create", for: .normal)
             self.createbottombutton.setTitle("Create", for: .normal)
         }
-        
-        super.viewDidLoad()
         self.table.delegate = self
         self.table.dataSource = self
         self.datepicker.minimumDate = Date()

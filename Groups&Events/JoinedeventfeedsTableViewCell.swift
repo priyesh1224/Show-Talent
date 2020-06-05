@@ -64,7 +64,9 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     
     var player : AVPlayer!
     var avplayeritem : AVPlayerItem!
-    
+    var layerc : AVPlayerLayer?
+    var muteunmute : UIButton?
+     var sp : UIActivityIndicatorView?
     var audio : AVAudioPlayer?
     var pv : UIProgressView!
     var musicurl = ""
@@ -155,12 +157,20 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
                 }
             }
             
+            if let s =  self.sp as? UIActivityIndicatorView {
+                s.isHidden = false
+                s.startAnimating()
+            }
             if y {
             
                 DispatchQueue.global(qos: .utility).async {
                     self.downloadvideo(url: x.activitypath) { (play) in
                         DispatchQueue.main.async {
                             if play?.status == .readyToPlay {
+                                if let s =  self.sp as? UIActivityIndicatorView {
+                                    s.isHidden = true
+                                    s.stopAnimating()
+                                }
                                 play?.play()
                                 self.feedimage.isHidden = true
                             }
@@ -228,10 +238,27 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
             self.player.pause()
             self.player = nil
         }
+         self.layerc?.removeFromSuperlayer()
 
     }
     
-    
+    @objc func muteunmuteaudio()
+    {
+        print("Muting")
+        if let p = self.player as? AVPlayer {
+            p.isMuted = !p.isMuted
+            if p.isMuted {
+                if let m = muteunmute as? UIButton {
+                    muteunmute?.setImage(#imageLiteral(resourceName: "mute"), for: .normal)
+                }
+            }
+            else {
+                if let m = muteunmute as? UIButton {
+                    muteunmute?.setImage(#imageLiteral(resourceName: "unmute"), for: .normal)
+                }
+            }
+        }
+    }
     
     @IBAction func sendbackactualcommentcount(_ sender: Any) {
         
@@ -352,28 +379,55 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         //        player = AVPlayer(url: (NSURL(string: url) as! URL))
         
         player = AVPlayer(playerItem: avplayeritem)
+        DispatchQueue.main.async{
+            self.feedimage.isHidden = true
+        }
+        
+        player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
+
         player.isMuted = true
         //        player.automaticallyWaitsToMinimizeStalling = true
-        var layer = AVPlayerLayer(player: player)
-        
-        
+         layerc = AVPlayerLayer(player: player)
+        sp = UIActivityIndicatorView(frame: CGRect(x: self.feedimage.frame.size.width/2 + 30, y: self.feedimage.frame.size.height/2 , width: 60, height: 60))
+        sp?.center = CGPoint(x: self.frame.size.width/2, y: self.frame.size.height/2)
+        sp?.color = UIColor.white
+        sp?.style = .whiteLarge
+        sp?.isHidden = false
+        sp?.startAnimating()
+        muteunmute = UIButton(frame: CGRect(x: self.frame.size.width - 38, y: 350, width: 25, height: 20))
+        muteunmute?.setTitle("", for: .normal)
+        muteunmute?.setImage(#imageLiteral(resourceName: "mute"), for: .normal)
+        if let b = muteunmute as? UIButton {
+            DispatchQueue.main.async {
+                self.contentView.addSubview(b)
+            }
+        }
+        muteunmute?.addTarget(self, action: #selector(muteunmuteaudio), for: .touchUpInside)
         DispatchQueue.main.async {
-            layer.backgroundColor = UIColor.black.cgColor
-            layer.videoGravity = AVLayerVideoGravity.resizeAspect
+            self.layerc?.backgroundColor = UIColor.black.cgColor
+            self.layerc?.videoGravity = AVLayerVideoGravity.resizeAspect
             
             
-            layer.frame = CoreGraphics.CGRect(x: self.feedimage.frame.origin.x,
+            self.layerc?.frame = CoreGraphics.CGRect(x: self.feedimage.frame.origin.x,
                                               y: self.feedimage.frame.origin.y + 20,
                                               width: self.feedimage.frame.size.width,
                                               height: self.feedimage.frame.size.height
             )
             //        layer.bounds.size.height = 170
-            layer.cornerRadius = 0
-            layer.masksToBounds = true
+            self.layerc?.cornerRadius = 0
+            self.layerc?.masksToBounds = true
             
             self.contentView.clipsToBounds = true
-            
-            self.contentView.layer.addSublayer(layer)
+            if let l = self.layerc as? AVPlayerLayer {
+                self.contentView.layer.addSublayer(l)
+                if let s = self.sp?.layer as? CALayer {
+                    self.contentView.layer.addSublayer(s)
+                }
+                if let s = self.muteunmute?.layer as? CALayer {
+                    //                    self.contentView.layer.addSublayer(s)
+                }
+                
+            }
         }
         
         if let p = self.player {

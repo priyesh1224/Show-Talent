@@ -25,11 +25,15 @@ class CoinsTableViewCell: UITableViewCell {
     @IBOutlet weak var loginbtn: UIButton!
     
     
-    func updatecell()
+    func updatecell(x : coinearning)
     {
 
         self.outerview.layer.cornerRadius = 10
         self.loginbtn.layer.cornerRadius = 10
+        self.upperlabel.text = x.eventdescription.capitalized
+        self.bottomimage.text = "\(x.coin) Coins"
+        self.loginbtn.setTitle("Completed", for: .normal)
+        self.selectionStyle = .none
         
     }
     

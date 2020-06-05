@@ -13,6 +13,19 @@ import AVKit
 class JurycontestthreeTableViewCell: UITableViewCell {
     
     
+    
+    @IBOutlet weak var selectbrntrailing: NSLayoutConstraint!
+    
+    @IBOutlet weak var userimageleading: NSLayoutConstraint!
+    
+    @IBOutlet weak var userimagewidth: NSLayoutConstraint!
+    
+    @IBOutlet weak var userimageheight: NSLayoutConstraint!
+    
+    
+    
+    
+    
     var passwinner : ((_ x : feeds) -> ())?
     var removewinner : ((_ x : feeds) -> ())?
     var sendclickedevent : ((_ x : String , _ y : Int , _ z : feeds) -> Void)?
@@ -64,6 +77,13 @@ class JurycontestthreeTableViewCell: UITableViewCell {
 //            }
 //        }
         
+        
+       
+        
+        
+        
+        
+        
         if let p = player {
             self.player.pause()
             self.player = nil
@@ -112,6 +132,16 @@ class JurycontestthreeTableViewCell: UITableViewCell {
                 self.userimage.image = imm
             }
         }
+        
+        if self.frame.size.width < 330 {
+        selectbrntrailing.constant = -4
+        userimageleading.constant = 8
+        userimagewidth.constant = 40
+        userimageheight.constant = 40
+        userimage.layer.cornerRadius = 20
+        }
+        
+        
         
         if x.type.lowercased() == "video" || x.type.lowercased() == "videos" {
             self.downloadimage(url: x.thumbnail) { (im) in

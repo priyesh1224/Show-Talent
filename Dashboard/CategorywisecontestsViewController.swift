@@ -89,17 +89,21 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
     @IBAction func segmentchanged(_ sender: Any) {
         if self.segmentcontroll.selectedSegmentIndex == 0 {
             if self.allcategorywiseevents.count == 0 {
+                self.nodatawarning.isHidden = false
                 self.fetchdata(pg: 0)
             }
             else {
+                self.nodatawarning.isHidden = true
                 self.table.reloadData()
             }
         }
         else {
             if self.allcategorywiseclosedevents.count == 0 {
+                self.nodatawarning.isHidden = false
                 self.fetchdata(pg: 0)
             }
             else {
+                self.nodatawarning.isHidden = true
                 self.table.reloadData()
             }
         }

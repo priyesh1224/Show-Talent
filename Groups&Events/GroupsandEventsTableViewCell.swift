@@ -52,6 +52,7 @@ class GroupsandEventsTableViewCell: UITableViewCell,UICollectionViewDelegate,UIC
     var createtapped : ((_ x : String) -> Void)?
     var alleventsdata : [strevent] = []
     var alljurydata : [streventcover] = []
+    var allselfjurydata : [streventcover] = []
     var passcounts : ((_ count : Int) -> ())?
     
     var isblannk : ((_ count : Bool , _ x : String , _ z : Int) -> ())?
@@ -192,7 +193,15 @@ class GroupsandEventsTableViewCell: UITableViewCell,UICollectionViewDelegate,UIC
     func fetchdata(x:String)
     {
         
-        
+        if x == "jury in own"{
+            self.allselfjurydata = GroupandEventsViewController.copyselfjuryevents
+            if self.allselfjurydata.count == 0{
+                self.isblannk?(true , "contest" , self.tag)
+            }
+            else {
+                self.isblannk?(false , "contest", self.tag)
+            }
+        }
         
         if x == "joined events"{
             self.joinedeventsdata = GroupandEventsViewController.copyjoinedevents
@@ -1560,7 +1569,7 @@ class GroupsandEventsTableViewCell: UITableViewCell,UICollectionViewDelegate,UIC
                             }
                             var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn)
                                                
-                                                   var y = streventcover(a: x, b: joined, c: joinstatus)
+                                var y = streventcover(a: x, b: joined, c: joinstatus)
                                                   
                               
                                    self.alljurydata.append(y)
@@ -1621,6 +1630,22 @@ class GroupsandEventsTableViewCell: UITableViewCell,UICollectionViewDelegate,UIC
             }
             return closedcontestes.count
             
+        }
+        else if self.title.lowercased() == "jury in own" {
+            if allselfjurydata.count == 0 {
+                self.nodataview.isHidden = false
+                self.nodataimage.isHidden = false
+                self.collection.isHidden = true
+                self.nodataunderline.text = "Create your fantastic contest."
+                self.nodatacreatebtn.setTitle("Create Contest", for: .normal)
+                self.nodataimage.image = UIImage(named: "mcontest")
+            }
+            else {
+                self.nodataview.isHidden = true
+                self.nodataimage.isHidden = true
+                self.collection.isHidden = false
+            }
+            return allselfjurydata.count
         }
         else if self.title.lowercased() == "i am jury in" {
             if alljurydata.count == 0 {
@@ -1746,6 +1771,9 @@ class GroupsandEventsTableViewCell: UITableViewCell,UICollectionViewDelegate,UIC
             else if self.title.lowercased() == "recommended contests" {
                  cell.updatecell3(item:recommendedevents[indexPath.row], type: title.lowercased())
             }
+            else if self.title.lowercased() == "jury in own" {
+                cell.updatecell3(item:allselfjurydata[indexPath.row], type: title.lowercased())
+            }
                 else if self.title.lowercased() == "i am jury in"
                 {
                 
@@ -1775,6 +1803,9 @@ class GroupsandEventsTableViewCell: UITableViewCell,UICollectionViewDelegate,UIC
         }
         else if self.title == "joined groups" {
             self.selectedgrouppassed!(self.joinedgroups[indexPath.row])
+        }
+        else if self.title.lowercased() == "jury in own" {
+            self.selectedjurypassed!(self.allselfjurydata[indexPath.row])
         }
             else if self.title == "i am jury in" {
                 self.selectedjurypassed!(self.alljurydata[indexPath.row])

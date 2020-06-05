@@ -8,6 +8,16 @@
 
 import UIKit
 
+
+
+struct coinearning {
+    var id : Int
+    var eventname : String
+    var eventdescription : String
+    var coin : Int
+    var coincounter : Int
+}
+
 class CoinsViewController: UIViewController , UITableViewDelegate , UITableViewDataSource {
    
     
@@ -28,7 +38,7 @@ class CoinsViewController: UIViewController , UITableViewDelegate , UITableViewD
     
     @IBOutlet weak var table: UITableView!
     
-
+    var allcoinsearning : [coinearning] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,7 +46,7 @@ class CoinsViewController: UIViewController , UITableViewDelegate , UITableViewD
         self.bannerheight.constant = self.view.frame.size.height/4
         table.delegate = self
         table.dataSource = self
-        table.reloadData()
+        fetchdata()
         
         let m = self.applygradient(a: #colorLiteral(red: 0.3215686275, green: 0.3058823529, blue: 0.7803921569, alpha: 1), b: #colorLiteral(red: 0.1960784314, green: 0.4784313725, blue: 0.6666666667, alpha: 1))
         self.bannerview.layer.insertSublayer(m, at: 0)
@@ -44,6 +54,54 @@ class CoinsViewController: UIViewController , UITableViewDelegate , UITableViewD
 
         // Do any additional setup after loading the view.
     }
+    
+    
+    
+    func fetchdata()
+    {
+        var url = "\(Constants.K_baseUrl)\(Constants.coinsledger)"
+       
+        var r = BaseServiceClass()
+        r.getApiRequest(url: url, parameters: [:]) { (response, err) in
+            if let res = response?.result.value as? Dictionary<String,Any> {
+                if let rr = res["Results"] as? Dictionary<String,Any> {
+                    if let dt = rr["Data"] as? [Dictionary<String,Any>] {
+                        for each in dt {
+                            var id : Int = 0
+                            var eventname : String = ""
+                            var eventdescription = ""
+                            var coin = 0
+                            var coincounter = 0
+                           
+                            if let e = each["Id"] as? Int {
+                                id = e
+                            }
+                            if let e = each["EventName"] as? String {
+                                eventname = e
+                            }
+                            if let e = each["EventDescription"] as? String {
+                                eventdescription = e
+                            }
+                            if let e = each["Coin"] as? Int {
+                                coin = e
+                            }
+                            if let e = each["CoinCounter"] as? Int {
+                                coincounter = e
+                            }
+                          
+                            
+                          let x  = coinearning(id: id, eventname: eventname, eventdescription: eventdescription
+                            , coin: coin, coincounter: coincounter)
+                            self.allcoinsearning.append(x)
+                        }
+                        print(self.allcoinsearning)
+                        self.table.reloadData()
+                    }
+                }
+            }
+        }
+    }
+    
     
     
     func applygradient(a:UIColor , b:UIColor) -> CAGradientLayer
@@ -56,12 +114,12 @@ class CoinsViewController: UIViewController , UITableViewDelegate , UITableViewD
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return self.allcoinsearning.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "coincell", for: indexPath) as? CoinsTableViewCell {
-            cell.updatecell()
+            cell.updatecell(x : self.allcoinsearning[indexPath.row])
             return cell
         }
         return UITableViewCell()

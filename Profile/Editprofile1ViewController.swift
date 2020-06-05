@@ -65,11 +65,11 @@ class Editprofile1ViewController: UIViewController, UITableViewDelegate , UITabl
     
     var imgtypes : [String] = []
     
-    var content1 = ["notifications","bookmarking","change password","privacy","your wallet","buy pro version"]
-    var content2 = ["block accounts","customer support","change language","change category","logout"]
+    var content1 = ["FAQ's","Account Settings","notifications","your wallet","event booking history","your plan - basic"]
+    var content2 = ["customer support","privacy policy","terms & conditions","need help with other issues","logout"]
     
-    var im1 = ["custom – 1 4","bookmark-settings","pending payment","custom – 1 5","",""]
-    var im2 = ["block" ,"support","languages","list","logout"]
+    var im1 = ["008-information","custom – 1 5","custom – 1 4","yourwallet","011-event-1","Group 1280"]
+    var im2 = ["support","pending payment","pending payment","Group 1767","logout"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -287,6 +287,13 @@ class Editprofile1ViewController: UIViewController, UITableViewDelegate , UITabl
                 }
                 else if x == "notifications" {
                     performSegue(withIdentifier: "notifications", sender: nil)
+                }
+                else if x == "your plan - basic" {
+                    performSegue(withIdentifier: "buypro", sender: nil)
+                    
+                }
+                else if x == "event booking history" {
+                    performSegue(withIdentifier: "eventbook", sender: nil)
                 }
                 
                 
