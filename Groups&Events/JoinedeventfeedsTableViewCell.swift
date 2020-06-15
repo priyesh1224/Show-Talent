@@ -73,15 +73,17 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     var currentpostid = 0
     var commentslist : [comment] = []
     var sendbackactivityid : ((_ x : Int) -> Void)?
+     var tryingtolikeclosedcontest : ((_ x : Bool) -> Void)?
     var sendbackactualcomments : ((_ x : Int , _ y : [comment]) -> Void)?
+    var currentrunningstatus = ""
     
     override class func awakeFromNib() {
         print("New cell appeared")
     }
     
-    func updatecell(x : feeds , y : Bool)
+    func updatecell(x : feeds , y : Bool , runningstatus : String)
     {
-        
+        currentrunningstatus = runningstatus
         leadcommentimage.layer.cornerRadius = 20
         if x.comments.count == 0 {
             self.leadcommentregion.isHidden = true
@@ -454,15 +456,21 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     
     
     @IBAction func liketaped(_ sender: UIButton) {
-        if likestatus == false {
-            self.likebtn.setImage(UIImage(named: "liked"), for: .normal)
-            likestatus = true
-            fetchdata(lk : 1)
+        if currentrunningstatus == "closed" {
+            self.tryingtolikeclosedcontest!(true)
         }
-        else {
-            self.likebtn.setImage(UIImage(named: "like"), for: .normal)
-            likestatus = false
-            fetchdata(lk : 0)
+        else
+        {
+            if likestatus == false {
+                self.likebtn.setImage(UIImage(named: "liked"), for: .normal)
+                likestatus = true
+                fetchdata(lk : 1)
+            }
+            else {
+                self.likebtn.setImage(UIImage(named: "like"), for: .normal)
+                likestatus = false
+                fetchdata(lk : 0)
+            }
         }
     }
     

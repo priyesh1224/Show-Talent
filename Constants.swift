@@ -117,6 +117,8 @@ struct Constants {
     
     static let coinsledger = "/CoinSystem/EarnCoinList"
     
+    static let getnotifications = "/PushNotification/GetNotification" 
+    
   //  /api/v{version}/Category/GetUserCategoryChoice
     static let blueColor = UIColor.init(red: 102.0/255, green: 178.0/255, blue: 255.0/255, alpha: 1)
     

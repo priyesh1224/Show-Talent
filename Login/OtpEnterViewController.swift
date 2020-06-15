@@ -260,9 +260,11 @@ class OtpEnterViewController: UIViewController , UITextFieldDelegate {
                                                 
                                                 DispatchQueue.global(qos: .background).async {
                                                     CoreDataManager.shared.loadallfromcontacts()
+                                                    DispatchQueue.main.async {
                                                     self.loginbtn.isEnabled = true
                                                     self.spinner.isHidden = true
                                                     self.spinner.stopAnimating()
+                                                    }
                                                 }
                                                        DispatchQueue.main.async {
                                                         self.loginbtn.isEnabled = true

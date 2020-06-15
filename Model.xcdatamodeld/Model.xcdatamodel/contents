@@ -11,9 +11,12 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="number" optional="YES" attributeType="String"/>
         <attribute name="onserver" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="profimage" optional="YES" attributeType="String"/>
+        <attribute name="profname" optional="YES" attributeType="String"/>
+        <attribute name="refguid" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Customcontact" positionX="-63" positionY="-18" width="128" height="103"/>
         <element name="Contestsharedingroup" positionX="-63" positionY="9" width="128" height="103"/>
+        <element name="Customcontact" positionX="-63" positionY="-18" width="128" height="148"/>
     </elements>
 </model>

@@ -49,14 +49,19 @@ class AllcommentsTableViewCell: UITableViewCell {
     var notifytoenableediting: ((_ showtools: Bool?,_ currentcomment: comment?,_ mode:String) -> ())?
 
 
-    func updatecell(x: comment) {
+    func updatecell(x: comment , rs : String) {
         self.selectionStyle = .none
         self.imageuser.layer.cornerRadius = 30
         
         self.replybtn.contentHorizontalAlignment = .left
         self.currentcommentinfo = x
         let userid = UserDefaults.standard.value(forKey: "refid") as! String
-        if userid != x.userid {
+        
+        if rs == "closed" {
+            self.replybtn.isHidden = true
+        }
+        
+        if userid != x.userid ||  rs == "closed" {
             self.deletecommentpressed.isHidden = true
             self.editcommentpressed.isHidden = true
         }
@@ -108,7 +113,7 @@ class AllcommentsTableViewCell: UITableViewCell {
     
     
     
-    func updatecell2(x: like) {
+    func updatecell2(x: like , rs : String) {
         self.deletecommentpressed.isHidden = true
         self.replybtn.isHidden = true
         username.text = x.profilename.capitalized

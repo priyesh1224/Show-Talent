@@ -27,7 +27,7 @@ struct groupcreated
     var groupimage : String
 }
 
-class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPickerViewDataSource,UITextFieldDelegate{
+class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPickerViewDataSource,UITextFieldDelegate {
 
     
     var pickerdata : [groupbelong] = []
@@ -76,6 +76,7 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
         createbottombtn.layer.cornerRadius = 25
         picketouterview.layer.cornerRadius = 20
         picketouterview.isHidden = true
+        pickerouterview2.isHidden = true
         picker.delegate = self
         picker.dataSource = self
         piecker2.delegate = self

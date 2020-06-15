@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITableViewDataSource {
  
@@ -31,6 +32,10 @@ class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITa
     var joinedevents : [streventcover] = []
     var joinedgroups : [groupevent] = []
     var juryevents : [streventcover] = []
+    var recommendedevents : [streventcover] = []
+    
+    
+    var needtoloadrecommendedevents = false
     
     
     @IBOutlet weak var table: UITableView!
@@ -92,6 +97,14 @@ class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITa
             self.screentitle.text = "Categories"
         }
         if typeoffetch == "recommended contests" {
+            if needtoloadrecommendedevents {
+                self.recommendedeventsummary(pg: 0) { (rs) in
+                    if rs {
+                        self.table.reloadData()
+                    }
+                }
+                
+            }
             self.screentitle.text = "Recommended contests"
         }
 
@@ -948,8 +961,222 @@ class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITa
            }
     }
     
-    
-    
+     typealias progressindata = ((_ done : Bool) -> Void)
+    func recommendedeventsummary(pg : Int ,done : @escaping progressindata)
+    {
+        
+        var lat = CLLocationDegrees(exactly: 0)
+        var longi = CLLocationDegrees(exactly: 0)
+        var locationManager = CLLocationManager()
+        locationManager.requestWhenInUseAuthorization()
+        var currentLoc: CLLocation!
+        if(CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
+            CLLocationManager.authorizationStatus() == .authorizedAlways) {
+            currentLoc = locationManager.location
+            if let lcc = currentLoc {
+                if let l = currentLoc.coordinate.latitude as? CLLocationDegrees {
+                    lat = l
+                }
+                if let lo = currentLoc.coordinate.longitude as? CLLocationDegrees {
+                    longi = lo
+                }
+            }
+        }
+        
+        
+        var userid = UserDefaults.standard.value(forKey: "refid") as! String
+        var uuid = UserDefaults.standard.value(forKey: "refid") as! String
+        var url = Constants.K_baseUrl + Constants.recommendedcontests
+        var params : Dictionary<String,Any> = ["Page": pg,
+                                               "PageSize": 10]
+        var addon = "?latitude=\(lat)&longitude=\(longi)&distance=5"
+        var allu = "\(url)\(addon)"
+        let r = BaseServiceClass()
+        r.postApiRequest(url: allu, parameters: params) { (response, err) in
+            if let res = response?.result.value as? Dictionary<String,Any> {
+                if let inner = res["Results"] as? Dictionary<String,Any> {
+                    if let ea = inner["Data"] as? [Dictionary<String,Any>] {
+                        print("%%%%%%%%%%%%%%%%%%%%%%")
+                        
+                        
+                        print("%%%%%%%%%%%%%%%%%%%%%%")
+                        for each in ea {
+                            var contestid = 0
+                            var contestname = ""
+                            var allowcategoryid = 0
+                            var allowcategory = ""
+                            var organisationallow = false
+                            var invitationtypeid = 0
+                            var invitationtype = ""
+                            var entryallowed = 0
+                            var entrytype = ""
+                            var entryfee = 0
+                            var conteststart = ""
+                            var contestlocation = ""
+                            var description = ""
+                            var resulton = ""
+                            var contestprice = ""
+                            var contestwinnerpricetypeid = 0
+                            var contestpricetype = ""
+                            var resulttypeid = 0
+                            var resulttype = ""
+                            var userid = ""
+                            var groupid = 0
+                            var createon = ""
+                            var isactive = false
+                            var status = false
+                            var runningstatusid = 0
+                            var runningstatus = ""
+                            var juries : [juryorwinner] = []
+                            var cim = ""
+                            
+                            if let cn = each["ContestId"] as? Int {
+                                contestid = cn
+                            }
+                            
+                            if let cn = each["ContestName"] as? String {
+                                contestname = cn
+                            }
+                            if let cn = each["AllowCategoryId"] as? Int {
+                                allowcategoryid = cn
+                            }
+                            if let cn = each["AllowCategory"] as? String {
+                                allowcategory = cn
+                            }
+                            if let cn = each["OrganizationAllow"] as? Bool {
+                                organisationallow = cn
+                            }
+                            if let cn = each["InvitationTypeId"] as? Int {
+                                invitationtypeid = cn
+                            }
+                            if let cn = each["InvitationType"] as? String {
+                                invitationtype = cn
+                            }
+                            if let cn = each["EntryAllowed"] as? Int {
+                                entryallowed = cn
+                            }
+                            if let cn = each["EntryType"] as? String {
+                                entrytype = cn
+                            }
+                            if let cn = each["EntryFee"] as? Int {
+                                entryfee = cn
+                            }
+                            if let cn = each["ContestStart"] as? String {
+                                conteststart = cn
+                            }
+                            if let cn = each["ContestLocation"] as? String {
+                                contestlocation = cn
+                            }
+                            if let cn = each["Description"] as? String {
+                                description = cn
+                            }
+                            if let cn = each["ResultOn"] as? String {
+                                resulton = cn
+                            }
+                            if let cn = each["ContestPrice"] as? String {
+                                contestprice = cn
+                            }
+                            if let cn = each["ContestWinnerPriceTypeId"] as? Int {
+                                contestwinnerpricetypeid = cn
+                            }
+                            if let cn = each["ContestWinnerPriceType"] as? String {
+                                contestpricetype  = cn
+                            }
+                            if let cn = each["ResultTypeId"] as? Int {
+                                resulttypeid = cn
+                            }
+                            if let cn = each["ResultType"] as? String {
+                                resulttype = cn
+                            }
+                            if let cn = each["UserId"] as? String {
+                                userid = cn
+                            }
+                            if let cn = each["GroupId"] as? Int {
+                                groupid = cn
+                            }
+                            if let cn = each["CreateOn"] as? String {
+                                createon = cn
+                            }
+                            if let cn = each["IsActive"] as? Bool {
+                                isactive = cn
+                            }
+                            if let cn = each["Status"] as? Bool {
+                                status = cn
+                            }
+                            if let cn = each["RunningStatusId"] as? Int {
+                                runningstatusid = cn
+                            }
+                            if let cn = each["RunningStatus"] as? String {
+                                runningstatus = cn
+                            }
+                            if let cfn = each["FileType"] as? String {
+                                if cfn == "Video" {
+                                    if let cn = each["Thumbnail"] as? String {
+                                        cim = cn
+                                    }
+                                }
+                                else {
+                                    if let cn = each["ContestImage"] as? String {
+                                        cim = cn
+                                    }
+                                }
+                                
+                            }
+                            else {
+                                if let cn = each["ContestImage"] as? String {
+                                    cim = cn
+                                }
+                            }
+                            
+                            if let cn = each["Juries"] as? [juryorwinner] {
+                                juries = cn
+                            }
+                            var joined = false
+                            var joinstatus = false
+                            
+                            if let cn = each["Joined"] as? Bool {
+                                joined = cn
+                            }
+                            
+                            if let cn = each["JoinStatus"] as? Bool {
+                                joinstatus = cn
+                            }
+                            var tandc = ""
+                            if let cn = each["TermAndCondition"] as? String {
+                                tandc = cn
+                            }
+                            var noofwinn = 0
+                            if let cn = each["NoOfWinner"] as? Int {
+                                noofwinn = cn
+                            }
+                            var x = strevent(contestid: contestid, contestname: contestname, allowcategoryid: allowcategoryid, allowcategory: allowcategory, organisationallow: organisationallow, invitationtypeid: invitationtypeid, invitationtype: invitationtype, entryallowed: entryallowed, entrytype: entrytype, entryfee: entryfee, conteststart: conteststart, contestlocation: contestlocation, description: description, resulton: resulton, contestprice: contestprice, contestwinnerpricetypeid: contestwinnerpricetypeid, contestpricetype: contestpricetype, resulttypeid: resulttypeid, resulttype: resulttype, userid: userid, groupid: groupid, createon: createon, isactive: isactive, status: status, runningstatusid: runningstatusid, runningstatus: runningstatus, juries: juries, contestimage: cim, termsandcondition: tandc, noofwinners: noofwinn)
+                            
+                            var y = streventcover(a: x, b: joined, c: joinstatus)
+                            
+                            if userid != uuid {
+                                self.recommendedevents.append(y)
+                            }
+                        }
+                        
+                        done(true)
+                    }
+                    else {
+                        done(false)
+                    }
+                    
+                    
+                    
+                }
+                else {
+                    done(false)
+                }
+            }
+            else {
+                done(false)
+            }
+        }
+    }
+
     
     
     
@@ -1149,6 +1376,9 @@ class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITa
         else if self.typeoffetch == "joinedgroups" {
             return self.joinedgroups.count
         }
+        else if typeoffetch == "recommended contests" {
+            return self.recommendedevents.count
+        }
         return 10
      }
     
@@ -1212,6 +1442,9 @@ class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITa
             else if self.typeoffetch == "joinedgroups" {
                 cell.updatecell4(x: self.joinedgroups[indexPath.row])
             }
+            else if typeoffetch == "recommended contests" {
+                cell.updatecell5(x: self.recommendedevents[indexPath.row])
+            }
             return cell
         }
         return UITableViewCell()
@@ -1244,7 +1477,7 @@ class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITa
             performSegue(withIdentifier: "exjuryevent", sender: nil)
             }
         }
-        else if self.typeoffetch == "dashboardevents" || self.typeoffetch == "yourevents" || self.typeoffetch == "joinedevents" || self.typeoffetch == "unpublished contests" {
+        else if self.typeoffetch == "dashboardevents" || self.typeoffetch == "yourevents" || self.typeoffetch == "joinedevents" || self.typeoffetch == "unpublished contests" || self.typeoffetch == "recommended contests" {
             if self.typeoffetch == "dashboardevents" {
                 self.tappedcategoryid = self.dashboardevents[indexPath.row].contestid
             }
@@ -1256,6 +1489,9 @@ class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITa
             }
             else if self.typeoffetch == "joinedevents" {
                 self.tappedcategoryid = self.joinedevents[indexPath.row].a.contestid
+            }
+            else if typeoffetch == "recommended contests" {
+                self.tappedcategoryid = self.recommendedevents[indexPath.row].a.contestid
             }
             
             if let auth = UserDefaults.standard.value(forKey: "refid") as? String {
@@ -1369,6 +1605,21 @@ class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITa
                 self.pagetostart = self.pagetostart + 1
             }
         }
+        else if typeoffetch == "recommended contests" {
+            if indexPath.row == self.recommendedevents.count - 5 && locked == false && self.recommendedevents.count >= 10 {
+                if self.recommendedevents.count < (self.pagetostart - 1) * 10 {
+                    return
+                }
+                locked = true
+                self.recommendedeventsummary(pg: self.pagetostart) { (res) in
+                    if res {
+                        self.pagetostart = self.pagetostart + 1
+                        self.table.reloadData()
+                    }
+                }
+                
+            }
+        }
         
         print("Cell goes off screen \(indexPath.row)")
         if self.typeoffetch == "categories" {
@@ -1416,6 +1667,12 @@ class SeeAllgeneralViewController: UIViewController , UITableViewDelegate , UITa
             if indexPath.row == self.juryevents.count - 2 {
                 locked = false
 
+            }
+        }
+        else if typeoffetch == "recommended contests" {
+            if indexPath.row == self.recommendedevents.count - 2 {
+                locked = false
+                
             }
         }
         

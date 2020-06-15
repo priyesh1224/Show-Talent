@@ -46,8 +46,11 @@ class ReviewandRatingsTableViewCell: UITableViewCell {
      var popup : ((_ x: String) -> Void)?
     
     var currentreview : review?
-    func update( x : review)
+    func update( x : review , rs : String)
     {
+        if rs == "closed" {
+            allowedit.isHidden = true
+        }
         var userid = UserDefaults.standard.value(forKey: "refid") as! String
         var m = ""
         if let g = x.userid as? String {

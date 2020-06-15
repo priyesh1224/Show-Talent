@@ -234,7 +234,7 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
                         var x = grouppost(id: id, activityid: activityid, posttype: posttype, refguide: refguide, postpath: postpath, description: description, createon: createon, refgroupid: refgroupid, profileimage: profileimage, profilename: profilename, usertype: usertype, contestid: ccontestid, contestname: ccontestname , contestimage: ccontestimage, activitytype: acttype,thumbnail: thumb,contestentrytype: contestentrytype)
                         self.allgroupfeeds.append(x)
                     }
-                    self.allgroupfeeds = self.allgroupfeeds.reversed()
+                    
                     self.table.reloadData()
                 }
                 print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
@@ -598,7 +598,7 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
                 
                 cell.postmessage = {a in
                     self.posttextmessage(m: a)
-                    self.getgroupposts(pg : 0)
+                    
                 }
                 
                 cell.invitemembers = {a in
@@ -752,6 +752,7 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
             print(self.passedgroup)
             print(self.passedgroup2)
             s.mode = "invite"
+            s.members = self.currentinfo?.members ?? []
             
             s.ischangedsomething = {a in
                 if a {

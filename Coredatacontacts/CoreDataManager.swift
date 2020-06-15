@@ -18,6 +18,9 @@ struct apicontact
     var FirstName : String
     var LastName : String
     var onserver : Bool
+    var refid : String
+    var profilename : String
+    var profileimage : String
 }
 
 struct apicontestsharedon
@@ -56,6 +59,7 @@ class CoreDataManager
     
     func loadallfromcontacts()
     {
+        
         var pass : [Dictionary<String,String>] = []
         GroupsandEventsContactvc.fetchcontactsforcoredata { (data, err) in
             if let d = data as? [customcontactcoredata] {
@@ -129,6 +133,9 @@ class CoreDataManager
                                                         var l = ""
                                                         var c = ""
                                                         var s = false
+                                                        var ref = ""
+                                                        var pim = ""
+                                                        var pnm = ""
                                                         if let ff = each["FirstName"] as? String {
                                                             f = ff
                                                         }
@@ -142,11 +149,20 @@ class CoreDataManager
                                                             s = ss
                                                         }
                                                      
+                                                        if let ff = each["Ref_guid"] as? String {
+                                                            ref = ff
+                                                        }
+                                                        if let ff = each["ProfileImg"] as? String {
+                                                            pim = ff
+                                                        }
+                                                        if let ff = each["ProfileName"] as? String {
+                                                            pnm = ff
+                                                        }
                                                         
-                                                        if !self.isEntityAttributeExist(id: c) {        self.createPerson(fn: f, ln: l, nu: c, onser: s)
+                                                        if !self.isEntityAttributeExist(id: c) {        self.createPerson(fn: f, ln: l, nu: c, onser: s , ref : ref ,pim : pim , pnm : pnm)
                                                         }
                                                         else {
-                                                            self.updateifsiffer(fn : f , ln : l , nu : c , onser : s)
+                                                            self.updateifsiffer(fn : f , ln : l , nu : c , onser : s, ref : ref ,pim : pim , pnm : pnm)
                                                         }
                                                     }
                                                 }
@@ -178,7 +194,7 @@ class CoreDataManager
       return res.count > 0 ? true : false
     }
     
-    public func updateifsiffer(fn: String, ln: String, nu: String , onser : Bool )
+    public func updateifsiffer(fn: String, ln: String, nu: String , onser : Bool , ref : String, pim :String, pnm : String )
     {
         let context = persistentContainer.viewContext
         
@@ -312,7 +328,7 @@ class CoreDataManager
     }
     
     
-    public func createPerson(fn: String, ln: String, nu: String , onser : Bool ){
+    public func createPerson(fn: String, ln: String, nu: String , onser : Bool , ref : String, pim :String, pnm : String ){
             
             let context = persistentContainer.viewContext
             let contact = NSEntityDescription.insertNewObject(forEntityName: "Customcontact", into: context) as! Customcontact
@@ -320,6 +336,10 @@ class CoreDataManager
         contact.lastname = ln
         contact.number = nu
         contact.onserver = onser
+        contact.refguid = ref
+        contact.profimage = pim
+        contact.profname = pnm
+        
             
             
             do {
@@ -345,7 +365,7 @@ class CoreDataManager
                 let persons = try context.fetch(fetchRequest)
                 
                 for (index,person) in persons.enumerated() {
-                    var x = apicontact(Contact: person.number ?? "", FirstName: person.name ?? "" , LastName: person.lastname ?? "", onserver: person.onserver ?? false)
+                    var x = apicontact(Contact: person.number ?? "", FirstName: person.name ?? "" , LastName: person.lastname ?? "", onserver: person.onserver ?? false, refid: person.refguid ?? "" , profilename: person.profname ?? "" , profileimage: person.profimage ?? "")
                     print("\(x.FirstName) and \(x.onserver)")
                     newarr.append(x)
                 }

@@ -19,6 +19,7 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
     
     
     
+    @IBOutlet weak var nodatawarn: Customlabel!
     
     
     
@@ -39,7 +40,7 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
     var allcomments : [commentinfo] = []
     var postid = 0
     var commenttobereplied : comment?
-    
+    var currentrunningstatus  = ""
     
     @IBOutlet weak var commentfield: UITextField!
     
@@ -54,6 +55,20 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
         table.dataSource = self
      
         table.reloadData()
+        
+        self.nodatawarn.isHidden = true
+        if currentrunningstatus == "closed" {
+            self.postbtn.isHidden = true
+            self.cancelbtn.isHidden = true
+            self.commentfield.isHidden = true
+        }
+        else {
+            self.postbtn.isHidden = false
+            self.cancelbtn.isHidden = false
+            self.commentfield.isHidden = false
+        }
+        
+        
         if mode == "comments" {
 //            fetchdata()
             print(tappedcommentlist)
@@ -144,6 +159,12 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
                                                        
                                                     
                                                                                 
+                                                    }
+                                                    if self.allcomments.count == 0 {
+                                                        self.nodatawarn.isHidden = false
+                                                    }
+                                                    else {
+                                                        self.nodatawarn.isHidden = true
                                                     }
                                                     self.table.reloadData()
                                                     for em in self.allcomments {
@@ -514,7 +535,7 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
                         }
                     }
                 }
-                cell.updatecell(x: tappedcommentlist[indexPath.row])
+                cell.updatecell(x: tappedcommentlist[indexPath.row] ,rs : currentrunningstatus)
                 return cell
             }
         }
@@ -522,7 +543,7 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
             if let cell = tableView.dequeueReusableCell(withIdentifier: "allcommentscell", for: indexPath) as? AllcommentsTableViewCell {
                 
                 
-                cell.updatecell2(x: alllikes[indexPath.row])
+                cell.updatecell2(x: alllikes[indexPath.row] , rs : currentrunningstatus)
                 return cell
             }
         }

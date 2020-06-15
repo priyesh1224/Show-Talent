@@ -19,6 +19,10 @@ struct customcontact
     var number : [String]?
     var countrycode : String
     var type : String
+    var refid : String
+    var profileimage : String
+    var profilename : String
+    var alreadyshared : Bool = false
 }
 
 struct customcontactcoredata
@@ -65,6 +69,8 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
     
     @IBOutlet weak var grouoname: Customlabel!
     
+    var members : [groupmember] = []
+    
     var passedjuryid = 0
     
     typealias sendcontacts = (_ alllist: [customcontactcoredata]?, _ err : Error?) -> Void
@@ -100,6 +106,12 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
         else if self.mode == "invite"{
             self.grouoname.text = "Invite Members"
             self.upperimageheight.constant = 0
+            print("Members")
+            print(members)
+            print("Talent Contacts")
+            print(self.talentcontacts)
+            
+            
         }
        
     }
@@ -204,7 +216,7 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
             print(contact)
             print(firstname)
             print(lastname)
-            self.addtogroupcontacts.append(customcontact(name: firstname ?? "", lastname: lastname ?? "", userimage: pf ?? "", profession: "", number: [contact ?? ""], countrycode: "91", type: ""))
+            self.addtogroupcontacts.append(customcontact(name: firstname ?? "", lastname: lastname ?? "", userimage: pf ?? "", profession: "", number: [contact ?? ""], countrycode: "91", type: "", refid: "", profileimage: "", profilename: "" ))
             
             print(allinfos)
             
@@ -288,7 +300,7 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
             print(contact)
             print(firstname)
             print(lastname)
-            self.addtogroupcontacts.append(customcontact(name: firstname ?? "", lastname: lastname ?? "", userimage: "", profession: "", number: [contact ?? ""], countrycode: "91", type: ""))
+            self.addtogroupcontacts.append(customcontact(name: firstname ?? "", lastname: lastname ?? "", userimage: "", profession: "", number: [contact ?? ""], countrycode: "91", type: "" , refid: "", profileimage: "", profilename: "" ))
             allinfos.append(["Contact" : contact ?? "","FirstName" :firstname ?? ""  , "LastName" : lastname ?? ""])
             print(allinfos)
             
@@ -370,7 +382,7 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
         self.talentcontacts = []
         self.phonecontacts = []
         for each in data {
-            var x = customcontact(name: "\(each.FirstName)",lastname : " \(each.LastName)", userimage: "", profession: "", number: [each.Contact], countrycode: "", type: "talent")
+            var x = customcontact(name: "\(each.FirstName)",lastname : " \(each.LastName)", userimage: "", profession: "", number: [each.Contact], countrycode: "", type: "talent" ,  refid: each.refid, profileimage: each.profileimage, profilename: each.profilename )
            
             if each.onserver == false {
                 self.phonecontacts.append(x)
@@ -378,6 +390,14 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
             else
             {
                 self.talentcontacts.append(x)
+            }
+        }
+        print(self.talentcontacts)
+        for each in members {
+            for k in 0 ..< self.talentcontacts.count {
+                if each.userid == self.talentcontacts[k].refid {
+                    self.talentcontacts[k].alreadyshared = true
+                }
             }
         }
         self.table1.reloadData()
@@ -595,7 +615,7 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
                 
                
                 for each in a {
-                    var x = customcontact(name: each.name, lastname: "", userimage: each.profileimage, profession:"", number: [each.contact], countrycode: each.countrycode, type: "talentother")
+                    var x = customcontact(name: each.name, lastname: "", userimage: each.profileimage, profession:"", number: [each.contact], countrycode: each.countrycode, type: "talentother" , refid: "" , profileimage: "",profilename: "")
                     self.addtogroupcontacts.append(x)
                 }
                 

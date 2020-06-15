@@ -1737,12 +1737,22 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                 if loadthisvideo == false && indexPath.row != 0 {
                     makevideoefetch = false
                 }
+                
+                var rs = ""
+                if let x = self.eventjoined as? strevent {
+                    rs = x.runningstatus
+                }
+                
 
-                cell.updatecell(x : self.allfeeds[indexPath.row] , y : makevideoefetch)
+                cell.updatecell(x : self.allfeeds[indexPath.row] , y : makevideoefetch , runningstatus : rs.lowercased())
 
                 
                 
-                
+                cell.tryingtolikeclosedcontest = { a in
+                    if a {
+                        self.present(customalert.showalert(x: "You can not like/unlike post of a contest which is closed."), animated: true, completion: nil)
+                    }
+                }
                 
                 
                 cell.sendbackactualcomments = {a,b in
@@ -2100,6 +2110,11 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         if let seg = segue.destination as? ReviewsandRatingsViewController {
             seg.contestid = self.eventid
             seg.postid = self.feedidtobepassed
+            var rs = ""
+            if let x = self.eventjoined as? strevent {
+                rs = x.runningstatus
+            }
+            seg.currentrunningstatus = rs.lowercased()
         }
         
         if let seg = segue.destination as? NewEventViewController {
@@ -2122,6 +2137,11 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         if let seg = segue.destination as? AllcommentsViewController {
             seg.postid = tappedpostid
             seg.tappedcommentlist = self.tappedcommentlist
+            var rs = ""
+            if let x = self.eventjoined as? strevent {
+                rs = x.runningstatus
+            }
+            seg.currentrunningstatus = rs.lowercased()
             seg.sendbackupdatedlist = {a,b in
                 print("Setting : ")
                 print(a)

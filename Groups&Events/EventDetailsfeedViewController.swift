@@ -120,6 +120,7 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
     var juryid = 0
     
     
+    @IBOutlet weak var nodatawarn: UILabel!
     @IBOutlet var spinner: UIActivityIndicatorView!
     
     
@@ -162,6 +163,7 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
         
         super.viewDidLoad()
         self.spinner.isHidden = true
+        self.nodatawarn.isHidden = true
         self.spinner.stopAnimating()
         okbtn.layer.cornerRadius = 30
         if self.isineditmode == true {
@@ -891,6 +893,12 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
                             
 
                         }
+                        if self.upcomingevents.count == 0 {
+                            self.nodatawarn.isHidden = false
+                        }
+                        else {
+                            self.nodatawarn.isHidden = true
+                        }
                         self.spinner.isHidden = true
                         self.spinner.stopAnimating()
                         self.table.reloadData()
@@ -935,6 +943,15 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
         createsliderbtn.setTitleColor(#colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1), for: .normal)
          upcomingsliderbtn.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
          pastsliderbtn.setTitleColor(#colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1), for: .normal)
+        if self.upcomingevents.count == 0 {
+            self.nodatawarn.text = "Sorry no upcoming contests found."
+            self.nodatawarn.isHidden = false
+
+        }
+        else {
+            self.nodatawarn.isHidden = true
+
+        }
         swipeslider(x:2)
         self.table.reloadData()
     }
@@ -951,6 +968,15 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
         createsliderbtn.setTitleColor(#colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1), for: .normal)
          upcomingsliderbtn.setTitleColor(#colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1), for: .normal)
          pastsliderbtn.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
+        if self.pastevents.count == 0 {
+            self.nodatawarn.text = "Sorry no past contests found."
+            self.nodatawarn.isHidden = false
+            
+        }
+        else {
+            self.nodatawarn.isHidden = true
+            
+        }
         swipeslider(x:3)
         self.table.reloadData()
     }
@@ -1120,9 +1146,9 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
         else if(self.allchoosenfields["Performance Type"] == nil) {
             self.present(customalert.showalert(x: "You need to enter performance type"), animated: true, completion: nil)
         }
-            else if(self.allchoosenfields["Gender"] == nil) {
-                self.present(customalert.showalert(x: "You need to enter gender"), animated: true, completion: nil)
-            }
+        else if(self.allchoosenfields["Gender"] == nil) {
+            self.present(customalert.showalert(x: "You need to enter gender"), animated: true, completion: nil)
+        }
         else if(self.allchoosenfields["Category"] == nil) {
             self.present(customalert.showalert(x: "You need to enter Category"), animated: true, completion: nil)
         }
@@ -1156,9 +1182,9 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
         else if(self.allchoosenfields["Contest Result Type"] == nil) {
             self.present(customalert.showalert(x: "You need to enter Contest Result Type"), animated: true, completion: nil)
         }
-            else if(self.allchoosenfields["Contest Theme"] == nil) {
-                self.present(customalert.showalert(x: "You need to enter Contest Theme"), animated: true, completion: nil)
-            }
+        else if(self.allchoosenfields["Contest Theme"] == nil) {
+            self.present(customalert.showalert(x: "You need to enter Contest Theme"), animated: true, completion: nil)
+        }
         else {
             
             if let cat = self.allchoosenfields["Category"] as? categorybrief {

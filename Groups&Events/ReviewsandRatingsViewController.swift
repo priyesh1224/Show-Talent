@@ -26,8 +26,18 @@ class ReviewsandRatingsViewController: UIViewController , UITableViewDelegate , 
   
     
     
+    @IBOutlet weak var hidetextview: UITextView!
     
     
+    @IBOutlet weak var hidestackview: UIStackView!
+    
+    
+    @IBOutlet weak var nodatawarn: Customlabel!
+    
+    @IBOutlet weak var hideview: UIView!
+    
+    
+    @IBOutlet weak var tableviewtopspace: NSLayoutConstraint!
     @IBOutlet weak var notificationindicator: UIView!
     
     
@@ -54,6 +64,7 @@ class ReviewsandRatingsViewController: UIViewController , UITableViewDelegate , 
     
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+    var currentrunningstatus = ""
     
     var allreviews : [review] = []
     
@@ -66,8 +77,30 @@ class ReviewsandRatingsViewController: UIViewController , UITableViewDelegate , 
         self.notificationindicator.layer.cornerRadius = 10
         table.delegate = self
         table.dataSource = self
+        nodatawarn.isHidden = true
         self.reviewsubmit.layer.cornerRadius = 10
         self.fetchreviews(pg: 0)
+        
+        
+        if currentrunningstatus == "closed" {
+            hidetextview.isHidden = true
+            hidestackview.isHidden = true
+            hideview.isHidden = true
+            reviewfield.isHidden = true
+            tableviewtopspace.constant = -120
+            
+        }
+        else {
+            hidetextview.isHidden = false
+            hidestackview.isHidden = false
+            hideview.isHidden = false
+            reviewfield.isHidden = false
+            tableviewtopspace.constant = 32
+        }
+        
+        
+        
+        
         // Do any additional setup after loading the view.
     }
     
@@ -195,7 +228,7 @@ class ReviewsandRatingsViewController: UIViewController , UITableViewDelegate , 
                 self.present(customalert.showalert(x: a), animated: true, completion: nil)
             }
             
-            cell.update(x : self.allreviews[indexPath.row])
+            cell.update(x : self.allreviews[indexPath.row] , rs : self.currentrunningstatus)
             return cell
         }
         return UITableViewCell()
@@ -276,6 +309,12 @@ class ReviewsandRatingsViewController: UIViewController , UITableViewDelegate , 
                                     var x = review(id: i, contestid: c, postid: p, userid: u, review: r, rating: ra, reviewdate: rd, name: nm, profileimage: pi)
                                     self.allreviews.append(x)
                                     
+                                }
+                                if self.allreviews.count == 0 {
+                                    self.nodatawarn.isHidden = false
+                                }
+                                else {
+                                    self.nodatawarn.isHidden = true
                                 }
                                 self.spinner.isHidden = true
                                 self.spinner.stopAnimating()

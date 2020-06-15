@@ -760,11 +760,24 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.createmode = false
-        var d = self.allprethemes[indexPath.row].contestid
-        self.themeid = indexPath.row
-        self.categoryselected = self.allprethemes[indexPath.row].categoryname.lowercased()
-        self.performSegue(withIdentifier: "presenttheme", sender: nil)
+        
+        if comingwithoutgroup && self.groupid == 0 {
+            
+            self.present(customalert.showalert(x: "You need to select group."), animated: true, completion: nil)
+        }
+        else if(self.allchoosenfields["Category"] == nil) {
+            self.present(customalert.showalert(x: "You need to enter Category"), animated: true, completion: nil)
+        }
+        else if(self.allchoosenfields["Contest Theme"] == nil) {
+            self.present(customalert.showalert(x: "You need to enter Contest Theme"), animated: true, completion: nil)
+        }
+        else {
+            self.createmode = false
+            var d = self.allprethemes[indexPath.row].contestid
+            self.themeid = indexPath.row
+            self.categoryselected = self.allprethemes[indexPath.row].categoryname.lowercased()
+            self.performSegue(withIdentifier: "presenttheme", sender: nil)
+        }
     }
     
     
@@ -2548,7 +2561,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
             self.fetchmegroups()
         }
         
+        print("Group Id passed : \(self.groupid) and \(comingwithoutgroup)")
+        
         if comingwithoutgroup && self.groupid == 0 {
+            
             self.present(customalert.showalert(x: "You need to select group."), animated: true, completion: nil)
         }
         else if(self.allchoosenfields["Category"] == nil) {

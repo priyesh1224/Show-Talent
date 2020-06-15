@@ -29,7 +29,6 @@
 		18AD7E692328C66200904E21 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AD7E682328C66200904E21 /* Constants.swift */; };
 		18AD7E6B2328CC5900904E21 /* country.json in Resources */ = {isa = PBXBuildFile; fileRef = 18AD7E6A2328CC5900904E21 /* country.json */; };
 		18AD7E6D2328F35D00904E21 /* AfManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AD7E6C2328F35D00904E21 /* AfManager.swift */; };
-		18B565172412622900DA5C23 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 18B565162412622900DA5C23 /* GoogleService-Info.plist */; };
 		18D018DF2318F9B2003AC6DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D018DE2318F9B2003AC6DC /* AppDelegate.swift */; };
 		18D018E62318F9B5003AC6DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18D018E52318F9B5003AC6DC /* Assets.xcassets */; };
 		18D018E92318F9B5003AC6DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18D018E72318F9B5003AC6DC /* LaunchScreen.storyboard */; };
@@ -149,6 +148,7 @@
 		849EFEC42411059B0013DD83 /* JuryContestoneTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849EFEC32411059B0013DD83 /* JuryContestoneTableViewCell.swift */; };
 		849EFEC6241105AF0013DD83 /* JurycontesttwoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849EFEC5241105AF0013DD83 /* JurycontesttwoTableViewCell.swift */; };
 		849EFEC8241105C20013DD83 /* JurycontestthreeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849EFEC7241105C20013DD83 /* JurycontestthreeTableViewCell.swift */; };
+		849F5552249642A200FF06F7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 849F5551249642A200FF06F7 /* GoogleService-Info.plist */; };
 		849FFB57240CD108004551A8 /* SeeAllgeneralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849FFB56240CD108004551A8 /* SeeAllgeneralViewController.swift */; };
 		849FFB59240CD11F004551A8 /* SeeAllgeneralTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849FFB58240CD11F004551A8 /* SeeAllgeneralTableViewCell.swift */; };
 		84A3640823D56C8C006A9A42 /* TalentshowcaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A3640723D56C8C006A9A42 /* TalentshowcaseViewController.swift */; };
@@ -227,7 +227,6 @@
 		18AD7E682328C66200904E21 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		18AD7E6A2328CC5900904E21 /* country.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = country.json; sourceTree = "<group>"; };
 		18AD7E6C2328F35D00904E21 /* AfManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfManager.swift; sourceTree = "<group>"; wrapsLines = 0; };
-		18B565162412622900DA5C23 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		18D018DB2318F9B2003AC6DC /* ShowTalent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShowTalent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18D018DE2318F9B2003AC6DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		18D018E52318F9B5003AC6DC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -349,6 +348,7 @@
 		849EFEC32411059B0013DD83 /* JuryContestoneTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JuryContestoneTableViewCell.swift; sourceTree = "<group>"; };
 		849EFEC5241105AF0013DD83 /* JurycontesttwoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JurycontesttwoTableViewCell.swift; sourceTree = "<group>"; };
 		849EFEC7241105C20013DD83 /* JurycontestthreeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JurycontestthreeTableViewCell.swift; sourceTree = "<group>"; };
+		849F5551249642A200FF06F7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		849FFB56240CD108004551A8 /* SeeAllgeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeeAllgeneralViewController.swift; sourceTree = "<group>"; };
 		849FFB58240CD11F004551A8 /* SeeAllgeneralTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeeAllgeneralTableViewCell.swift; sourceTree = "<group>"; };
 		84A3640723D56C8C006A9A42 /* TalentshowcaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentshowcaseViewController.swift; sourceTree = "<group>"; };
@@ -429,9 +429,9 @@
 		18D018D22318F9B2003AC6DC = {
 			isa = PBXGroup;
 			children = (
+				849F5551249642A200FF06F7 /* GoogleService-Info.plist */,
 				A4B091982445C86100F59A29 /* Offer and help */,
 				182335AA2423932E00F13FEC /* Shadowtable.swift */,
-				18B565162412622900DA5C23 /* GoogleService-Info.plist */,
 				849CA0EF23F2BC2200AB49CD /* Supporting files */,
 				849CA0A923F2641700AB49CD /* Model.xcdatamodeld */,
 				849CA0A623F262B900AB49CD /* Coredatacontacts */,
@@ -806,7 +806,7 @@
 				18D9988B2346001D008BFE2A /* NeusaNextStd-WideBoldItalic.ttf in Resources */,
 				18D9986A2346001D008BFE2A /* NeusaNextStd-CompactBoldIta.ttf in Resources */,
 				18D9986E2346001D008BFE2A /* NeusaNextStd-CompactLight.ttf in Resources */,
-				18B565172412622900DA5C23 /* GoogleService-Info.plist in Resources */,
+				849F5552249642A200FF06F7 /* GoogleService-Info.plist in Resources */,
 				18D998842346001D008BFE2A /* NeusaNextStd-WideRegular.ttf in Resources */,
 				18D998742346001D008BFE2A /* NeusaNextStd-CondensedRegular.ttf in Resources */,
 				18D9987D2346001D008BFE2A /* NeusaNextStd-Bold.ttf in Resources */,

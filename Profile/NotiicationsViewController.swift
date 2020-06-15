@@ -10,10 +10,18 @@ import UIKit
 
 struct notifications
 {
-    var image : String
-    var content : String
-    var time : String
-    var status : String
+    var title : String
+    var body : String
+    var datatype : String
+    var contestgroupname : String
+    var id : String
+    var categoryname : String
+    var contestentrytype : String
+    var createon : String
+    var userid : String
+    var icon : String
+    var wincount : String = ""
+    
 }
 
 class NotiicationsViewController: UIViewController , UITableViewDelegate , UITableViewDataSource {
@@ -33,12 +41,16 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
     
     @IBOutlet weak var searchbar: UISearchBar!
     
+    var tappedid = ""
+    var tappedwincount = ""
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupallviews()
         self.table.delegate = self
         self.table.dataSource = self
-        setdummydata()
+        setdummydata(pg : 0)
     }
     
     
@@ -47,18 +59,87 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
     }
     
     
-    func setdummydata()
+    func setdummydata(pg : Int)
     {
-        var x  = notifications(image: "", content: "Biggest Sale of the year", time: "12:00PM", status: "unread")
-        var y  = notifications(image: "", content: "Your order is placed.", time: "01:00PM", status: "read")
-        self.allnotificationsfetced.append(x)
-        self.allnotificationsfetced.append(y)
-        self.allnotificationsfetced.append(x)
-        self.allnotificationsfetced.append(y)
-        self.allnotificationsfetced.append(x)
-        self.allnotificationsfetced.append(y)
+        let uid = UserDefaults.standard.value(forKey: "refid") as! String
+        let url = "\(Constants.K_baseUrl)\(Constants.getnotifications)?userId=\(uid)"
+        let r = BaseServiceClass()
+        var param : Dictionary<String,Any> = ["Page": pg,
+                                              "PageSize": 10]
+        r.postApiRequest(url: url, parameters: param) { (response, err) in
+            if let res = response?.result.value as? Dictionary<String,Any> {
+                if let rr = res["Results"] as? Dictionary<String,Any> {
+                    if let data = rr["Data"] as? [Dictionary<String,Any>] {
+                        for each in data {
+                            var title = ""
+                            var body = ""
+                            var datatype = ""
+                            var contestgroupname = ""
+                            var id = ""
+                            var categoryname = ""
+                            var contestentrytype = ""
+                            var createon = ""
+                            var userid = ""
+                            var icon = ""
+                            var wc = ""
+                            
+                            if let e = each["Title"] as? String {
+                                title = e
+                            }
+                            if let e = each["Body"] as? String {
+                                body = e
+                            }
+                            if let ee = each["Data"] as? Dictionary<String,Any> {
+                                
+                                if let e = ee["ContestName"] as? String {
+                                    contestgroupname = e
+                                }
+                                else if let e = ee["GroupName"] as? String {
+                                    contestgroupname = e
+                                }
+                                
+                                if let e = ee["ID"] as? String {
+                                    id = e
+                                }
+                                if let e = ee["CategoryName"] as? String {
+                                    categoryname = e
+                                }
+                               
+                                
+                                if let e = ee["ContestEntryType"] as? String {
+                                    contestentrytype = e
+                                }
+                                if let e = ee["NoOfWinner"] as? String {
+                                    wc = e
+                                }
+                            }
+                            if let e = each["DataType"] as? String {
+                                datatype = e
+                            }
+                           
+                            if let e = each["CreateOn"] as? String {
+                                createon = e
+                            }
+                            if let e = each["UserID"] as? String {
+                                userid = e
+                            }
+                            if let e = each["Icon"] as? String {
+                                icon = e
+                            }
+                            
+                            var notif = notifications(title: title, body: body, datatype: datatype, contestgroupname: contestgroupname, id: id, categoryname: categoryname, contestentrytype: contestentrytype, createon: createon, userid: userid, icon: icon , wincount: wc)
+                            
+                            self.allnotificationsfetced.append(notif)
+                            
+                        }
+                        print(self.allnotificationsfetced)
+                        self.table.reloadData()
+                    }
+                }
+            }
+        }
         
-        self.table.reloadData()
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -79,6 +160,42 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
         return self.table.frame.size.height / 4.5
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let x = self.allnotificationsfetced[indexPath.row]
+        self.tappedid = x.id
+        self.tappedwincount = x.wincount
+        if x.datatype.lowercased() == "groupmember" {
+            performSegue(withIdentifier: "togroups", sender: nil)
+        }
+        else if x.datatype.lowercased() == "juryadd" {
+            performSegue(withIdentifier: "tojurycontests", sender: nil)
+        }
+        else if x.datatype.lowercased() == "group" {
+            performSegue(withIdentifier: "togroups", sender: nil)
+        }
+        else if x.datatype.lowercased() == "contestinvitation" {
+            performSegue(withIdentifier: "tojurycontests", sender: nil)
+        }
+        else if x.datatype.lowercased() == "nearcontest" {
+            performSegue(withIdentifier: "tonearbycontests", sender: nil)
+        }
+        else if x.datatype.lowercased() == "contestwinner" {
+            performSegue(withIdentifier: "tocontests", sender: nil)
+        }
+        else if x.datatype.lowercased() == "contestpostlike" {
+            performSegue(withIdentifier: "tocontests", sender: nil)
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     func setupallviews()
        {
         self.searchbar.layer.cornerRadius = 35
@@ -88,14 +205,40 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
        }
        
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+   
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        
+        if let seg = segue.destination as? JoinedeventsViewController {
+            if let t = Int(self.tappedid) as? Int {
+                seg.eventid = t
+            }
+            
+            
+        }
+        if let seg = segue.destination as? MainGroupViewController {
+            seg.isseguedevent = true
+            if let t = Int(self.tappedid) as? Int {
+                seg.seguedeventid = 0
+            }
+            
+            
+        }
+        if let seg = segue.destination as? JurycontestViewController {
+            if let t = Int(self.tappedid) as? Int {
+                seg.contestid = t
+            }
+            if let t = Int(self.tappedwincount) as? Int {
+                seg.totalwinners = t
+            }
+            
+        }
+        if let seg = segue.destination as? SeeAllgeneralViewController {
+            seg.typeoffetch = "recommended contests"
+            seg.needtoloadrecommendedevents = true
+        }
+        
+        
     }
-    */
+    
 
 }

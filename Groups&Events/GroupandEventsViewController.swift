@@ -21,7 +21,7 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
     @IBOutlet weak var screentitle: Customlabel!
     var isother = false
     var jurysectionpressed = false
-    var sections = ["events","i am jury in","joined groups","groups","joined events"]
+    var sections = ["events","joined groups","groups","joined events"]
     
     @IBOutlet weak var notificationindicator: UIView!
     
@@ -73,12 +73,12 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
         }
         else if self.isother {
             self.screentitle.text = "Contests"
-            sections = ["unpublished contests","i am jury in","events","joined events","closed contests" ,"recommended contests"]
+            sections = ["unpublished contests","events","joined events","closed contests" ,"recommended contests"]
             self.creategroupupperbutton.setTitle("Create Contest", for: .normal)
         }
         else {
             self.screentitle.text = "Groups"
-            sections = ["i am jury in","joined groups","groups"]
+            sections = ["joined groups","groups"]
             self.creategroupupperbutton.setTitle("Create Group", for: .normal)
         }
         super.viewDidLoad()

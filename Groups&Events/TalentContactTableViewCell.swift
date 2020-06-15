@@ -32,7 +32,20 @@ class TalentContactTableViewCell: UITableViewCell {
         self.username.text = x.name.capitalized
         self.userprofession.text = x.profession.capitalized
         
-        if let u = x.userimage as? String
+        if x.alreadyshared {
+            self.addbtn.isEnabled = false
+            self.addbtn.setTitle("Shared", for: .normal)
+            self.addbtn.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
+            self.addbtn.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        }
+        else {
+            self.addbtn.isEnabled = true
+            self.addbtn.setTitle("Add", for: .normal)
+            self.addbtn.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: .normal)
+            self.addbtn.backgroundColor = #colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1)
+        }
+        
+        if let u = x.profileimage as? String
         {
             if u != "" && u != " " {
                 self.downloadimage(url: u) { (imk) in

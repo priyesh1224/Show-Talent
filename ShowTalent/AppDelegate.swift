@@ -129,11 +129,17 @@ import UserNotifications
             completionHandler(false)
         }
     }
-    func application(application: UIApplication,
-                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-//        Messaging.messaging().apnsToken = deviceToken as Data
-    }
+//    func application(application: UIApplication,
+//                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+//        let deviceTokenString = deviceToken.hexString
+//        print("Device Token : \(deviceTokenString)")
+////        Messaging.messaging().apnsToken = deviceToken as Data
+//    }
 
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let deviceTokenString = deviceToken
+       print("Device Token : \(deviceTokenString)")
+    }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
     
