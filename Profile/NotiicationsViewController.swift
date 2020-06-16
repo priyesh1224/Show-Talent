@@ -26,6 +26,7 @@ struct notifications
 
 class NotiicationsViewController: UIViewController , UITableViewDelegate , UITableViewDataSource {
 
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     var allnotificationsfetced : [notifications] = []
     
@@ -43,14 +44,18 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
     
     var tappedid = ""
     var tappedwincount = ""
-    
+    var locked = false
+    var furtherallowed = true
+    var page = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupallviews()
         self.table.delegate = self
         self.table.dataSource = self
-        setdummydata(pg : 0)
+
+        setdummydata(pg : page)
+        
     }
     
     
@@ -66,6 +71,9 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
         let r = BaseServiceClass()
         var param : Dictionary<String,Any> = ["Page": pg,
                                               "PageSize": 10]
+        var oldcount = self.allnotificationsfetced.count
+        self.spinner.isHidden = false
+        self.spinner.startAnimating()
         r.postApiRequest(url: url, parameters: param) { (response, err) in
             if let res = response?.result.value as? Dictionary<String,Any> {
                 if let rr = res["Results"] as? Dictionary<String,Any> {
@@ -132,7 +140,12 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
                             self.allnotificationsfetced.append(notif)
                             
                         }
+                        if self.allnotificationsfetced.count == oldcount {
+                            self.furtherallowed = false
+                        }
                         print(self.allnotificationsfetced)
+                        self.spinner.isHidden = true
+                        self.spinner.stopAnimating()
                         self.table.reloadData()
                     }
                 }
@@ -189,7 +202,21 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
     }
     
     
-    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+           
+   
+        if indexPath.row == self.allnotificationsfetced.count - 5 && locked == false && self.allnotificationsfetced.count >= 10 && self.furtherallowed == true {
+                    locked = true
+                    page = page + 1
+                    setdummydata(pg: page)
+                   
+               }
+           
+        
+        if indexPath.row == self.allnotificationsfetced.count - 2 {
+                       locked = false
+                   }
+    }
     
     
     

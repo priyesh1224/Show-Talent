@@ -190,6 +190,7 @@ class DashboardTableViewCell: UITableViewCell,UICollectionViewDelegate,UICollect
         print("Dashboard Feed  \(url)")
         var r = BaseServiceClass()
         r.getApiRequest(url: url, parameters: [:]) { (res, err) in
+            print(res)
             if let rv = res?.result.value  as? Dictionary<String,Any>{
                 
                 if let jsonres = rv as?
@@ -266,9 +267,11 @@ class DashboardTableViewCell: UITableViewCell,UICollectionViewDelegate,UICollect
                                 
                             }
                                 self.copytakeback!(self.selectedtrendingdata)
+                                 DispatchQueue.main.async {
                                 self.collection.reloadData()
                                 self.spinner.isHidden = true
                                 self.spinner.stopAnimating()
+                                }
                             }
                         }
                         
@@ -298,6 +301,8 @@ class DashboardTableViewCell: UITableViewCell,UICollectionViewDelegate,UICollect
         print(params)
         var r = BaseServiceClass()
         r.postApiRequest(url: allu, parameters: params) { (response, err) in
+            print("Response")
+            print(response)
             if let resv = response?.result.value as? Dictionary<String,Any> {
                 if let resps = resv["ResponseStatus"] as? Int {
                     if resps == 1 {
@@ -441,19 +446,21 @@ class DashboardTableViewCell: UITableViewCell,UICollectionViewDelegate,UICollect
                                     
                                 
                                 self.copytakebackevent!(self.selectedeventsdata)
-                                    print(self.selectedeventsdata)
-                                self.spinner.isHidden = true
-                                self.spinner.stopAnimating()
-                                
-                                    if let r = self.selectedeventsdata.count as? Int {
-                                        print("hola \(r)")
-                                        if r  == 0 {
-                                            self.isblannk!(true,"contest")
-                                        }
-                                        else {
-                                            self.isblannk!(false,"contest")
-                                            self.collection.reloadData()
-                                        }
+                                    
+                                     DispatchQueue.main.async {
+                                        self.spinner.isHidden = true
+                                        self.spinner.stopAnimating()
+                                        
+                                            if let r = self.selectedeventsdata.count as? Int {
+                                                print("hola \(r)")
+                                                if r  == 0 {
+                                                    self.isblannk!(true,"contest")
+                                                }
+                                                else {
+                                                    self.isblannk!(false,"contest")
+                                                    self.collection.reloadData()
+                                                }
+                                            }
                                     }
                             }
                         }
@@ -475,6 +482,7 @@ class DashboardTableViewCell: UITableViewCell,UICollectionViewDelegate,UICollect
         var url = "http://thcoreapi.maraekat.com/api/v1/Dashboard/DashboardFeed"
         
         Alamofire.request(url, method: .get, parameters: [:], encoding:URLEncoding.default , headers: headers).responseJSON { (res) in
+            print(res)
             let rv = res.result.value
             
             if let jsonres = rv as?
@@ -542,9 +550,13 @@ class DashboardTableViewCell: UITableViewCell,UICollectionViewDelegate,UICollect
                                                                                 }}}}}}}}}}}}}
                             }
                         }
+                            DispatchQueue.main.async {
+     
                             self.collection.reloadData()
                             self.spinner.isHidden = true
                             self.spinner.stopAnimating()
+                                
+                            }
                         }
                     }
                     
@@ -589,16 +601,25 @@ class DashboardTableViewCell: UITableViewCell,UICollectionViewDelegate,UICollect
         self.category = x.lowercased()
         if self.category  == "categories"
         {
-            fetchfreshcategories()
+            DispatchQueue.global(qos: .utility).async {
+                self.fetchfreshcategories()
+            }
+            
         }
         print("Passed \(x)")
         self.categorylabel.text = "\(x)"
         
         if x == "Events" {
-            self.fetchevents()
+            DispatchQueue.global(qos: .utility).async {
+                self.fetchevents()
+            }
+            
         }
         else {
-            self.fetchdata(y: "\(x.lowercased())")
+            DispatchQueue.global(qos: .utility).async {
+                self.fetchdata(y: "\(x.lowercased())")
+            }
+           
         }
 
      

@@ -241,7 +241,7 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
                     print("Group Created")
                     print(self.currentgroupcreated)
                     
-                    self.performSegue(withIdentifier: "entergroup", sender: nil)
+                    self.performSegue(withIdentifier: "verifygroup", sender: nil)
                    }
                    else {
                     self.createbottombtn.isEnabled = true
@@ -419,6 +419,26 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
                 seg.passedgroup = s
             }
             
+        }
+        
+        if let seg = segue.destination as? VerifyGroupDocumentsViewController {
+            if let gi = self.currentgroupcreated?.groupid as? Int {
+                seg.groupid = gi
+            }
+            if let y = self.selectedauthority?.id as? Int {
+                if y == 2 {
+                    seg.isauthorized = true
+                }
+                else {
+                    seg.isauthorized = false
+                }
+                
+            }
+            
+            if let s = self.currentgroupcreated as? groupcreated {
+                seg.currentgroupcreated = s
+            }
+           
         }
         
         if let seg = segue.destination as? GroupsandEventsContactvc {

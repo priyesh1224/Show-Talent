@@ -206,7 +206,7 @@ class DashboardCollectionViewCell: UICollectionViewCell {
                                 hobby.text = y.title.capitalized
                                 
                                 hobby.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
-                                newimage?.addSubview(hobby)
+//                                newimage?.addSubview(hobby)
             }
             else {
                 
@@ -256,7 +256,7 @@ class DashboardCollectionViewCell: UICollectionViewCell {
                 hobby.text = y.title.capitalized
                 
                 hobby.textColor = #colorLiteral(red: 0.3333333433, green: 0.3333333433, blue: 0.3333333433, alpha: 1)
-                newimage?.addSubview(hobby)
+//                newimage?.addSubview(hobby)
                 
             }
         }

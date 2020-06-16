@@ -123,7 +123,7 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
 //        }
         
         DispatchQueue.global(qos: .background).async {
-            CoreDataManager.shared.deletecrossedgroups()
+//            CoreDataManager.shared.deletecrossedgroups()
         }
         
         print("popup height is \(self.view.frame.size.height/2.5)")

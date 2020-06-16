@@ -34,7 +34,7 @@ class NotificationTableViewCell: UITableViewCell {
         indicator.layer.cornerRadius = 10
 
             indicator.isHidden = false
-        
+        self.notificon.layer.cornerRadius = self.notificon.frame.size.height/2
         
         self.downloadimage(url: x.icon) { (im) in
             if let i = im as? UIImage {
@@ -63,7 +63,23 @@ class NotificationTableViewCell: UITableViewCell {
         }
         
         
+        var tl = x.createon
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+        var td = tl.components(separatedBy: "T")[0]
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let date = dateFormatter.date(from: td ?? "")
+        print(td)
+        print(date)
         
+        let monthsname = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        let calendar = Calendar.current
+        let yx = calendar.component(.year, from: date!)
+        let mx = monthsname[calendar.component(.month, from: date!)]
+        let dx = calendar.component(.day, from: date!)
+       
+        
+        self.notifdate.text = "\(mx) \(dx)"
         
     }
     

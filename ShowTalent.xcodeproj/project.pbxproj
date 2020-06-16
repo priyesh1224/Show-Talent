@@ -128,6 +128,7 @@
 		8492B5CF23D30BD10072C852 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8492B5CE23D30BD10072C852 /* NotificationTableViewCell.swift */; };
 		8492B5D123D322070072C852 /* FollowerfollowingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8492B5D023D322070072C852 /* FollowerfollowingTableViewCell.swift */; };
 		8492B5D323D322270072C852 /* FollowerfollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8492B5D223D322270072C852 /* FollowerfollowingViewController.swift */; };
+		849AE38424978CCB00BF842E /* VerifyGroupDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849AE38324978CCB00BF842E /* VerifyGroupDocumentsViewController.swift */; };
 		849CA0A823F262D800AB49CD /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849CA0A723F262D800AB49CD /* CoreDataManager.swift */; };
 		849CA0AB23F2641700AB49CD /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 849CA0A923F2641700AB49CD /* Model.xcdatamodeld */; };
 		849D3BFD23F65C06000B3E79 /* ShowPromotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849D3BFC23F65C06000B3E79 /* ShowPromotionViewController.swift */; };
@@ -328,6 +329,7 @@
 		8492B5CE23D30BD10072C852 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		8492B5D023D322070072C852 /* FollowerfollowingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerfollowingTableViewCell.swift; sourceTree = "<group>"; };
 		8492B5D223D322270072C852 /* FollowerfollowingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerfollowingViewController.swift; sourceTree = "<group>"; };
+		849AE38324978CCB00BF842E /* VerifyGroupDocumentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyGroupDocumentsViewController.swift; sourceTree = "<group>"; };
 		849CA0A723F262D800AB49CD /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		849CA0AA23F2641700AB49CD /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		849D3BFC23F65C06000B3E79 /* ShowPromotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowPromotionViewController.swift; sourceTree = "<group>"; };
@@ -683,6 +685,7 @@
 				A4551F8B247FB67F008AAD86 /* EventbookingformViewController.swift */,
 				A4551F8D24800C7A008AAD86 /* EventBookingHistoryViewController.swift */,
 				A4551F8F24800C9F008AAD86 /* EventBookingHistoryTableViewCell.swift */,
+				849AE38324978CCB00BF842E /* VerifyGroupDocumentsViewController.swift */,
 			);
 			path = "Groups&Events";
 			sourceTree = "<group>";
@@ -769,6 +772,7 @@
 				TargetAttributes = {
 					18D018DA2318F9B2003AC6DC = {
 						CreatedOnToolsVersion = 10.2.1;
+						LastSwiftMigration = 1150;
 					};
 				};
 			};
@@ -939,6 +943,7 @@
 				A4A823A524810A7600E1D49E /* UpdateUserCategoryTableViewCell.swift in Sources */,
 				8492B5CB23D2E6090072C852 /* Editprofile1TableViewCell.swift in Sources */,
 				849E8DC023D6B0A500629000 /* NewEventViewController.swift in Sources */,
+				849AE38424978CCB00BF842E /* VerifyGroupDocumentsViewController.swift in Sources */,
 				A4A823A924810AB000E1D49E /* UpdateUserCategoryViewController.swift in Sources */,
 				849EFEBE2410D08F0013DD83 /* JuryprofileViewController.swift in Sources */,
 				180F95EC2420CA200018DA83 /* UpperCollectionViewCell.swift in Sources */,
@@ -1210,6 +1215,7 @@
 			baseConfigurationReference = 9AD6ED3078CAD248B303B11F /* Pods-ShowTalent.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VQVG8BVT62;
@@ -1221,6 +1227,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.maraekat.info.ShowTalent2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1231,6 +1238,7 @@
 			baseConfigurationReference = 77ACBAD4628F04E5458F51C5 /* Pods-ShowTalent.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VQVG8BVT62;

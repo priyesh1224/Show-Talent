@@ -67,6 +67,7 @@ struct Constants {
     
     static let shareamonggroups = "/Groups/ShareContestInSelectedGroup"
     static let groupdashboard = "/Groups/Dashboard"
+    static let postgroupdocuments = "/Groups/AddDocument"
 
     
     static let getprerequisitecontests = "/Contest/PrerequisiteContest"
