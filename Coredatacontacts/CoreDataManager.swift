@@ -55,10 +55,11 @@ class CoreDataManager
             return container
         }()
     
-    
+    static var contactstoserverinprogress = false
     
     func loadallfromcontacts()
     {
+        CoreDataManager.contactstoserverinprogress = true
         
         var pass : [Dictionary<String,String>] = []
         GroupsandEventsContactvc.fetchcontactsforcoredata { (data, err) in
@@ -165,6 +166,7 @@ class CoreDataManager
                                                             self.updateifsiffer(fn : f , ln : l , nu : c , onser : s, ref : ref ,pim : pim , pnm : pnm)
                                                         }
                                                     }
+                                                    CoreDataManager.contactstoserverinprogress = false
                                                 }
                                         }
                                     }
@@ -374,6 +376,31 @@ class CoreDataManager
             }catch let fetchErr {
                 print("❌ Failed to fetch Person:",fetchErr)
                  return newarr
+            }
+        }
+    
+    
+    public func fetchcontactcount() -> Int{
+            
+        var newarr : [apicontact] = []
+            let context = persistentContainer.viewContext
+            
+            let fetchRequest = NSFetchRequest<Customcontact>(entityName: "Customcontact")
+        let sort = NSSortDescriptor(key: #keyPath(Customcontact.name), ascending: true)
+        fetchRequest.sortDescriptors = [sort]
+        fetchRequest.predicate = NSPredicate(format: "name != %@ ","")
+            
+            do{
+                
+                let persons = try context.fetch(fetchRequest)
+                
+                return persons.count
+                
+                
+                
+            }catch let fetchErr {
+                print("❌ Failed to fetch Person:",fetchErr)
+                 return 0
             }
         }
     

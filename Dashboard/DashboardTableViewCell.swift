@@ -593,6 +593,7 @@ class DashboardTableViewCell: UITableViewCell,UICollectionViewDelegate,UICollect
     func updatehead(x:String)
     {
         print("Cat is \(x)")
+        if InternetCheck.isConnectedToNetwork() {
         
         if x == "Trending Wall" {
             self.categorycount.isHidden = true
@@ -620,6 +621,7 @@ class DashboardTableViewCell: UITableViewCell,UICollectionViewDelegate,UICollect
                 self.fetchdata(y: "\(x.lowercased())")
             }
            
+        }
         }
 
      

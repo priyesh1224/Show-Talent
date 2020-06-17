@@ -68,7 +68,7 @@ var leftcontest : ((_ pressed : Bool) -> ())?
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
         dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
-        let date = dateFormatter.date(from: tl ?? "")
+        var date = dateFormatter.date(from: tl ?? "")
         let today = dateFormatter.date(from: dateFormatter.string(from: Date()))
         var ttday : Date = Date()
         if let d  = date, let t = today {
@@ -77,6 +77,13 @@ var leftcontest : ((_ pressed : Bool) -> ())?
             ttday = t
             
         }
+        if let d = date {} else {
+            let dateFormatter2 = DateFormatter()
+                   dateFormatter2.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                   dateFormatter2.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                    date = dateFormatter2.date(from: tl ?? "")
+        }
+        
         let cal = Calendar.current
         
         let components = cal.dateComponents([Calendar.Component.day], from: ttday  , to: date ?? Date())

@@ -382,6 +382,8 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
         self.talentcontacts = []
         self.phonecontacts = []
         for each in data {
+            print("Each Contact")
+            print(each)
             var x = customcontact(name: "\(each.FirstName)",lastname : " \(each.LastName)", userimage: "", profession: "", number: [each.Contact], countrycode: "", type: "talent" ,  refid: each.refid, profileimage: each.profileimage, profilename: each.profilename )
            
             if each.onserver == false {
@@ -402,6 +404,12 @@ class GroupsandEventsContactvc: UIViewController , UITableViewDelegate,UITableVi
         }
         self.table1.reloadData()
     }
+    
+    
+    
+       
+    
+    
     
     static func fetchcontactsforcoredata(completion:@escaping sendcontacts)
        {

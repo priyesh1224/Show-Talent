@@ -79,14 +79,22 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
         }
         table.delegate = self
         table.dataSource = self
-        if let u =  UserDefaults.standard.value(forKey: "refid") as? String {
-        self.fetchdata(pg : self.page)
-        }
+        
+        if !InternetCheck.isConnectedToNetwork() {
+                   self.present(customalert.showalert(x: "Sorry you are not connected to internet."), animated: true, completion: nil)
+                      }
+                      else {
+                      if let u =  UserDefaults.standard.value(forKey: "refid") as? String {
+                      self.fetchdata(pg : self.page)
+                      }
+                      }
+        
 
     }
     
     
     @IBAction func segmentchanged(_ sender: Any) {
+         if InternetCheck.isConnectedToNetwork() {
         if self.segmentcontroll.selectedSegmentIndex == 0 {
             if self.allcategorywiseevents.count == 0 {
                 self.nodatawarning.isHidden = false
@@ -106,6 +114,7 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
                 self.nodatawarning.isHidden = true
                 self.table.reloadData()
             }
+        }
         }
         
     }

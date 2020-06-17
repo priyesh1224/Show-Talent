@@ -29,7 +29,13 @@ class CustomeventViewController: UIViewController , UITableViewDelegate , UITabl
         super.viewDidLoad()
         table.delegate = self
         table.dataSource = self
-        table.reloadData()
+         if !InternetCheck.isConnectedToNetwork() {
+            self.present(customalert.showalert(x: "Sorry you are not connected to Internet."), animated: true, completion: nil)
+        }
+         else {
+            table.reloadData()
+        }
+        
         table.allowsSelection = true
         self.nodatawarning.isHidden = true
         self.spinner.isHidden = false

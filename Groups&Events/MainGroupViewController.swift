@@ -31,6 +31,7 @@ struct obtainhere
     var totalmembers : Int
     var groupimage : String
     var creator : String
+    
 }
 
 struct grouppost
@@ -345,7 +346,16 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
                     }
                     print("H337777777777777777777777777")
                     print(self.currentinfo)
-                    
+                    var uid = UserDefaults.standard.value(forKey: "refid") as! String
+                           if uid == creator {
+                               self.editbtn.isHidden = false
+                               
+                           }
+                           else {
+                               self.editbtn.isHidden = true
+                              
+                           }
+
                     if let d = self.currentinfo as? obtainhere {
                         self.table.reloadData()
                     }

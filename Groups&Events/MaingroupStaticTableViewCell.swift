@@ -55,6 +55,17 @@ class MaingroupStaticTableViewCell: UITableViewCell    {
     func updatecell(d : obtainhere)
     {
         
+        var uid = UserDefaults.standard.value(forKey: "refid") as! String
+        if uid == d.creator {
+            self.holderview.isHidden = false
+            self.createeventbtn.isHidden = false
+        }
+        else {
+            self.holderview.isHidden = true
+            self.createeventbtn.isHidden = true
+        }
+
+        
         let tp = UITapGestureRecognizer()
         tp.numberOfTapsRequired = 1
         tp.addTarget(self, action: #selector(tapped))

@@ -69,6 +69,7 @@ struct Constants {
     static let groupdashboard = "/Groups/Dashboard"
     static let postgroupdocuments = "/Groups/AddDocument"
 
+    static let submitticket = "/AppTicket/SubmitTicket"
     
     static let getprerequisitecontests = "/Contest/PrerequisiteContest"
     static let createcontest = "/Contest/CreateContest"

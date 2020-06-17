@@ -240,6 +240,76 @@ class ImageUploadRequest {
     
     
     
+    func uploadticket(imagesdata : [UIImage], params : Parameters,extensiontype : [String],completion:@escaping completionBlock4)
+          {
+
+              
+
+       let header = configureCurrentSession()
+              
+              
+              Alamofire.upload(multipartFormData:
+                  {
+                      (multipartFormData) in
+                      
+                  
+                    if imagesdata.count > 0 {
+                      if extensiontype[0] == "jpg"
+                      {
+                      multipartFormData.append(imagesdata[0].jpegData(compressionQuality: 0.4)!, withName: "image", fileName: "file.jpg", mimeType: "image/jpg")
+                      }
+                      else if extensiontype[0] == "png" {
+      
+      
+                          multipartFormData.append(imagesdata[0].pngData()!, withName: "image", fileName: "file.png", mimeType: "image/png")
+                      }
+                    }
+                      for (key, value) in params
+                      {
+                          multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key)
+                      }
+              }, to:Constants.K_baseUrl + Constants.submitticket,method: .post,headers:header)
+              { (result) in
+                  switch result {
+                  case .success(let upload,_,_ ):
+                      upload.uploadProgress(closure: { (progress) in
+                          
+                          
+                          print("\(progress) is uploaded")
+                      })
+                   
+                      
+                      upload.responseString
+                          { response in
+                              print("Response String")
+                              print(response)
+                              print(response.result)
+                              
+                              print(response.result.value)
+                                  if response.result.isSuccess {
+                                  var jsondata = response.result.value as? NSDictionary
+                                  
+                                      if response.result.isSuccess {
+                                      completion("done" , nil)
+                                      }
+                                      else{
+                                           completion(nil , nil)
+                                      }
+      //                                if response.result == "SUCCESS:"
+      //                                {
+      //                                  print("DATA UPLOAD SUCCESSFULLY")
+      //                                }
+                                  
+                              }
+                          }
+                  case .failure(let encodingError):
+                      completion(nil , encodingError)
+                      break
+                      
+                  }
+              }
+      }
+      
     
     
     

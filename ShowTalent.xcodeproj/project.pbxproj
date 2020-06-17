@@ -87,7 +87,9 @@
 		18F9BC9624249FC600A1DF38 /* ContestsharebottonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F9BC9524249FC600A1DF38 /* ContestsharebottonTableViewCell.swift */; };
 		18F9BC982424CE9E00A1DF38 /* TBstartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F9BC972424CE9E00A1DF38 /* TBstartViewController.swift */; };
 		2298BB1EC872E10040905964 /* Pods_ShowTalent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0F3C1F740DD809F2CA589FF /* Pods_ShowTalent.framework */; };
+		840AE2BE249A3BE30076FA9F /* InternetCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840AE2BD249A3BE30076FA9F /* InternetCheck.swift */; };
 		8419063123DEA90900BDB96F /* AllLikesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8419063023DEA90900BDB96F /* AllLikesTableViewCell.swift */; };
+		84276DA7249919AE00949153 /* OhterissuesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84276DA6249919AE00949153 /* OhterissuesViewController.swift */; };
 		844D985623E2B89B0021F710 /* ChooseEachCategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844D985523E2B89B0021F710 /* ChooseEachCategoryTableViewCell.swift */; };
 		846EC08023E142ED0041039A /* TalentshowcaseTableViewCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EC07F23E142ED0041039A /* TalentshowcaseTableViewCell2.swift */; };
 		846EC08223E19DE10041039A /* PostVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846EC08123E19DE10041039A /* PostVideoViewController.swift */; };
@@ -288,7 +290,9 @@
 		18F9BC9524249FC600A1DF38 /* ContestsharebottonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContestsharebottonTableViewCell.swift; sourceTree = "<group>"; };
 		18F9BC972424CE9E00A1DF38 /* TBstartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBstartViewController.swift; sourceTree = "<group>"; };
 		77ACBAD4628F04E5458F51C5 /* Pods-ShowTalent.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShowTalent.release.xcconfig"; path = "Pods/Target Support Files/Pods-ShowTalent/Pods-ShowTalent.release.xcconfig"; sourceTree = "<group>"; };
+		840AE2BD249A3BE30076FA9F /* InternetCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetCheck.swift; sourceTree = "<group>"; };
 		8419063023DEA90900BDB96F /* AllLikesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllLikesTableViewCell.swift; sourceTree = "<group>"; };
+		84276DA6249919AE00949153 /* OhterissuesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OhterissuesViewController.swift; sourceTree = "<group>"; };
 		844D985523E2B89B0021F710 /* ChooseEachCategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseEachCategoryTableViewCell.swift; sourceTree = "<group>"; };
 		846EC07F23E142ED0041039A /* TalentshowcaseTableViewCell2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentshowcaseTableViewCell2.swift; sourceTree = "<group>"; };
 		846EC08123E19DE10041039A /* PostVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostVideoViewController.swift; sourceTree = "<group>"; };
@@ -431,6 +435,7 @@
 		18D018D22318F9B2003AC6DC = {
 			isa = PBXGroup;
 			children = (
+				840AE2BD249A3BE30076FA9F /* InternetCheck.swift */,
 				849F5551249642A200FF06F7 /* GoogleService-Info.plist */,
 				A4B091982445C86100F59A29 /* Offer and help */,
 				182335AA2423932E00F13FEC /* Shadowtable.swift */,
@@ -726,6 +731,7 @@
 				A4B0919B2445C8AD00F59A29 /* HelpTableViewCell.swift */,
 				A4B0919D2445C8BA00F59A29 /* OfferTableViewCell.swift */,
 				A4B0919F2445C8CC00F59A29 /* OfferViewController.swift */,
+				84276DA6249919AE00949153 /* OhterissuesViewController.swift */,
 			);
 			path = "Offer and help";
 			sourceTree = "<group>";
@@ -992,9 +998,11 @@
 				8492B5C923D2CD270072C852 /* Editprofile1ViewController.swift in Sources */,
 				A4616DAE2458C85A005EBE02 /* PreviewcontestTableViewCell.swift in Sources */,
 				84A8DF8F23D80B370054FE6B /* TalentContactTableViewCell.swift in Sources */,
+				84276DA7249919AE00949153 /* OhterissuesViewController.swift in Sources */,
 				A4B88A5C2456FC6400BA4550 /* AudioUploadViewController.swift in Sources */,
 				849FFB59240CD11F004551A8 /* SeeAllgeneralTableViewCell.swift in Sources */,
 				84A8DF8D23D8044C0054FE6B /* GroupsandEventsContactvc.swift in Sources */,
+				840AE2BE249A3BE30076FA9F /* InternetCheck.swift in Sources */,
 				A486037F2473CCC90021FE87 /* AllyourjuryCollectionViewCell.swift in Sources */,
 				A46BCF672472A03400988B13 /* ThemetypetwoTableViewCell.swift in Sources */,
 				A4B0919E2445C8BA00F59A29 /* OfferTableViewCell.swift in Sources */,

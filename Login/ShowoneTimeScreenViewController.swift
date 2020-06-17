@@ -29,7 +29,22 @@ class ShowoneTimeScreenViewController: UIViewController , UIGestureRecognizerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("Internet \(InternetCheck.isConnectedToNetwork())")
+        if !InternetCheck.isConnectedToNetwork() {
+            self.present(customalert.showalert(x: "Sorry you are not connected to Internet"), animated: true, completion: nil)
+            var skip = UIButton()
+                skip.backgroundColor = UIColor.white
+                skip.setTitle("Skip", for: .normal)
+                skip.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
+            skip.addTarget(self, action: #selector(skipped), for: .touchUpInside)
+                skip.layer.cornerRadius = 5
+            skip.layer.zPosition = 3
+                skip.frame = CGRect(x: self.view.frame.size.width - 122, y: 64, width: 90, height: 40)
+                self.view.addSubview(skip)
+        }
+        else {
         fetchdata()
+        }
 //        setupview()
         
     }

@@ -236,9 +236,12 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.feedimage.image = nil
+        self.feedimage.isHidden = false
+        self.feedimage.backgroundColor = UIColor.black
         if let p = player {
             self.player.pause()
             self.player = nil
+            p.removeObserver(self, forKeyPath: "timeControlStatus")
         }
          self.layerc?.removeFromSuperlayer()
 
@@ -365,14 +368,14 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         
         
         
-        if let avs = Talentshowcase2ViewController.cachepostvideo.object(forKey: url as NSString) as? AVURLAsset {
+        if let avs = JoinedeventsViewController.cachepostvideo.object(forKey: url as NSString) as? AVURLAsset {
             avplayeritem = AVPlayerItem(asset: avs)
         }
         else  {
             let avasset = AVURLAsset.init(url: (NSURL(string: url) as! URL))
             if let avv = AVPlayerItem(asset: avasset) as? AVPlayerItem {
                 avplayeritem = avv
-                Talentshowcase2ViewController.cachepostvideo.setObject(avasset, forKey: url as NSString)
+                JoinedeventsViewController.cachepostvideo.setObject(avasset, forKey: url as NSString)
             }
             
         }
@@ -386,7 +389,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         }
         
         player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
-
+        
         player.isMuted = true
         //        player.automaticallyWaitsToMinimizeStalling = true
          layerc = AVPlayerLayer(player: player)
@@ -444,6 +447,19 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         
     }
     
+    
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if object as AnyObject? === player {
+         if keyPath == "timeControlStatus" {
+                if #available(iOS 10.0, *) {
+                    
+                }
+            } else if keyPath == "rate" {
+                
+            }
+        }
+    }
     
     
     @objc func playerEndedPlaying(_ notification: Notification) {

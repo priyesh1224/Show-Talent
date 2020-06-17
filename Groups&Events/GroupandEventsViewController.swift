@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import Contacts
 
 struct streventcover
 {
@@ -84,9 +85,16 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
         super.viewDidLoad()
         table.delegate = self
         table.dataSource = self
-        table.reloadData()
+        if !InternetCheck.isConnectedToNetwork() {
+                   self.present(customalert.showalert(x: "Sorry you are not connected to Internet."), animated: true, completion: nil)
+               }
+                else {
+                   table.reloadData()
+                    fetchmasterdata()
+               }
+        
         setupviews()
-        fetchmasterdata()
+        
         var lat = CLLocationDegrees(exactly: 0)
         var longi = CLLocationDegrees(exactly: 0)
         
@@ -1718,27 +1726,27 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
         label.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         if self.sections[section] == "jury in own" {
             label.font = UIFont(name: "NeusaNextStd-Light", size: 10)
-            label.text = "You are jury in own contests"
+            label.text = "Jury in own contests"
         }
         else if self.sections[section] == "i am jury in" {
             label.font = UIFont(name: "NeusaNextStd-Light", size: 10)
-            label.text = "You are jury in others contest"
+            label.text = "Jury in others contest"
         }
         else if self.sections[section] == "unpublished contests" {
             label.text = "Unpublished contests"
         }
         else if self.sections[section] == "events" {
-            label.text = "Your contests"
+            label.text = "Contests"
         }
         else if self.sections[section] == "joined events" {
-            label.text = "Your joined contests"
+            label.text = "Joined contests"
         }
         else if self.sections[section] == "recommended contests" {
             label.text = "Recommended contests"
         }
         else {
             
-            label.text = "Your \(self.sections[section].capitalized)"
+            label.text = "\(self.sections[section].capitalized)"
         }
     
            view.addSubview(label)
@@ -1767,18 +1775,58 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
     
     
     @IBAction func creategrouptapped(_ sender: Any) {
-        if self.isother || self.jurysectionpressed {
-            print("Right place \(GroupandEventsViewController.copyunpublishedevents.count)")
-            if GroupandEventsViewController.copyunpublishedevents.count > 3 {
-               self.present(customalert.showalert(x: "Please publish or delete your unpublished contests before creating a new contest."), animated: true, completion: nil)
+        if !InternetCheck.isConnectedToNetwork() {
+            self.present(customalert.showalert(x: "Sorry you are not connected to Internet."), animated: true, completion: nil)
+            return
+        }
+        if CoreDataManager.contactstoserverinprogress {
+            self.present(customalert.showalert(x: "Please wait while your contacts are syncing, Try again in sometime."), animated: true, completion: nil)
+            return
+        }
+//        if CoreDataManager.shared.fetchcontactcount() == 0 {
+//            DispatchQueue.global(qos: .background).async {
+//                CoreDataManager.shared.loadallfromcontacts()
+//            }
+//            
+//        }
+        var t =  UIApplication.shared.delegate as? AppDelegate
+        t?.requestForAccess(completionHandler: { (ans) in
+            if ans {
+                if self.isother || self.jurysectionpressed {
+                               print("Right place \(GroupandEventsViewController.copyunpublishedevents.count)")
+                               if GroupandEventsViewController.copyunpublishedevents.count > 3 {
+                                  self.present(customalert.showalert(x: "Please publish or delete your unpublished contests before creating a new contest."), animated: true, completion: nil)
+                               }
+                               else {
+                                self.performSegue(withIdentifier: "creatingnewcontest", sender: nil)
+                               }
+                           }
+                           else {
+                    self.performSegue(withIdentifier: "creatinggroup", sender: nil)
+                           }
             }
             else {
-                performSegue(withIdentifier: "creatingnewcontest", sender: nil)
+               let alertController = UIAlertController(title: "Allow Contacts for Show Talent", message: "Please go to Settings and turn on the contacts access to proceed further.", preferredStyle: .alert)
+               let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
+                guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                       return
+                   }
+                   if UIApplication.shared.canOpenURL(settingsUrl) {
+                       UIApplication.shared.open(settingsUrl, completionHandler: { (success) in })
+                    }
+               }
+               let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+               alertController.addAction(cancelAction)
+               alertController.addAction(settingsAction)
+                self.present(alertController, animated: true, completion: nil)
             }
-        }
-        else {
-            performSegue(withIdentifier: "creatinggroup", sender: nil)
-        }
+                    
+        })
+            
+            
+        
+           
+        
         
         
     }

@@ -129,8 +129,10 @@ class ShowtalentothercontactsViewController: UIViewController , UITableViewDeleg
                 if b {
                 self.allselectedcontacts.append(a)
                     for var k in 0 ..< self.allobtainedcontacts.count {
-                        if a.id == self.allobtainedcontacts[k].id {
-                            self.allobtainedcontacts.remove(at: k)
+                        if k < self.allobtainedcontacts.count {
+                            if a.id == self.allobtainedcontacts[k].id {
+                                self.allobtainedcontacts.remove(at: k)
+                            }
                         }
                     }
                     self.tabel.reloadData()

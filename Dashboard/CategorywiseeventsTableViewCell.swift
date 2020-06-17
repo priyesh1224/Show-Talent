@@ -51,7 +51,7 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
         dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
-        let date = dateFormatter.date(from: tl ?? "")
+        var date = dateFormatter.date(from: tl ?? "")
         let today = dateFormatter.date(from: dateFormatter.string(from: Date()))
         var ttday : Date = Date()
         if let d  = date, let t = today {
@@ -59,6 +59,14 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
             ttday = t
             
         }
+        if let d = date {} else {
+            let dateFormatter2 = DateFormatter()
+                   dateFormatter2.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                   dateFormatter2.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+                    date = dateFormatter2.date(from: tl ?? "")
+        }
+        print(date)
+        print(ttday)
         let cal = Calendar.current
         
         let components = cal.dateComponents([Calendar.Component.day], from: ttday  , to: date ?? Date())
@@ -67,6 +75,7 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
         let components4 = cal.dateComponents([Calendar.Component.second], from: ttday  , to: date ?? Date())
         
         var passdata = 0
+        print("passdata is \(components.day) \(components2.hour) \(components3.minute)  \(components4.second)")
         if let p = components4.second
         {
             if p > 0 {

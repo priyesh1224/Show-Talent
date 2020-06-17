@@ -306,6 +306,9 @@ class Editprofile1ViewController: UIViewController, UITableViewDelegate , UITabl
                 else if x == "change category" {
                     performSegue(withIdentifier: "updatecategories", sender: nil)
                 }
+                 else if x == "need help with other issues" {
+                    performSegue(withIdentifier: "otherissues", sender: nil)
+                }
             }
         }
     }

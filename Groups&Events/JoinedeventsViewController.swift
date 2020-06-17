@@ -60,20 +60,20 @@ struct pricewinnerwise
     var amount : Int
 }
 
-class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITableViewDataSource {
+class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITableViewDataSource , UIGestureRecognizerDelegate {
     
     
     var juryeditmode = "new"
     
     var tablemode = "details"
-    
+    static var cachepostvideo = NSCache<NSString,AVURLAsset>()
     
     @IBOutlet weak var nopostswarning: UILabel!
     @IBOutlet weak var postpendingwarning: UIView!
     @IBOutlet weak var showcontestdetails: UIButton!
     
     @IBOutlet weak var showcontestposts: UIButton!
-    
+     var sp : UIActivityIndicatorView?
     
     static var holder : Dictionary<String,UIImage> = [:]
     
@@ -287,6 +287,10 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                             self.downloadvideo(url: self.contestimage) { (play) in
                                 DispatchQueue.main.async {
                                     if play?.status == .readyToPlay {
+                                        if let s =  self.sp as? UIActivityIndicatorView {
+                                                                           s.isHidden = true
+                                                                           s.stopAnimating()
+                                                                       }
                                         play?.play()
                                         self.eventimage.isHidden = true
                                     }
@@ -404,14 +408,14 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         
         
         
-        if let avs = Talentshowcase2ViewController.cachepostvideo.object(forKey: url as NSString) as? AVURLAsset {
+        if let avs = JoinedeventsViewController.cachepostvideo.object(forKey: url as NSString) as? AVURLAsset {
             avplayeritem = AVPlayerItem(asset: avs)
         }
         else  {
             let avasset = AVURLAsset.init(url: (NSURL(string: url) as! URL))
             if let avv = AVPlayerItem(asset: avasset) as? AVPlayerItem {
                 avplayeritem = avv
-                Talentshowcase2ViewController.cachepostvideo.setObject(avasset, forKey: url as NSString)
+                JoinedeventsViewController.cachepostvideo.setObject(avasset, forKey: url as NSString)
             }
             
         }
@@ -424,8 +428,21 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         //        player.automaticallyWaitsToMinimizeStalling = true
         var layer = AVPlayerLayer(player: player)
         
-        
+        player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
+        sp = UIActivityIndicatorView(frame: CGRect(x: self.eventimage.frame.size.width/2 + 30, y: self.eventimage.frame.size.height/2 , width: 60, height: 60))
+        sp?.center = CGPoint(x: self.view.frame.size.width/2, y: self.eventimage.frame.size.height/2)
+        sp?.color = UIColor.white
+        sp?.style = .whiteLarge
+        sp?.isHidden = false
+        sp?.startAnimating()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleplayertap))
+        tap.delegate = self
+        tap.numberOfTouchesRequired = 1
+        tap.isEnabled = true
+        coverview.addGestureRecognizer(tap)
+
         DispatchQueue.main.async {
+            self.eventimage.isHidden = true
             layer.backgroundColor = UIColor.black.cgColor
             layer.videoGravity = AVLayerVideoGravity.resizeAspect
             
@@ -438,7 +455,9 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             //        layer.bounds.size.height = 170
             layer.cornerRadius = 0
             layer.masksToBounds = true
-            
+            if let s = self.sp?.layer as? CALayer {
+                               self.coverview.layer.addSublayer(s)
+                           }
             self.coverview.clipsToBounds = true
             
             self.coverview.layer.insertSublayer(layer, at: 0)
@@ -456,6 +475,27 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         
         
     }
+    
+    @objc func handleplayertap()
+    {
+        print("player tapped")
+        if let pla = player as? AVPlayer {
+            pla.isMuted = !pla.isMuted
+        }
+    }
+    
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+           if object as AnyObject? === player {
+            if keyPath == "timeControlStatus" {
+                   if #available(iOS 10.0, *) {
+                       
+                   }
+               } else if keyPath == "rate" {
+                   
+               }
+           }
+       }
 
     @objc func playerEndedPlaying(_ notification: Notification) {
         DispatchQueue.main.async {[weak self] in
@@ -2032,6 +2072,12 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     
     @IBAction func backbtnpressed(_ sender: UIButton) {
+        if let p = player {
+            p.isMuted = true
+            self.player.pause()
+            self.player = nil
+            p.removeObserver(self, forKeyPath: "timeControlStatus")
+        }
         if dangeringoingback {
             self.performSegue(withIdentifier: "backtozero", sender: nil)
         }

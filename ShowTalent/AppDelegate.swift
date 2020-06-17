@@ -108,6 +108,8 @@ import UserNotifications
   
     func requestForAccess(completionHandler: @escaping (_ accessGranted: Bool) -> Void) {
         let authorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
+        print("status is")
+        print(authorizationStatus)
      
         switch authorizationStatus {
         case .authorized:
@@ -116,9 +118,25 @@ import UserNotifications
         case .denied, .notDetermined:
             self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (access, accessError) -> Void in
                 if access {
+                    print("Accepted ")
                     completionHandler(access)
                 }
                 else {
+                    print("Not Accepted ")
+                    if authorizationStatus == CNAuthorizationStatus.denied {
+                       completionHandler(false)
+                    }
+                }
+            })
+            
+        case .restricted :
+            self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (access, accessError) -> Void in
+                if access {
+                    print("Accepted ")
+                    completionHandler(access)
+                }
+                else {
+                    print("Not Accepted ")
                     if authorizationStatus == CNAuthorizationStatus.denied {
                        completionHandler(false)
                     }
@@ -129,6 +147,29 @@ import UserNotifications
             completionHandler(false)
         }
     }
+    
+    
+    func makenewfetchrequest(completionHandler: @escaping (_ accessGranted: Bool) -> Void)
+    {
+        let authorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
+    
+        self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (access, accessError) -> Void in
+            if access {
+                print("Accepted ")
+                completionHandler(access)
+            }
+            else {
+                print("Not Accepted ")
+                if authorizationStatus == CNAuthorizationStatus.denied {
+                   completionHandler(false)
+                }
+            }
+        })
+    }
+    
+    
+    
+    
 //    func application(application: UIApplication,
 //                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 //        let deviceTokenString = deviceToken.hexString

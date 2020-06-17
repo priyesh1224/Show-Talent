@@ -105,7 +105,13 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
         print("Hello my width is \(self.view.frame.size.width)")
         self.collection.delegate = self
         self.collection.dataSource = self
-        self.collection.reloadData()
+        if !InternetCheck.isConnectedToNetwork() {
+            self.present(customalert.showalert(x: "Sorry you are not connected to internet."), animated: true, completion: nil)
+               }
+               else {
+               self.collection.reloadData()
+               }
+        
         
       var l = UICollectionViewFlowLayout()
                        l.scrollDirection = .vertical
@@ -241,7 +247,9 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
         popup.isHidden = true
         self.searchbar.delegate = self
         self.searchpopup.isHidden = true
-        actualseachdata()
+        if InternetCheck.isConnectedToNetwork() {
+            actualseachdata()
+        }
         
 //        self.fetchsearchdata { (done) in
 //            print("Status is \(done)")
