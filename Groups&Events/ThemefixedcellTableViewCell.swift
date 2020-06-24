@@ -250,7 +250,8 @@ class ThemefixedcellTableViewCell: UITableViewCell, UICollectionViewDelegate , U
             if aa.runningstatus.lowercased() == "close" || x.runningstatus.lowercased() == "closed" {
                 self.timingsupperhead.text = "Contest over"
                 self.postvideobtn.isHidden = true
-                self.contestsharebtn.isHidden = true
+                self.contestsharebtn.isHidden = false
+                self.contestsharebtn.setTitle("Re-Run Contest", for: .normal)
             }
             else if aa.userid == userid {
                 if aa.isactive {

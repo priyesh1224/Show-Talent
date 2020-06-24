@@ -87,7 +87,7 @@ class ReviewsandRatingsViewController: UIViewController , UITableViewDelegate , 
             hidestackview.isHidden = true
             hideview.isHidden = true
             reviewfield.isHidden = true
-            tableviewtopspace.constant = -120
+            tableviewtopspace.constant = -230
             
         }
         else {

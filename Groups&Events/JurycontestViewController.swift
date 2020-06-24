@@ -87,7 +87,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     @IBOutlet weak var minipopupokbutton: CustomButton!
     
     
-    
+    static var deallocateplayers : ((_ c : Bool) -> Void)?
     
     
     
@@ -151,7 +151,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 3
+        return 6
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
@@ -167,6 +167,15 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
         if row == 2 {
             return "By Comments"
         }
+        if row == 3 {
+            return "By Views"
+        }
+        if row == 4 {
+            return "By Recently Added Posts"
+        }
+        if row == 5 {
+            return "Not seen by you"
+        }
         return ""
     }
     
@@ -180,8 +189,17 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
         else if filterpicker.selectedRow(inComponent: 0) == 1 {
             filterselected = "likes"
         }
-        else {
+        else if filterpicker.selectedRow(inComponent: 0) == 2 {
             filterselected = "comments"
+        }
+        else if filterpicker.selectedRow(inComponent: 0) == 3 {
+            filterselected = "views"
+        }
+        else if filterpicker.selectedRow(inComponent: 0) == 4 {
+            filterselected = "latest"
+        }
+        else if filterpicker.selectedRow(inComponent: 0) == 5 {
+            filterselected = "not seen"
         }
         if oldfilterselected != filterselected {
             
@@ -206,6 +224,25 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     
     
     @IBAction func backpressed(_ sender: UIButton) {
+        
+        let indexPath = self.table.indexPathsForVisibleRows
+                      for i in indexPath! {
+
+                          if let cell = self.table.cellForRow(at: i) as? JurycontestthreeTableViewCell {
+                            if let p = cell.player {
+                                  cell.player.isMuted = true
+                                  cell.player = nil
+                              }
+                          }
+
+                          
+
+                      }
+        
+        
+        if allfeeds.count > 0 {
+        JurycontestViewController.deallocateplayers!(true)
+        }
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -546,21 +583,50 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
         var lik = 0
         var comm = 0
         var views = 0
+        var latest = 0
+        var notseen = 0
         if self.filterselected == "none" {
             lik = 0
             comm = 0
             views = 0
+            latest = 0
+            notseen = 0
         }
         else if self.filterselected == "likes" {
             lik = 2
             comm = 0
             views = 0
+            latest = 0
+            notseen = 0
         }
         else if self.filterselected == "comments" {
             lik = 0
             comm = 2
             views = 0
+            latest = 0
+            notseen = 0
         }
+        else if self.filterselected == "views" {
+                   lik = 0
+                   comm = 0
+                   views = 2
+                   latest = 0
+                   notseen = 0
+               }
+        else if self.filterselected == "latest" {
+                   lik = 0
+                   comm = 0
+                   views = 0
+                   latest = 2
+                   notseen = 0
+               }
+        else if self.filterselected == "not seen" {
+                   lik = 0
+                   comm = 0
+                   views = 0
+                   latest = 0
+                   notseen = 2
+               }
         if isfiltering {
             self.allfeeds = []
         }
@@ -1024,7 +1090,7 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
             return 420
         }
         else {
-            return self.view.frame.size.height * 0.7
+            return self.view.frame.size.height * 0.6
         }
         return 280
     }
@@ -1035,15 +1101,39 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
     
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print(indexPath.row)
-        if let cell = tableView.cellForRow(at: indexPath) as? JurycontestthreeTableViewCell {
-            print("Yo")
-            if let p = cell.player  {
-               print("hey")
-                p.play()
-            }
+        
+        print("Loading Cell \(indexPath.row)")
+        print("I will display \(indexPath.row)")
+        let indexPaths = self.table.indexPathsForVisibleRows
+               for i in indexPaths! {
+                if i.row != indexPath.row {
+                   if let cell = self.table.cellForRow(at: i) as? JurycontestthreeTableViewCell {
+                    if let p = cell.player {
+                       cell.player.isMuted = true
+                       cell.player = nil
+                    }
+                   }
+                }
+
+
+
+               }
+        print("Lets see")
+        var cell = self.table.cellForRow(at: indexPath) as? JurycontestthreeTableViewCell
+        cell?.player.play()
+        
+        if let cell = self.table.cellForRow(at: indexPath) as? JurycontestthreeTableViewCell {
+            print("Casted cell \(indexPath.row)")
             
+            if let p = cell.player  {
+                print("Gotta play")
+                    p.play()
+                
+
+            }
+
         }
+       
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -1126,6 +1216,12 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
                     seg.tappedcommentlist = cmm
                 }
             }
+            
+            var rs = ""
+            if let x = self.currentevent as? strevent {
+                rs = x.runningstatus
+            }
+            seg.currentrunningstatus = rs.lowercased()
             seg.sendbackupdatedlist = {a,b in
                 
             }
@@ -1157,6 +1253,11 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
         if let s = segue.destination as? ReviewsandRatingsViewController {
             s.contestid = self.contestid
             s.postid = self.postid
+            var rs = ""
+            if let x = self.currentevent as? strevent {
+                rs = x.runningstatus
+            }
+            s.currentrunningstatus = rs.lowercased()
         }
         
     }

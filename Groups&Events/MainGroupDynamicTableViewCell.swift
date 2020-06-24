@@ -113,7 +113,7 @@ class MainGroupDynamicTableViewCell: UITableViewCell {
                                             s.isHidden = true
                                             s.stopAnimating()
                                         }
-                                        play?.play()
+//                                        play?.play()
                                         
                                     }
                                     
@@ -274,6 +274,10 @@ class MainGroupDynamicTableViewCell: UITableViewCell {
         //        player = AVPlayer(url: (NSURL(string: url) as! URL))
         
         player = AVPlayer(playerItem: avplayeritem)
+        avplayeritem.addObserver(self,
+        forKeyPath: #keyPath(AVPlayerItem.status),
+        options: [.old, .new],
+        context: nil)
         player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
 
         player.isMuted = true
@@ -359,6 +363,32 @@ class MainGroupDynamicTableViewCell: UITableViewCell {
                 }
             }
         }
+        
+        if keyPath == #keyPath(AVPlayerItem.status) {
+                   let status: AVPlayerItem.Status
+                   if let statusNumber = change?[.newKey] as? NSNumber {
+                       status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
+                   } else {
+                       status = .unknown
+                   }
+
+                   // Switch over status value
+                   switch status {
+                   case .readyToPlay:
+                       print("Status Ready to play")
+                       if let p = player as? AVPlayer {
+                        p.play()
+                       }
+                       
+                       // Player item is ready to play.
+                   case .failed:
+                       print("Status Failed")
+                       // Player item failed. See error.
+                   case .unknown:
+                       print("Status unknown")
+                       // Player item is not yet ready.
+                   }
+               }
     }
     
     

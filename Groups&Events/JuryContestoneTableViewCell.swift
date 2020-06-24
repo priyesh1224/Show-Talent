@@ -41,8 +41,17 @@ class JuryContestoneTableViewCell: UITableViewCell {
         else if b == "likes" {
             filterselectedbtn.setTitle("By Likes", for: .normal)
         }
-        else {
+        else if b == "comments"{
             filterselectedbtn.setTitle("By Comments", for: .normal)
+        }
+        else if b == "views"{
+            filterselectedbtn.setTitle("By Views", for: .normal)
+        }
+        else if b == "latest"{
+            filterselectedbtn.setTitle("By Recently Added Posts", for: .normal)
+        }
+        else if b == "not seen"{
+            filterselectedbtn.setTitle("Not seen by you", for: .normal)
         }
         filterselectedbtn.layer.borderColor = #colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1)
         filterselectedbtn.layer.borderWidth = 1

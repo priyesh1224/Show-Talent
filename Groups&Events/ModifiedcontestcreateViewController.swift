@@ -317,6 +317,8 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
     var currentthemeid = 0
     var ischoosentheme = false
     
+    var isreruningcontest = false
+    
     
     var passedevent : strevent?
     var isineditmode = false
@@ -364,7 +366,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
         self.svwidth.constant = self.view.frame.size.width
         self.collection.delegate = self
         self.collection.dataSource = self
-        
+        self.datepicker.locale = Locale.init(identifier: "en_IN")
+        print(TimeZone.knownTimeZoneIdentifiers)
+        let indTimeZone = TimeZone(identifier: "Asia/Calcutta")
+        self.datepicker.timeZone = indTimeZone
         paintborder(x: bod1)
         paintborder(x: bod2)
         paintborder(x: bod3)
@@ -440,7 +445,12 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
             self.contestgenderallowshow.isHidden = false
             bod8.isHidden = false
             bod9.isHidden = false
-            self.createbtn.setTitle("Edit", for: .normal)
+            if isreruningcontest {
+                self.createbtn.setTitle("Re Run", for: .normal)
+            }
+            else {
+                self.createbtn.setTitle("Edit", for: .normal)
+            }
         }
         else {
             self.choosetheme.isHidden = false
@@ -1055,31 +1065,123 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
         else {
             self.allchoosenfields["Contest Location"] = ""
         }
-        var errorcheck = false
+            var errorcheck = false
+                var errorcheck2 = false
+        var errorcheck3 = false
+            var errorcheck4 = false
         
         if isineditmode {
             print(self.allchoosenfields["Contest Result Date"])
             print(self.allchoosenfields["Contest Start Date"])
            
-            if let c = self.allchoosenfields["Contest Result Date"] as? String {
-                
+
             
-            if let d = self.allchoosenfields["Contest Start Date"] as? String {
-                let dateFormatter = DateFormatter()
+            if let c = self.allchoosenfields["Contest Result Date"] as? Date {
+                if let r = self.allchoosenfields["Contest Start Date"] as? Date {
+                    if c.timeIntervalSince(r).isLessThanOrEqualTo(0) {
+                        errorcheck = true
+                    }
+                    if c.timeIntervalSince(r).isLessThanOrEqualTo(60 * 60) {
+                        errorcheck4 = true
+                    }
+                    if r.timeIntervalSince(Date()).isLessThanOrEqualTo(0) {
+                        errorcheck2 = true
+                    }
+                    if r.timeIntervalSince(Date()).isLessThanOrEqualTo(30 * 60) {
+                        errorcheck3 = true
+                    }
+                }
+                else if let r = self.allchoosenfields["Contest Start Date"] as? String {
+                            let dateFormatter = DateFormatter()
+                 let dateFormatter2 = DateFormatter()
                             dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-                            dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303'"
-                            if let date = dateFormatter.date(from: c) as? Date {
-                                if let date2 = dateFormatter.date(from: d) as? Date {
-                                    print("Check this")
-                                    print(date)
-                                    print(date2)
-                                    if date.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
+                 dateFormatter2.locale = Locale(identifier: "en_US_POSIX")
+                            dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+                             dateFormatter2.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303'"
+                
+                     if let date2 = dateFormatter.date(from: r ?? "") as? Date {
+                            if c.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
                                         errorcheck = true
                                     }
-                                }
+                        if c.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                                                        errorcheck4 = true
+                                                    }
+                        print(date2)
+                        print(Date())
+                        print(date2.timeIntervalSince(Date()))
+                        
+                            if (date2.timeIntervalSince(Date()  + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                errorcheck2 = true
                             }
-                
-            }
+                        if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                errorcheck3 = true
+                        }
+                     }
+                    else if let date2 = dateFormatter2.date(from: r ?? "") as? Date {
+                                               if c.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
+                                                           errorcheck = true
+                                                       }
+                                                if c.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                                                    errorcheck4 = true
+                                                }
+                                               if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                                   errorcheck2 = true
+                                               }
+                                                if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                                    errorcheck3 = true
+                                                }
+                                        }
+                 }
+                  
+                 
+                    
+                }
+
+            
+            else {
+                if let c = self.allchoosenfields["Contest Result Date"] as? String {
+                                   if let r = self.allchoosenfields["Contest Start Date"] as? String {
+                                               let dateFormatter = DateFormatter()
+                                    let dateFormatter2 = DateFormatter()
+                                               dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                                    dateFormatter2.locale = Locale(identifier: "en_US_POSIX")
+                                               dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+                                                dateFormatter2.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303'"
+                                    if let date = dateFormatter.date(from: c ?? "") as? Date {
+                                        if let date2 = dateFormatter.date(from: r ?? "") as? Date {
+                                               if date.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
+                                                           errorcheck = true
+                                                       }
+                                            if date.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                                                errorcheck4 = true
+                                            }
+                                               if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                                   errorcheck2 = true
+                                               }
+                                            if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                                    errorcheck3 = true
+                                            }
+                                        }
+                                    }
+                                    else if let date = dateFormatter2.date(from: c ?? "") as? Date {
+                                        if let date2 = dateFormatter2.date(from: r ?? "") as? Date {
+                                               if date.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
+                                                           errorcheck = true
+                                                       }
+                                            if date.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                                                errorcheck4 = true
+                                            }
+                                               if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                                   errorcheck2 = true
+                                               }
+                                            if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                                errorcheck3 = true
+                                            }
+                                        }
+                                    }
+                                       
+                                   }
+                               }
             }
 
 //            if let tl = "\(self.allchoosenfields["Contest Result Date"])" as? String {
@@ -1110,8 +1212,60 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                     if c.timeIntervalSince(r).isLessThanOrEqualTo(0) {
                         errorcheck = true
                     }
+                    if c.timeIntervalSince(r).isLessThanOrEqualTo(60 * 60) {
+                        errorcheck4 = true
+                    }
+                    if r.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0) {
+                                           errorcheck2 = true
+                                       }
+                    if r.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60) {
+                                                            errorcheck3 = true
+                                                        }
                 }
             }
+            else if let c = self.allchoosenfields["Contest Result Date"] as? String {
+                                              if let r = self.allchoosenfields["Contest Start Date"] as? String {
+                                                          let dateFormatter = DateFormatter()
+                                               let dateFormatter2 = DateFormatter()
+                                                          dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                                               dateFormatter2.locale = Locale(identifier: "en_US_POSIX")
+                                                          dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+                                                           dateFormatter2.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303'"
+                                               if let date = dateFormatter.date(from: c ?? "") as? Date {
+                                                   if let date2 = dateFormatter.date(from: r ?? "") as? Date {
+                                                          if date.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
+                                                                      errorcheck = true
+                                                                  }
+                                                    if date.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                                                        errorcheck4 = true
+                                                    }
+                                                          if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                                              errorcheck2 = true
+                                                          }
+                                                    if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                                                errorcheck3 = true
+                                                        }
+                                                   }
+                                               }
+                                               else if let date = dateFormatter2.date(from: c ?? "") as? Date {
+                                                   if let date2 = dateFormatter2.date(from: r ?? "") as? Date {
+                                                          if date.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
+                                                                      errorcheck = true
+                                                                  }
+                                                    if date.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                                                            errorcheck4 = true
+                                                    }
+                                                          if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                                              errorcheck2 = true
+                                                          }
+                                                    if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                                            errorcheck3 = true
+                                                    }
+                                                   }
+                                               }
+                                                  
+                                              }
+                                          }
         }
         
         
@@ -1132,6 +1286,15 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
         if errorcheck {
             self.present(customalert.showalert(x: "Contest End date should be later to Start Date."), animated: true, completion: nil)
         }
+            else if errorcheck2 {
+                self.present(customalert.showalert(x: "Start Date has already exceeded current date"), animated: true, completion: nil)
+            }
+            else if errorcheck3 {
+                self.present(customalert.showalert(x: "Contest Start Date should atleast be 30 minutes after the current date."), animated: true, completion: nil)
+            }
+            else if errorcheck4 {
+                self.present(customalert.showalert(x: "Contest End Date should atleast be 60 minutes after the Contest Start Date."), animated: true, completion: nil)
+            }
 
         else if(self.allchoosenfields["Contest Name"] == nil) {
             self.present(customalert.showalert(x: "You need to enter contest name"), animated: true, completion: nil)
@@ -1454,14 +1617,14 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
         }
         else if self.dropdownselectedtype == "Contest Start Date" || self.dropdownselectedtype == "Contest Result Date" {
             print("Selected \(self.dropdownselectedtype)")
-            self.allchoosenfields[self.dropdownselectedtype] = self.datepicker.date
-            selectedval = self.datepicker.date.description.components(separatedBy: "+")[0]
+            self.allchoosenfields[self.dropdownselectedtype] = self.datepicker.date + (5.5 * 60 * 60 )
+            selectedval = (self.datepicker.date  + (5.5 * 60 * 60 )).description.components(separatedBy: "+")[0]
             self.alldatainsync[self.dropdownselectedtype] = selectedval
             if isineditmode {
-                self.allchoosenfields[self.dropdownselectedtype] = self.datepicker.date.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
+                self.allchoosenfields[self.dropdownselectedtype] = (self.datepicker.date + (5.5 * 60 * 60 )).string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
             }
             else {
-                self.allchoosenfields[self.dropdownselectedtype] = self.datepicker.date
+                self.allchoosenfields[self.dropdownselectedtype] = self.datepicker.date + (5.5 * 60 * 60 )
             }
             if self.dropdownselectedtype == "Contest Start Date" {
                 self.startdatebtn.setTitle(selectedval, for: .normal)
@@ -1706,8 +1869,68 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                 conton = "\(conton)Z"
                 }
             }
+            var errorcheck = false
+            var errorcheck2 = false
+            var errorcheck3 = false
+            var errorcheck4 = false
+            
+            if let c = self.allchoosenfields["Contest Result Date"] as? Date {
+                if let r = self.allchoosenfields["Contest Start Date"] as? Date {
+                    if c.timeIntervalSince(r).isLessThanOrEqualTo(0) {
+                        errorcheck = true
+                    }
+                    if c.timeIntervalSince(r).isLessThanOrEqualTo(60 * 60) {
+                        errorcheck4 = true
+                    }
+                    if r.timeIntervalSince(Date()).isLessThanOrEqualTo(0) {
+                        errorcheck2 = true
+                    }
+                    if r.timeIntervalSince(Date()).isLessThanOrEqualTo(30 * 60) {
+                                           errorcheck3 = true
+                                       }
+                }
+            }
+            else {
+                if let c = self.allchoosenfields["Contest Result Date"] as? String {
+                                   if let r = self.allchoosenfields["Contest Start Date"] as? String {
+                                               let dateFormatter = DateFormatter()
+                                               dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                                               dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+                                               let date = dateFormatter.date(from: c ?? "")
+                                               let date2 = dateFormatter.date(from: r ?? "")
+                                       if date!.timeIntervalSince(date2!).isLessThanOrEqualTo(0) {
+                                                   errorcheck = true
+                                               }
+                                    if date!.timeIntervalSince(date2!).isLessThanOrEqualTo(60 * 60) {
+                                        errorcheck4 = true
+                                    }
+                                       if (date2?.timeIntervalSince(Date()).isLessThanOrEqualTo(0))! {
+                                           errorcheck2 = true
+                                       }
+                                    if (date2?.timeIntervalSince(Date()).isLessThanOrEqualTo(30 * 60))! {
+                                        errorcheck3 = true
+                                    }
+                                       
+                                   }
+                               }
+            }
+            
+            
+            
             print("After \(reson)  \(conton)")
-            if let cat = self.allchoosenfields["Category"] as? categorybrief {
+             if errorcheck {
+                self.present(customalert.showalert(x: "Result date should be later to Start Date."), animated: true, completion: nil)
+            }
+                else if errorcheck2 {
+                               self.present(customalert.showalert(x: "Start Date has already exceeded current date"), animated: true, completion: nil)
+            }
+                else if errorcheck3 {
+                        self.present(customalert.showalert(x: "Contest Start Date should atleast be 30 minutes after the current date."), animated: true, completion: nil)
+                }
+                else if errorcheck4 {
+                        self.present(customalert.showalert(x: "Contest End Date should atleast be 60 minutes after the Contest Start Date."), animated: true, completion: nil)
+                }
+            else if let cat = self.allchoosenfields["Category"] as? categorybrief {
                 if let invt = self.allchoosenfields["Invitation type"] as? invitationtypess {
                     if let et = self.allchoosenfields["Entry Type"] as? entrytype {
                         if let cpt = self.allchoosenfields["Contest Winner Price Type"] as? contestwinnerpricess {
@@ -1805,8 +2028,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
     
     @IBAction func createeventtapped(_ sender: UIButton) {
         
-        if isineditmode {
-            self.updatetheevent()
+        if isineditmode && isreruningcontest == false {
+            
+                self.updatetheevent()
+            
         }
         else {
             self.createmode = true
@@ -1844,12 +2069,49 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
             }
            
             var errorcheck = false
+            var errorcheck2 = false
+            var errorcheck3 = false
+            var errorcheck4 = false
             if let c = self.allchoosenfields["Contest Result Date"] as? Date {
                 if let r = self.allchoosenfields["Contest Start Date"] as? Date {
                     if c.timeIntervalSince(r).isLessThanOrEqualTo(0) {
                         errorcheck = true
                     }
+                    if c.timeIntervalSince(r).isLessThanOrEqualTo(60 * 60) {
+                        errorcheck4 = true
+                    }
+                    if r.timeIntervalSince(Date()).isLessThanOrEqualTo(0) {
+                        errorcheck2 = true
+                    }
+                    if r.timeIntervalSince(Date()).isLess(than: 30 * 60) ?? true {
+                        errorcheck3 = true
+                    }
                 }
+            }
+            else {
+                if let c = self.allchoosenfields["Contest Result Date"] as? String {
+                    if let r = self.allchoosenfields["Contest Start Date"] as? String {
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                                dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+                                let date = dateFormatter.date(from: c ?? "")
+                                let date2 = dateFormatter.date(from: r ?? "")
+                        if date!.timeIntervalSince(date2!).isLessThanOrEqualTo(0) {
+                                    errorcheck = true
+                                }
+                        if date!.timeIntervalSince(date2!).isLessThanOrEqualTo(60 * 60) {
+                            errorcheck4 = true
+                        }
+                        if (date2?.timeIntervalSince(Date()).isLessThanOrEqualTo(0))! {
+                            errorcheck2 = true
+                        }
+                        if (date2?.timeIntervalSince(Date()).isLessThanOrEqualTo(30 * 60))! {
+                            errorcheck3 = true
+                        }
+                        
+                    }
+                }
+               
             }
            
             
@@ -1930,6 +2192,15 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
             else if errorcheck {
                 self.present(customalert.showalert(x: "Result date should be later to Start Date."), animated: true, completion: nil)
             }
+                else if errorcheck2 {
+                               self.present(customalert.showalert(x: "Start Date has already exceeded current date"), animated: true, completion: nil)
+                           }
+//                else if errorcheck3 {
+//                        self.present(customalert.showalert(x: "Contest Start Date should atleast be 30 minutes after the current date."), animated: true, completion: nil)
+//                }
+                else if errorcheck4 {
+                        self.present(customalert.showalert(x: "Contest End Date should atleast be 60 minutes after the Contest Start Date."), animated: true, completion: nil)
+                }
             
             else if self.groupid == 0 {
                 self.present(customalert.showalert(x: "You need to enter contest belong to which group."), animated: true, completion: nil)
@@ -2018,12 +2289,18 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                 if let c = self.allchoosenfields["Contest Result Date"] as? Date {
                                                     reson =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
                                                 }
+                                                else if let c =  self.allchoosenfields["Contest Result Date"] as? String {
+                                                               reson = c
+                                                           }
                                                 if let c = self.allchoosenfields["Contest Price"] as? String {
                                                     contprice = c
                                                 }
                                                 if let c = self.allchoosenfields["Contest Start Date"] as? Date {
                                                     conton =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
                                                 }
+                                                else if let c =  self.allchoosenfields["Contest Start Date"] as? String {
+                                                               conton = c
+                                                           }
                                                 
                                                 if let c = self.allchoosenfields["Contest Description"] as? String {
                                                     contdesc = c
@@ -2693,6 +2970,8 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                 }
             }
             
+            print("Contest Result typr")
+            print(contestwinnertypes)
             var find = false
             for var  each in 0 ..< self.contestwinnertypes.count {
                 if self.contestwinnertypes[each].id == x.resultypeid {
@@ -2737,15 +3016,15 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
             
             
             
-            
+            print(x)
  
         
         self.contestentrytype.text = "\(x.entrytype.capitalized)"
         self.invitationtype.text = "\(x.invitationtype.capitalized)"
             self.performancetype.text = "\(x.performancetype.capitalized)"
             self.genderallow.text = "\(x.gendername.capitalized)"
-            self.contestprice.text = "\(x.contestprice.capitalized)"
-            self.noofwinners.text = "\(x.noofwinner)"
+            self.contestprice.text = "\(x.contestwinnerpricetype.capitalized)"
+            self.noofwinners.text = "\(x.resulttype.capitalized)"
             self.contestcategory.text = "\(x.categoryname.capitalized)"
             self.selecttheme.text = "\(x.themename.capitalized)"
             self.startdatebtn.setTitle("\(Date())", for: .normal)

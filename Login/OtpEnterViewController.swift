@@ -469,6 +469,11 @@ class OtpEnterViewController: UIViewController , UITextFieldDelegate {
                                             if uo == vrn {
                                                    print("Verfied")
                                             UserDefaults.standard.setValue(vtok as? String, forKey: "token")
+                                                UserDefaults.standard.set(true, forKey: "needtoshowdashboardtutorial")
+                                                UserDefaults.standard.set(true, forKey: "needtoshowgroupdashboardtutorial")
+                                                UserDefaults.standard.set(true, forKey: "needtoshowcontestdashboardtutorial")
+                                                UserDefaults.standard.set(true, forKey: "needtoshowjurydashboardtutorial")
+                                                UserDefaults.standard.set(true, forKey: "needtoshowprofiletutorial")
                                                 
                             
                                                 

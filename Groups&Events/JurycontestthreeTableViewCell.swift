@@ -64,10 +64,13 @@ class JurycontestthreeTableViewCell: UITableViewCell {
     var sp : UIActivityIndicatorView?
     var postid = 0
 
+    var playerlockfortiming = true
+    var alreadysentrequest = false
     
     override func prepareForReuse() {
         super.prepareForReuse()
         self.postimage.image = #imageLiteral(resourceName: "cover-photo")
+        print("Reusing")
 //        if let m = muteunmute as? UIButton {
 //            if self.currentfeed?.type == "Video" || self.currentfeed?.type == "Videos" {
 //                m.isHidden = false
@@ -96,6 +99,22 @@ class JurycontestthreeTableViewCell: UITableViewCell {
     
     func updatecell(x : feeds , y : Bool , z : Int , w : Bool)
     {
+        
+        JurycontestViewController.deallocateplayers = { a in
+            if let p = self.player {
+                self.player.pause()
+                self.player = nil
+            }
+            if let ai = self.audio {
+                ai.pause()
+                self.audio = nil
+            }
+            self.layerc?.removeFromSuperlayer()
+        }
+        
+        
+        
+        
         self.postid = x.acticityid
         selectbutton.contentEdgeInsets = UIEdgeInsets(top: 5,left: 5,bottom: 5,right: 5) 
         if y {
@@ -160,12 +179,16 @@ class JurycontestthreeTableViewCell: UITableViewCell {
                 DispatchQueue.global(qos: .utility).async {
                     self.downloadvideo(url: x.activitypath) { (play) in
                         DispatchQueue.main.async {
+                            print("Status Value")
+                            print(AVPlayer.Status.readyToPlay.rawValue)
+                            print(AVPlayer.Status.failed.rawValue)
+                            print(AVPlayer.Status.unknown.rawValue)
                             if play?.status == .readyToPlay {
                                 if let s =  self.sp as? UIActivityIndicatorView {
                                     s.isHidden = true
                                     s.stopAnimating()
                                 }
-                                play?.play()
+//                                play?.play()
                             }
                             self.postimage.isHidden = true
                             
@@ -377,6 +400,10 @@ class JurycontestthreeTableViewCell: UITableViewCell {
         //        player = AVPlayer(url: (NSURL(string: url) as! URL))
         
         player = AVPlayer(playerItem: avplayeritem)
+        avplayeritem.addObserver(self,
+                                  forKeyPath: #keyPath(AVPlayerItem.status),
+                                  options: [.old, .new],
+                                  context: nil)
         player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
         
         player.isMuted = true
@@ -450,6 +477,9 @@ class JurycontestthreeTableViewCell: UITableViewCell {
     }
     
     
+   
+    
+    
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "timeControlStatus", let change = change, let newValue = change[NSKeyValueChangeKey.newKey] as? Int, let oldValue = change[NSKeyValueChangeKey.oldKey] as? Int {
             let oldStatus = AVPlayer.TimeControlStatus(rawValue: oldValue)
@@ -466,7 +496,62 @@ class JurycontestthreeTableViewCell: UITableViewCell {
                 }
             }
         }
+        
+        if keyPath == #keyPath(AVPlayerItem.status) {
+                   let status: AVPlayerItem.Status
+                   if let statusNumber = change?[.newKey] as? NSNumber {
+                       status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
+                   } else {
+                       status = .unknown
+                   }
+
+                   // Switch over status value
+                   switch status {
+                   case .readyToPlay:
+                       print("Status Ready to play")
+                       if let p = player as? AVPlayer {
+                        p.play()
+                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5.0) {
+                            // check if player is still playing
+                            if self.player.rate != 0 && self.alreadysentrequest == false {
+                                
+                                if self.playerlockfortiming == false {
+                                print("Player reached 5 seconds \(self.currentfeed?.acticityid)")
+                                    self.sendseenrequest()
+                                }
+                                self.playerlockfortiming = false
+                            }
+                        }
+                       }
+                       
+                       // Player item is ready to play.
+                   case .failed:
+                       print("Status Failed")
+                       // Player item failed. See error.
+                   case .unknown:
+                       print("Status unknown")
+                       // Player item is not yet ready.
+                   }
+               }
     }
+    
+    
+    func sendseenrequest()
+    {
+        if let i = self.currentfeed?.acticityid as? Int {
+            let r = BaseServiceClass()
+            let url = "\(Constants.K_baseUrl)\(Constants.jurypostseentrigger)?postId=\(i)"
+            r.getApiRequest(url: url, parameters: [:]) { (response, err) in
+                if let res = response?.result.value as? Dictionary<String,Any> {
+                    print(res)
+                    self.alreadysentrequest = true
+                }
+            }
+        }
+    }
+    
+    
+    
     
     
     @objc func playerEndedPlaying(_ notification: Notification) {

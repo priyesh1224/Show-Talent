@@ -12,6 +12,7 @@ import Alamofire
 class JoinedeventinformationTableViewCell: UITableViewCell , UITableViewDelegate , UITableViewDataSource {
  
  var publishcontest : ((_ pressed : Bool) -> ())?
+var reruncontest : ((_ pressed : Bool) -> ())?
 var leftcontest : ((_ pressed : Bool) -> ())?
    var participatebtnpressed : ((_ pressed : Bool) -> ())?
     var taketoedit : ((_ pressed : Bool,_ id : Int) -> ())?
@@ -199,7 +200,13 @@ var leftcontest : ((_ pressed : Bool) -> ())?
     
     
     @IBAction func leavecontestpressed(_ sender: Any) {
-        if currenttimetopublish {
+         let tit = self.participatebutton.titleLabel?.text as? String
+            
+        
+        if tit == "Re-Run Contest" {
+            
+        }
+        else if currenttimetopublish {
             self.publishcontest!(true)
         }
         else {
@@ -274,7 +281,8 @@ var leftcontest : ((_ pressed : Bool) -> ())?
         var userid = UserDefaults.standard.value(forKey: "refid") as! String
         if x.runningstatus.lowercased() == "close" || x.runningstatus.lowercased() == "closed" {
             self.participatebutton.setTitle("Contest Closed", for: .normal)
-            self.leavecontest.isHidden = true
+            self.leavecontest.setTitle("Re-Run Contest", for: .normal)
+            self.leavecontest.isHidden = false
             self.participatebutton.isHidden = false
             self.participatebutton.backgroundColor = UIColor.clear
             self.participatebutton.setTitleColor(UIColor.red, for: .normal)

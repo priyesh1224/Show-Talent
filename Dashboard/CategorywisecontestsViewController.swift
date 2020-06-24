@@ -58,6 +58,11 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
     var eventtobepassed : customstrevent?
     var page = 0
     var closedpage = 0
+    var path = CGMutablePath()
+       var pathlabel = UILabel()
+       let maskLayer = CAShapeLayer()
+       var overview : UIView?
+       var introcount = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,8 +94,34 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
                       }
                       }
         
+        overview = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height))
+                       overview?.backgroundColor = #colorLiteral(red: 0.0264734456, green: 0.0264734456, blue: 0.0264734456, alpha: 0.8351122359)
+               
+                       let tp = UITapGestureRecognizer(target: self, action: #selector(handleoverviewtap))
+                       tp.numberOfTouchesRequired = 1
+                       tp.numberOfTapsRequired = 1
+                       tp.isEnabled = true
+                       overview?.addGestureRecognizer(tp)
+               self.view.addSubview(overview ?? UIView())
+               maskLayer.backgroundColor = UIColor.white.cgColor
+                              maskLayer.fillRule = .evenOdd
+                              overview?.layer.mask = maskLayer
+                              overview?.clipsToBounds = true
+                              pathlabel = UILabel(frame: CGRect(x: 0, y: self.view.frame.size.height/2.4, width: self.view.frame.size.width, height: 90))
+                              pathlabel.numberOfLines = 0
+                              pathlabel.textAlignment = .center
+                              pathlabel.textColor = UIColor.white
+                              overview?.addSubview(pathlabel)
+               
+        
 
     }
+    
+    @objc func handleoverviewtap()
+       {
+           introcount = introcount +  1
+           self.bringinintro(intro: introcount)
+       }
     
     
     @IBAction func segmentchanged(_ sender: Any) {
@@ -120,13 +151,73 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
     }
     
     
-    
+    func bringinintro(intro : Int)
+       {
+           
+          
+           
+                   
+                   
+                  
+           
+           
+           if intro == 1 {
+               let frame = self.view.convert(segmentcontroll.layer.frame, to:self.view)
+               
+                   path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 8))
+                   path.addRoundedRect(in: CGRect(x: frame.origin.x, y: frame.origin.y - 4, width: frame.size.width, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+                   path.addRect(CGRect(origin: .zero, size: overview?.frame.size ?? CGSize.zero))
+                   maskLayer.path = path
+
+                  
+                   pathlabel.text = "Switch to view upcoming and closed contests. \n\n\n Tap for next suggestion"
+                   
+           }
+           else if intro == 2 {
+            
+            if let cell = table.cellForRow(at: IndexPath(row: 0, section: 0)) as? CategorywiseeventsTableViewCell {
+                let frame = cell.outsv.convert(cell.innsv.layer.frame, to:self.view)
+                       
+                       path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 8))
+                       path.addRoundedRect(in: CGRect(x: frame.origin.x, y: frame.origin.y - 4, width: cell.outsv.frame.size.width, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+
+                                 maskLayer.path = path
+                pathlabel.text = "Check for the remaining time left for contest to end. \n\n\n Tap for next suggestion"
+            }
+            
+            
+               
+           }
+           else if intro == 3 {
+              if let cell = table.cellForRow(at: IndexPath(row: 0, section: 0)) as? CategorywiseeventsTableViewCell {
+                let frame = cell.participatecoverview.convert(cell.participatebtn.layer.frame, to:self.view)
+                          
+                          path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 8))
+                          path.addRoundedRect(in: CGRect(x: frame.origin.x, y: frame.origin.y - 4, width: cell.participatebtn.frame.size.width, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+
+                                    maskLayer.path = path
+                   pathlabel.text = "Click here to participate in the contest. \n\n\n Tap for next suggestion"
+               }
+           }
+           
+           else {
+               self.overview?.isHidden = true
+           }
+                   
+                   
+                   
+
+       }
     
     
     @IBAction func filterspressed(_ sender: UIButton) {
         
         performSegue(withIdentifier: "showfilters", sender: nil)
     }
+    
+    
+    
+    
     
     
     
@@ -420,6 +511,7 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
 
                     self.segmentcontroll.isEnabled = true
                     self.table.reloadData()
+                    self.bringinintro(intro: self.introcount)
                 }
             }
             

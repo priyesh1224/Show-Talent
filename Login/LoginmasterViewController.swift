@@ -297,7 +297,16 @@ class LoginmasterViewController: UIViewController,UICollectionViewDelegate,UICol
             self.loginbutton.setTitle("Forgot Password", for: .normal)
         }
         else {
-            tableviewheight.constant = 220
+            var alreadygap = self.table.frame.origin.y
+            var put = self.view.frame.size.height - alreadygap - 250
+            if put > 220 {
+                tableviewheight.constant = put
+            }
+            else {
+                tableviewheight.constant = 220
+            }
+            
+            
             self.loginbutton.setTitle("Sign up", for: .normal)
         }
         if type == "loginmobile" {
@@ -447,9 +456,11 @@ class LoginmasterViewController: UIViewController,UICollectionViewDelegate,UICol
 
                var url = Constants.K_baseUrl + Constants.registerUrl
                var r = BaseServiceClass()
+        self.startspinner()
                r.postApiRequest(url: url, parameters: params) { (data, err) in
                 if(err != nil) {
                     print(err)
+                    self.stopspinner()
                 }
                 print(data)
                    if let resv = (data?.result.value) as? Dictionary<String,AnyObject> {
@@ -499,7 +510,11 @@ class LoginmasterViewController: UIViewController,UICollectionViewDelegate,UICol
         
         
     }
-    
+    func startspinner()
+    {
+        self.spinner.isHidden = false
+        self.spinner.startAnimating()
+    }
     
     func stopspinner()
     {
@@ -1064,16 +1079,22 @@ class LoginmasterViewController: UIViewController,UICollectionViewDelegate,UICol
         if indexPath.row == 0 {
             self.loginbuttonouterview.isHidden = false
             self.signupextraview.isHidden = true
+            self.bottomtext.isHidden = false
+            self.bottommosttext.isHidden = false
             type = "login"
         }
         else if indexPath.row == 1 {
             self.loginbuttonouterview.isHidden = false
             self.signupextraview.isHidden = true
+            self.bottomtext.isHidden = false
+            self.bottommosttext.isHidden = false
             type = "forgot"
         }
         else {
             self.loginbuttonouterview.isHidden = true
             self.signupextraview.isHidden = false
+            self.bottomtext.isHidden = true
+            self.bottommosttext.isHidden = true
             type = "signup"
         }
         
@@ -1298,7 +1319,7 @@ class LoginmasterViewController: UIViewController,UICollectionViewDelegate,UICol
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
+        return 80
     }
     
     

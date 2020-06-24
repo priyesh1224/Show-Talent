@@ -63,6 +63,9 @@ struct pricewinnerwise
 class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITableViewDataSource , UIGestureRecognizerDelegate {
     
     
+    
+    static var deallocateplayer : ((_ x : Bool) -> Void)?
+    
     var juryeditmode = "new"
     
     var tablemode = "details"
@@ -94,6 +97,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     @IBOutlet weak var eventimageheight: NSLayoutConstraint!
     static var participatebtnpressedanswer : ((_ pressed : Bool) -> ())?
     var timetopublish = false
+    var isreruningcontest = false
     
     var dangeringoingback = false
     var themeid = 0
@@ -159,6 +163,27 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
    
     
     @IBOutlet var editlayer: Shadowedbuttonview!
+    
+    
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+
+        let indexPath = self.table.indexPathsForVisibleRows
+        for i in indexPath! {
+
+            if let cell = self.table.cellForRow(at: i) as? JoinedeventfeedsTableViewCell {
+                if let p = player {
+                    cell.player.isMuted = true
+                    cell.player = nil
+                }
+            }
+
+            
+
+        }
+
+    }
     
     override func viewDidLoad() {
         
@@ -291,7 +316,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                                                                            s.isHidden = true
                                                                            s.stopAnimating()
                                                                        }
-                                        play?.play()
+//                                        play?.play()
                                         self.eventimage.isHidden = true
                                     }
                                     
@@ -425,6 +450,10 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         
         player = AVPlayer(playerItem: avplayeritem)
         player.isMuted = true
+        avplayeritem.addObserver(self,
+        forKeyPath: #keyPath(AVPlayerItem.status),
+        options: [.old, .new],
+        context: nil)
         //        player.automaticallyWaitsToMinimizeStalling = true
         var layer = AVPlayerLayer(player: player)
         
@@ -495,6 +524,33 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                    
                }
            }
+        
+        
+        if keyPath == #keyPath(AVPlayerItem.status) {
+                   let status: AVPlayerItem.Status
+                   if let statusNumber = change?[.newKey] as? NSNumber {
+                       status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
+                   } else {
+                       status = .unknown
+                   }
+
+                   // Switch over status value
+                   switch status {
+                   case .readyToPlay:
+                       print("Status Ready to play")
+                       if let p = player as? AVPlayer {
+                        p.play()
+                       }
+                       
+                       // Player item is ready to play.
+                   case .failed:
+                       print("Status Failed")
+                       // Player item failed. See error.
+                   case .unknown:
+                       print("Status unknown")
+                       // Player item is not yet ready.
+                   }
+               }
        }
 
     @objc func playerEndedPlaying(_ notification: Notification) {
@@ -1261,7 +1317,12 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                     
                     
                     cell.sharepressed = {a in
-                        if a.lowercased() == "contest share" {
+                          if a.lowercased() == "re-run contest" {
+                            self.isreruningcontest = true
+                            self.performSegue(withIdentifier: "editcontestdetails", sender: nil)
+
+                        }
+                        else if a.lowercased() == "contest share" {
                             if let iid = self.eventjoined?.contestid as? Int {
                                 
                             
@@ -1326,15 +1387,22 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                             let today = dateFormatter.date(from: dateFormatter.string(from: Date()))
                             print(today)
                             var errorcheck = false
+                            var errorcheck3 = false
                             if let d = date as? Date {
                                 print(today?.timeIntervalSince(d).isLess(than: 0))
                                 if d.timeIntervalSince(today!).isLess(than: 0) ?? true {
                                     errorcheck = true
                                 }
+                                if d.timeIntervalSince(today!).isLess(than: 30 * 60) ?? true {
+                                    errorcheck3 = true
+                                }
                                 
                                 if errorcheck {
-                                    self.present(customalert.showalert(x: "Contest Start date has already been passed. Please Edit Start date to continue"), animated: true, completion: nil)
+                                    self.present(customalert.showalert(x: "Contest Start date has already been passed. Please Edit Contest Details and modify start date to continue"), animated: true, completion: nil)
                                 }
+//                                else if errorcheck3 {
+//                                        self.present(customalert.showalert(x: "Contest Start date should atleast be after 30 minutes from current date. Please Edit Contest Details and modify start date to continue"), animated: true, completion: nil)
+//                                    }
                                 else if self.eventjoined?.contestimage == "" {
                                     let alert = UIAlertController(title: "No Contest Image", message: "Are you sure you want to publish this contest with out an image ?", preferredStyle: .actionSheet)
                                     alert.addAction(UIAlertAction(title: "Publish contest", style: .default, handler: { _ in
@@ -1976,12 +2044,12 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                 var tc = self.allfeeds[indexPath.row].description.count
                 var nl = CGFloat(tc/55)
                 if nl == 0 {
-                    return (200 + (45 * 1.3))
+                    return (200 + (65 * 1.3))
                 }
                 if nl < 1 || tc == 0 {
-                    return (460 + (45 * 1.3))
+                    return (460 + (65 * 1.3))
                 }
-                return (480 + (45 * nl))
+                return (480 + (65 * nl))
             }
             
             var tc = self.allfeeds[indexPath.row].description.count
@@ -1995,7 +2063,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             return (680 + (45 * nl))
             }
         }
-        return 800
+        return 700
     }
     
     
@@ -2037,6 +2105,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             if let p = cell.player  {
                 p.isMuted = true
                 p.pause()
+//                cell.player = nil
             }
             
         }
@@ -2054,16 +2123,37 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        print("I will display \(indexPath.row)")
-//        if let cell = tableView.cellForRow(at: inde) as? JoinedeventfeedsTableViewCell {
-//            if let p = cell.player  {
-//                if p.status == .readyToPlay {
-//                    p.play()
-//                }
-//
-//            }
-//
-//        }
+        print("Loading Cell \(indexPath.row)")
+        print("I will display \(indexPath.row)")
+        let indexPaths = self.table.indexPathsForVisibleRows
+               for i in indexPaths! {
+                if i.row != indexPath.row {
+                   if let cell = self.table.cellForRow(at: i) as? JoinedeventfeedsTableViewCell {
+                    if let p = cell.player {
+                       cell.player.isMuted = true
+                       cell.player = nil
+                    }
+                   }
+                }
+
+
+
+               }
+        print("Lets see")
+        var cell = self.table.cellForRow(at: indexPath) as? JoinedeventfeedsTableViewCell
+        cell?.player.play()
+        
+        if let cell = self.table.cellForRow(at: indexPath) as? JoinedeventfeedsTableViewCell {
+            print("Casted cell \(indexPath.row)")
+            
+            if let p = cell.player  {
+                print("Gotta play")
+                    p.play()
+                
+
+            }
+
+        }
     }
     
     
@@ -2072,10 +2162,28 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     
     @IBAction func backbtnpressed(_ sender: UIButton) {
-        if let p = player {
+        print("Back Tapped")
+        
+        let indexPath = self.table.indexPathsForVisibleRows
+               for i in indexPath! {
+
+                   if let cell = self.table.cellForRow(at: i) as? JoinedeventfeedsTableViewCell {
+                    if let p = cell.player {
+                           cell.player.isMuted = true
+                           cell.player = nil
+                       }
+                   }
+
+                   
+
+               }
+        
+        JoinedeventsViewController.deallocateplayer?(true)
+        if let p =  self.player {
             p.isMuted = true
             self.player.pause()
             self.player = nil
+            
             p.removeObserver(self, forKeyPath: "timeControlStatus")
         }
         if dangeringoingback {
@@ -2235,6 +2343,8 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             seg.eventid = self.ownereventid
             seg.groupid = self.groupid
             seg.allwinnersexistingprices = self.allwinnersexistingprices
+            seg.isreruningcontest = self.isreruningcontest
+            self.isreruningcontest = false
         }
         
         

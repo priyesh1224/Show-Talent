@@ -31,6 +31,10 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
     var locationManager = CLLocationManager()
     
     
+    @IBOutlet weak var try1: UIStackView!
+    
+    
+    
     @IBOutlet weak var searchbar: UISearchBar!
     static var cachegroupimage = NSCache<NSString,UIImage>()
     
@@ -54,6 +58,12 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
     static var copyjuryevents : [streventcover] = []
     static var copyselfjuryevents : [streventcover] = []
     
+    var path = CGMutablePath()
+          var pathlabel = UILabel()
+          let maskLayer = CAShapeLayer()
+          var overview : UIView?
+          var introcount = 1
+    
     @IBOutlet weak var table: UITableView!
     override func viewDidLoad() {
         
@@ -66,6 +76,10 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
         GroupandEventsViewController.copyrecommendedcontests = []
         GroupandEventsViewController.copyjuryevents = []
         
+        
+        
+        print("Jury")
+        print(self.jurysectionpressed)
         
         if self.jurysectionpressed {
             self.screentitle.text = "Jury"
@@ -109,9 +123,113 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
             locationManager.requestWhenInUseAuthorization()
 
         }
+        
+        var shallshow = false
+        
+        if self.jurysectionpressed {
+             if let v = UserDefaults.standard.value(forKey: "needtoshowjurydashboardtutorial") as? Bool {
+                if v {
+                    shallshow = true
+                }
+            }
+        }
+        else if isother {
+            if let v = UserDefaults.standard.value(forKey: "needtoshowcontestdashboardtutorial") as? Bool {
+                if v {
+                    shallshow = true
+                }
+            }
+        }
+        else {
+            if let v = UserDefaults.standard.value(forKey: "needtoshowgroupdashboardtutorial") as? Bool {
+                if v {
+                    shallshow = true
+                }
+            }
+        }
+        
+        if shallshow {
+        
+        overview = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height))
+                overview?.backgroundColor = #colorLiteral(red: 0.0264734456, green: 0.0264734456, blue: 0.0264734456, alpha: 0.8351122359)
+
+                let tp = UITapGestureRecognizer(target: self, action: #selector(handleoverviewtap))
+                tp.numberOfTouchesRequired = 1
+                tp.numberOfTapsRequired = 1
+                tp.isEnabled = true
+                overview?.addGestureRecognizer(tp)
+        self.view.addSubview(overview ?? UIView())
+        maskLayer.backgroundColor = UIColor.white.cgColor
+                       maskLayer.fillRule = .evenOdd
+                       overview?.layer.mask = maskLayer
+                       overview?.clipsToBounds = true
+                       pathlabel = UILabel(frame: CGRect(x: 0, y: self.view.frame.size.height/2.4, width: self.view.frame.size.width, height: 90))
+                       pathlabel.numberOfLines = 0
+                       pathlabel.textAlignment = .center
+                       pathlabel.textColor = UIColor.white
+                       overview?.addSubview(pathlabel)
+         self.bringinintro(intro: self.introcount)
+             if self.jurysectionpressed {
+                UserDefaults.standard.set(false, forKey: "needtoshowjurydashboardtutorial")
+            }
+             else if isother {
+                UserDefaults.standard.set(false, forKey: "needtoshowcontestdashboardtutorial")
+            }
+             else {
+                 UserDefaults.standard.set(false, forKey: "needtoshowgroupdashboardtutorial")
+            }
+            
+        }
 
  
     }
+    
+    
+    @objc func handleoverviewtap()
+        {
+            introcount = introcount +  1
+            self.bringinintro(intro: introcount)
+        }
+     
+    func bringinintro(intro : Int)
+          {
+
+            if intro == 1 && !self.isother && !self.jurysectionpressed {
+                let frame = self.try1.convert(self.creategroupupperbutton.layer.frame, to:self.view)
+                  
+                self.path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y ))
+                self.path.addRoundedRect(in: CGRect(x: frame.origin.x - 2, y: frame.origin.y+2, width: frame.size.width + 4, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+                self.path.addRect(CGRect(origin: .zero, size: overview?.frame.size ?? CGSize.zero))
+                self.maskLayer.path = self.path
+
+                     
+                self.pathlabel.text = "Click to create new group. \n\n\n Tap for next suggestion"
+                      
+              }
+            else if intro == 1 && (self.isother || self.jurysectionpressed) {
+               
+                let frame = self.try1.convert(creategroupupperbutton.layer.frame, to:self.view)
+                                
+                                    path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y))
+                                    path.addRoundedRect(in: CGRect(x: frame.origin.x - 2, y: frame.origin.y+2, width: frame.size.width + 4, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+                                    path.addRect(CGRect(origin: .zero, size: overview?.frame.size ?? CGSize.zero))
+                                    maskLayer.path = path
+
+                                   
+                                    pathlabel.text = "Click to create new contest. \n\n\n Tap for next suggestion"
+               }
+ 
+              else {
+                  self.overview?.isHidden = true
+              }
+                      
+                      
+                      
+
+          }
+       
+    
+    
     
     
     func fetchselfjurydata()

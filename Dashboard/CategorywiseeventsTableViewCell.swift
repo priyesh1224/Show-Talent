@@ -10,7 +10,15 @@ import UIKit
 import Alamofire
 
 class CategorywiseeventsTableViewCell: UITableViewCell {
-
+    
+    
+    
+    @IBOutlet weak var participatecoverview: UIView!
+    
+    @IBOutlet weak var outsv: UIStackView!
+    
+    @IBOutlet weak var innsv: UIStackView!
+    
     @IBOutlet weak var userprofileimage: UIImageView!
     
     @IBOutlet weak var eventname: Customlabel!
@@ -68,7 +76,7 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
         print(date)
         print(ttday)
         let cal = Calendar.current
-        
+         
         let components = cal.dateComponents([Calendar.Component.day], from: ttday  , to: date ?? Date())
         let components2 = cal.dateComponents([Calendar.Component.hour], from: ttday  , to: date ?? Date())
         let components3 = cal.dateComponents([Calendar.Component.minute], from: ttday  , to: date ?? Date())

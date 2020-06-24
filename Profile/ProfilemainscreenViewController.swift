@@ -46,7 +46,11 @@ class ProfilemainscreenViewController: UIViewController , UICollectionViewDelega
     var oldcount = 0
     
     let pickercontroller = UIImagePickerController()
-    
+    var path = CGMutablePath()
+       var pathlabel = UILabel()
+       let maskLayer = CAShapeLayer()
+       var overview : UIView?
+       var introcount = 1
     
     var tappeddata = 0
     var pageno = 0
@@ -54,6 +58,11 @@ class ProfilemainscreenViewController: UIViewController , UICollectionViewDelega
     @IBOutlet weak var layout: UICollectionViewFlowLayout!
     @IBOutlet weak var profileimage: PaddedImageView!
     
+    @IBOutlet weak var try2: UIStackView!
+    
+    @IBOutlet weak var try1: UIStackView!
+    
+    @IBOutlet weak var sidebar: UIButton!
     
     @IBOutlet weak var editphotobtn: Paddedbutton!
     
@@ -116,10 +125,105 @@ class ProfilemainscreenViewController: UIViewController , UICollectionViewDelega
             fetchprofile(firsttime: true)
         }
         
+        
+        if let v  = UserDefaults.standard.value(forKey: "needtoshowprofiletutorial") as? Bool {
+            if v {
+                self.overview = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height))
+                self.overview?.backgroundColor = #colorLiteral(red: 0.0264734456, green: 0.0264734456, blue: 0.0264734456, alpha: 0.8351122359)
+
+                let tp = UITapGestureRecognizer(target: self, action: #selector(self.handleoverviewtap))
+                        tp.numberOfTouchesRequired = 1
+                        tp.numberOfTapsRequired = 1
+                        tp.isEnabled = true
+                self.overview?.addGestureRecognizer(tp)
+                self.view.addSubview(self.overview ?? UIView())
+                self.maskLayer.backgroundColor = UIColor.white.cgColor
+                self.maskLayer.fillRule = .evenOdd
+                self.overview?.layer.mask = self.maskLayer
+                self.overview?.clipsToBounds = true
+                self.pathlabel = UILabel(frame: CGRect(x: 0, y: self.view.frame.size.height/2.4, width: self.view.frame.size.width, height: 90))
+                self.pathlabel.numberOfLines = 0
+                self.pathlabel.textAlignment = .center
+                self.pathlabel.textColor = UIColor.white
+                self.overview?.addSubview(self.pathlabel)
+                self.bringinintro(intro: self.introcount)
+                UserDefaults.standard.set(false, forKey: "needtoshowprofiletutorial")
+            }
+        }
+        
+        
+        
       
     }
     
-    
+    func bringinintro(intro : Int)
+       {
+           
+          
+           
+                   
+                   
+                  
+           
+           
+           if intro == 1 {
+            let frame = self.eventbookinghistoryouterview.frame
+               
+                   path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 6))
+                                        path.addRoundedRect(in: CGRect(x: frame.origin.x - 4, y: frame.origin.y - 2, width: frame.size.width + 8, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+                   path.addRect(CGRect(origin: .zero, size: overview?.frame.size ?? CGSize.zero))
+                   maskLayer.path = path
+
+                  
+                   pathlabel.text = "Click to see all your events booked. \n\n\n Tap for next suggestion"
+                   
+           }
+           else if intro == 2 {
+               let frame = self.try1.convert(editphotobtn.layer.frame, to:self.view)
+                      
+                      path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 6))
+                      path.addRoundedRect(in: CGRect(x: frame.origin.x - 4, y: frame.origin.y - 2, width: frame.size.width + 8, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+
+                                maskLayer.path = path
+               pathlabel.text = "Click here to change your profile picture. \n\n\n Tap for next suggestion"
+           }
+           else if intro == 3 {
+               let frame = self.try2.convert(editprofilebtn.layer.frame, to:self.view)
+                      
+                      path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 8))
+                      path.addRoundedRect(in: CGRect(x: frame.origin.x - 4, y: frame.origin.y - 2, width: frame.size.width + 8, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+
+                                maskLayer.path = path
+               pathlabel.text = "Click here to edit/view your profile. \n\n\n Tap for next suggestion"
+           }
+           else if intro == 4 {
+            let frame = sidebar.frame
+                      
+                      path.addArc(center: CGPoint(x: frame.origin.x+15, y: frame.origin.y+16),
+                      radius: frame.size.height/2 + 5,
+                         startAngle: 0.0,
+                         endAngle: 2.0 * .pi,
+                         clockwise: false)
+
+                                maskLayer.path = path
+               pathlabel.text = "Click here to see more options. \n\n\n Tap for next suggestion"
+           }
+               
+           else {
+               self.overview?.isHidden = true
+           }
+                   
+                   
+                   
+
+       }
+       
+       
+       @objc func handleoverviewtap()
+       {
+           introcount = introcount +  1
+           self.bringinintro(intro: introcount)
+       }
     func setTableViewBackgroundGradient( _ topColor:UIColor, _ bottomColor:UIColor) {
         
         let gradientBackgroundColors = [topColor.cgColor, bottomColor.cgColor]

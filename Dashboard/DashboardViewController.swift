@@ -28,8 +28,29 @@ struct searchcategory
 class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate, UICollectionViewDelegate,UICollectionViewDataSource , UISearchBarDelegate,UICollectionViewDelegateFlowLayout {
     
     
+    
+    var currenttutorialshowing = 1
+    
+    
     @IBOutlet weak var groupbtnwidth: NSLayoutConstraint!
     @IBOutlet weak var contestbtnwidth: NSLayoutConstraint!
+    
+    
+    @IBOutlet weak var newsearch: UIButton!
+    
+    @IBOutlet weak var newnotification: UIButton!
+    
+    
+    @IBOutlet weak var newprofile: UIButton!
+    
+    @IBOutlet weak var try1: UIStackView!
+    
+    @IBOutlet weak var try2: UIView!
+    
+    
+    @IBOutlet weak var try3: UIStackView!
+    
+    @IBOutlet weak var try4: UIStackView!
     
     static var categoryimageslist : Dictionary<Int,UIImage> = [ : ]
     static var trendingimageslist : Dictionary<String,UIImage> = [ : ]
@@ -55,6 +76,9 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
     var categorytopassforseeall = ""
     
     @IBOutlet weak var collection: UICollectionView!
+    
+    
+    @IBOutlet weak var coinicon: UIButton!
     
     
     var selectedtrending : strtrending?
@@ -91,7 +115,11 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
     var jurysectionpressed = false
     
     @IBOutlet weak var aboveiphone5s: UIStackView!
-    
+     var path = CGMutablePath()
+    var pathlabel = UILabel()
+    let maskLayer = CAShapeLayer()
+    var overview : UIView?
+    var introcount = 1
     
     override func viewWillDisappear(_ animated: Bool) {
 //        DashboardViewController.categoryimageslist.removeAll()
@@ -248,7 +276,35 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
         self.searchbar.delegate = self
         self.searchpopup.isHidden = true
         if InternetCheck.isConnectedToNetwork() {
-            actualseachdata()
+            self.actualseachdata { (st) in
+                if st {
+                    
+                    if let v = UserDefaults.standard.value(forKey: "needtoshowdashboardtutorial") as? Bool {
+                        if v {
+                        self.overview = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height))
+                        self.overview?.backgroundColor = #colorLiteral(red: 0.0264734456, green: 0.0264734456, blue: 0.0264734456, alpha: 0.8351122359)
+
+                        let tp = UITapGestureRecognizer(target: self, action: #selector(self.handleoverviewtap))
+                                tp.numberOfTouchesRequired = 1
+                                tp.numberOfTapsRequired = 1
+                                tp.isEnabled = true
+                        self.overview?.addGestureRecognizer(tp)
+                        self.view.addSubview(self.overview ?? UIView())
+                        self.maskLayer.backgroundColor = UIColor.white.cgColor
+                        self.maskLayer.fillRule = .evenOdd
+                        self.overview?.layer.mask = self.maskLayer
+                        self.overview?.clipsToBounds = true
+                        self.pathlabel = UILabel(frame: CGRect(x: 0, y: self.view.frame.size.height/2.4, width: self.view.frame.size.width, height: 90))
+                        self.pathlabel.numberOfLines = 0
+                        self.pathlabel.textAlignment = .center
+                        self.pathlabel.textColor = UIColor.white
+                        self.overview?.addSubview(self.pathlabel)
+                        self.bringinintro(intro: self.introcount)
+                        UserDefaults.standard.set(false, forKey: "needtoshowdashboardtutorial")
+                        }
+                    }
+                }
+            }
         }
         
 //        self.fetchsearchdata { (done) in
@@ -263,6 +319,109 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
 //
 //            }
 //        }
+        
+
+        
+        
+        
+        
+    }
+    
+    
+    
+    func bringinintro(intro : Int)
+    {
+        
+       
+        
+                
+                
+               
+        
+        
+        if intro == 1 {
+            let frame = self.try1.convert(coinicon.layer.frame, to:self.view)
+            
+                path.addArc(center: CGPoint(x: frame.origin.x+15, y: frame.origin.y+16),
+                            radius: groupbtn.frame.size.height/2 + 5,
+                               startAngle: 0.0,
+                               endAngle: 2.0 * .pi,
+                               clockwise: false)
+                path.addRect(CGRect(origin: .zero, size: overview?.frame.size ?? CGSize.zero))
+                maskLayer.path = path
+
+               
+                pathlabel.text = "Click to share app among friends. \n\n\n Tap for next suggestion"
+                
+        }
+        else if intro == 2 {
+            let frame = self.try4.convert(referfriends.layer.frame, to:self.view)
+                   
+                   path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 6))
+                   path.addRoundedRect(in: CGRect(x: frame.origin.x, y: frame.origin.y - 2, width: try3.frame.size.width/3, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+
+                             maskLayer.path = path
+            pathlabel.text = "Click here to view contests and create new contest. \n\n\n Tap for next suggestion"
+        }
+        else if intro == 3 {
+            let frame = self.try4.convert(groupbtn.layer.frame, to:self.view)
+                   
+                   path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 8))
+                   path.addRoundedRect(in: CGRect(x: frame.origin.x - 2, y: frame.origin.y - 2, width: try3.frame.size.width/3 + 4, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+
+                             maskLayer.path = path
+            pathlabel.text = "Click here to view groups and create new group. \n\n\n Tap for next suggestion"
+        }
+        else if intro == 4 {
+            let frame = self.try4.convert(jurysectionbtn.layer.frame, to:self.view)
+                   
+                   path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 8))
+                   path.addRoundedRect(in: CGRect(x: frame.origin.x - 2, y: frame.origin.y - 2, width: try3.frame.size.width/3 + 4, height: frame.size.height + 5), cornerWidth: 20, cornerHeight: frame.size.height/2)
+
+                             maskLayer.path = path
+            pathlabel.text = "Click here to view contests in which you are jury. \n\n\n Tap for next suggestion"
+        }
+            else if intro == 5 {
+                let frame = self.iphone5s.convert(newsearch.layer.frame, to:self.view)
+                       
+                       path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 8))
+                       path.addRoundedRect(in: CGRect(x: frame.origin.x - 2, y: frame.origin.y - 2, width: frame.size.width+12, height: frame.size.height + 5), cornerWidth: frame.size.width/2, cornerHeight: frame.size.height/2)
+
+                                 maskLayer.path = path
+                pathlabel.text = "Click here to search among categories. \n\n\n Tap for next suggestion"
+            }
+            else if intro == 6 {
+                let frame = self.iphone5s.convert(newnotification.layer.frame, to:self.view)
+                       
+                       path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 8))
+                       path.addRoundedRect(in: CGRect(x: frame.origin.x - 4, y: frame.origin.y - 4, width: frame.size.width+8, height: frame.size.height + 5), cornerWidth: frame.size.width/2, cornerHeight: frame.size.height/2)
+
+                                 maskLayer.path = path
+                pathlabel.text = "Click here to see all the notifications.. \n\n\n Tap for next suggestion"
+            }
+            else if intro == 7 {
+                let frame = self.iphone5s.convert(newprofile.layer.frame, to:self.view)
+                       
+                       path.move(to: CGPoint(x: frame.origin.x, y: frame.origin.y - 8))
+                       path.addRoundedRect(in: CGRect(x: frame.origin.x - 4, y: frame.origin.y - 4, width: frame.size.width+8, height: frame.size.height + 5), cornerWidth: frame.size.width/2, cornerHeight: frame.size.height/2)
+
+                                 maskLayer.path = path
+                pathlabel.text = "Click here to see your profile. \n\n\n Tap for next suggestion"
+            }
+        else {
+            self.overview?.isHidden = true
+        }
+                
+                
+                
+
+    }
+    
+    
+    @objc func handleoverviewtap()
+    {
+        introcount = introcount +  1
+        self.bringinintro(intro: introcount)
     }
     
     @objc func rfpressed()
@@ -320,9 +479,9 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
               return gl
           }
     
+     typealias progressindata = ((_ done : Bool) -> Void)
     
-    
-    func actualseachdata()
+    func actualseachdata(d : @escaping progressindata)
     {
         var url = Constants.K_baseUrl + Constants.dashboardfeed
         print("Dashboard Feed  \(url)")
@@ -356,6 +515,7 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
                                 self.collection.reloadData()
                                 self.spinner.isHidden = true
                                 self.spinner.stopAnimating()
+                                d(true)
                                
                             }
                         

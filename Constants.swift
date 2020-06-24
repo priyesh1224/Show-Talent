@@ -116,6 +116,9 @@ struct Constants {
     static let getusercategories = "/Category/GetUserCategoryChoice"
     static let updatecategorychoice = "/Category/UpdateUserCategoryChoice"
     
+    static let jurypostseentrigger = "/Contest/JuryViewTriger"
+    static let uservideotrigger = "/Contest/VideoTriger"
+    
     
     static let coinsledger = "/CoinSystem/EarnCoinList"
     

@@ -51,6 +51,8 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     @IBOutlet weak var actualcommentcount: UILabel!
     
     var btn : UIButton?
+    var playerlockfortiming = true
+    var alreadysentrequest = false
     
     @IBOutlet weak var feeddescription: UITextView!
     
@@ -83,6 +85,25 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     
     func updatecell(x : feeds , y : Bool , runningstatus : String)
     {
+        
+        print("Allocatin this cell")
+        
+        JoinedeventsViewController.deallocateplayer = { a in
+            print("Got Tapped")
+            
+                if let p = self.player as? AVPlayer  {
+                  self.player.pause()
+                    self.player = nil
+                }
+                if let ai = self.audio {
+                    self.audio?.pause()
+                    self.audio = nil
+                }
+                self.layerc?.removeFromSuperlayer()
+            
+        }
+        
+        
         currentrunningstatus = runningstatus
         leadcommentimage.layer.cornerRadius = 20
         if x.comments.count == 0 {
@@ -163,7 +184,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
                 s.isHidden = false
                 s.startAnimating()
             }
-            if y {
+            
             
                 DispatchQueue.global(qos: .utility).async {
                     self.downloadvideo(url: x.activitypath) { (play) in
@@ -173,7 +194,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
                                     s.isHidden = true
                                     s.stopAnimating()
                                 }
-                                play?.play()
+//                                play?.play()
                                 self.feedimage.isHidden = true
                             }
                             
@@ -181,7 +202,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
                         }
                     }
                 }
-            }
+            
 
         }
         else if x.type.lowercased() == "audio" {
@@ -241,7 +262,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         if let p = player {
             self.player.pause()
             self.player = nil
-            p.removeObserver(self, forKeyPath: "timeControlStatus")
+            muteunmute?.setImage(#imageLiteral(resourceName: "mute"), for: .normal)
         }
          self.layerc?.removeFromSuperlayer()
 
@@ -321,6 +342,10 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
                     self.audio = try AVAudioPlayer(data: soundData! as Data)
                     
                     audio?.play()
+                    if self.alreadysentrequest == false {
+                        self.self.sendseenrequest()
+                        self.alreadysentrequest = true
+                    }
 //                    audio = try AVAudioPlayer(contentsOf: NSURL(string: v) as! URL)
                     // 3
                     Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateAudioProgressView), userInfo: nil, repeats: true)
@@ -337,12 +362,14 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     
     @objc func updateAudioProgressView()
     {
-        if audio!.isPlaying
-        {
-            // Update progress
-            pv.setProgress(Float(audio!.currentTime/audio!.duration), animated: true)
-            if Float(audio!.currentTime/audio!.duration) == 1.0 {
-                pv.setProgress(0, animated: false)
+        if let a = audio {
+            if audio!.isPlaying
+            {
+                // Update progress
+                pv.setProgress(Float(audio!.currentTime/audio!.duration), animated: true)
+                if Float(audio!.currentTime/audio!.duration) == 1.0 {
+                    pv.setProgress(0, animated: false)
+                }
             }
         }
     }
@@ -384,13 +411,20 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         //        player = AVPlayer(url: (NSURL(string: url) as! URL))
         
         player = AVPlayer(playerItem: avplayeritem)
+        player.automaticallyWaitsToMinimizeStalling = true
         DispatchQueue.main.async{
             self.feedimage.isHidden = true
         }
-        
+        avplayeritem.addObserver(self,
+        forKeyPath: #keyPath(AVPlayerItem.status),
+        options: [.old, .new],
+        context: nil)
+        if let p = player {
         player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
         
+        
         player.isMuted = true
+        }
         //        player.automaticallyWaitsToMinimizeStalling = true
          layerc = AVPlayerLayer(player: player)
         sp = UIActivityIndicatorView(frame: CGRect(x: self.feedimage.frame.size.width/2 + 30, y: self.feedimage.frame.size.height/2 , width: 60, height: 60))
@@ -459,7 +493,68 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
                 
             }
         }
+        
+        if keyPath == #keyPath(AVPlayerItem.status) {
+                   let status: AVPlayerItem.Status
+                   if let statusNumber = change?[.newKey] as? NSNumber {
+                       status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
+                   } else {
+                       status = .unknown
+                   }
+
+                   // Switch over status value
+                   switch status {
+                   case .readyToPlay:
+                       print("Status Ready to play")
+                       
+//                       player.play()
+                       if let p = player as? AVPlayer {
+                        sp?.isHidden = true
+                        p.play()
+                        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5.0) {
+                                                   // check if player is still playing
+                            if let p = self.player {
+                                                   if self.player.rate != 0 && self.alreadysentrequest == false {
+                                                       
+                                                       if self.playerlockfortiming == false {
+                                                       print("Player reached 5 seconds \(self.currentpost?.acticityid)")
+                                                           self.sendseenrequest()
+                                                       }
+                                                       self.playerlockfortiming = false
+                                                   }
+                                                }
+                                               }
+                        
+                       }
+                       
+                       // Player item is ready to play.
+                   case .failed:
+                       print("Status Failed")
+                       // Player item failed. See error.
+                   case .unknown:
+                       print("Status unknown")
+                       // Player item is not yet ready.
+                   }
+               }
     }
+    
+    
+    
+    func sendseenrequest()
+       {
+        print("Triggering")
+           if let i = self.currentpost?.acticityid as? Int {
+               let r = BaseServiceClass()
+               let url = "\(Constants.K_baseUrl)\(Constants.uservideotrigger)?Activityid=\(i)"
+            print(url)
+               r.getApiRequest(url: url, parameters: [:]) { (response, err) in
+                   if let res = response?.result.value as? Dictionary<String,Any> {
+                       print(res)
+                       self.alreadysentrequest = true
+                   }
+               }
+           }
+       }
     
     
     @objc func playerEndedPlaying(_ notification: Notification) {
