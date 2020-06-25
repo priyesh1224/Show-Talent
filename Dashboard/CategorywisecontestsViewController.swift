@@ -92,7 +92,11 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
                       if let u =  UserDefaults.standard.value(forKey: "refid") as? String {
                       self.fetchdata(pg : self.page)
                       }
-                      }
+            }
+        
+        
+        if let v = UserDefaults.standard.value(forKey: "needtoshowcategorywiseconteststutorial") as? Bool {
+                               if v {
         
         overview = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height))
                        overview?.backgroundColor = #colorLiteral(red: 0.0264734456, green: 0.0264734456, blue: 0.0264734456, alpha: 0.8351122359)
@@ -112,6 +116,10 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
                               pathlabel.textAlignment = .center
                               pathlabel.textColor = UIColor.white
                               overview?.addSubview(pathlabel)
+                           UserDefaults.standard.set(false, forKey: "needtoshowcategorywiseconteststutorial")
+                                
+            }
+        }
                
         
 
@@ -254,11 +262,11 @@ class CategorywisecontestsViewController: UIViewController , UITableViewDelegate
         if self.categoryname != "all"
         {
                      params = [  "Page": pg,"PageSize": 10,"userid" : userid , "contestStatus" : 2, "contestType" : 0 , "categoryId" : self.categoryid]
-            url  = "\(Constants.K_baseUrl)\( Constants.getcontestcategorywise)?contestStatus=\(conteststatus)&invitationType=0&categoryId=\(self.categoryid)&contestTheme=0&performanceId=0&gender=0&entryfeetype=0&isActive=true"
+            url  = "\(Constants.K_baseUrl)\( Constants.getcontestcategorywise)?contestStatus=\(conteststatus)&invitationType=0&categoryId=\(self.categoryid)&contestTheme=0&performanceId=0&gender=0&entryfeetype=0&isActive=true&participentUserId=\(userid)"
         }
         else {
                      params = [  "Page": pg,"PageSize": 10, "contestStatus" : 2, "contestType" : 0 ]
-            url  = "\(Constants.K_baseUrl)\( Constants.getcontestcategorywise)?contestStatus=\(conteststatus)&invitationType=0&categoryId=0&contestTheme=0&performanceId=0&gender=0&entryfeetype=0&isActive=true"
+            url  = "\(Constants.K_baseUrl)\( Constants.getcontestcategorywise)?contestStatus=\(conteststatus)&invitationType=0&categoryId=0&contestTheme=0&performanceId=0&gender=0&entryfeetype=0&isActive=true&participentUserId=\(userid)"
         }
         
         

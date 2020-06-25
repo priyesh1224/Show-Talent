@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import MessageUI
 
-class InvitepeopleViewController: UIViewController {
+class InvitepeopleViewController: UIViewController , MFMessageComposeViewControllerDelegate , UIDocumentInteractionControllerDelegate  {
     
     
     @IBOutlet weak var notifindicator: UIView!
@@ -23,6 +24,7 @@ class InvitepeopleViewController: UIViewController {
     
     @IBOutlet weak var bannerview: UIView!
     var rfc = ""
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,9 +54,57 @@ class InvitepeopleViewController: UIViewController {
     }
     
     
+    
+    @IBAction func instagramtapped(_ sender: Any) {
+        shareToInstagram()
+    }
+    
+    var documentController: UIDocumentInteractionController!
+    
+    func shareToInstagram() {
+
+      let instagramURL = NSURL(string: "instagram://app")
+        
+        var yourImage = #imageLiteral(resourceName: "logo-s")
+
+        if (UIApplication.shared.canOpenURL(instagramURL! as URL)) {
+
+            let imageData = yourImage.jpegData(compressionQuality: 100)
+
+                 let captionString = "Download ShowTalent app"
+
+            let writePath = (NSTemporaryDirectory() as NSString).appendingPathComponent("instagram.igo")
+
+            do {
+                try imageData?.write(to: URL(fileURLWithPath: writePath), options: .atomic)
+            } catch {
+                print(error)
+            }
+
+    let fileURL = NSURL(fileURLWithPath: writePath)
+
+                self.documentController = UIDocumentInteractionController(url: fileURL as URL)
+
+                     self.documentController.delegate = self
+
+                self.documentController.uti = "com.instagram.exlusivegram"
+
+                self.documentController.annotation = NSDictionary(object: captionString, forKey: "InstagramCaption" as NSCopying)
+                self.documentController.presentOpenInMenu(from: self.view.frame, in: self.view, animated: true)
+
+                 
+
+             } else {
+                 print(" Instagram isn't installed ")
+             }
+         }
+    
+
+  
+    
     @IBAction func whatsapptapped(_ sender: Any) {
         let date = Date()
-        let msg = "Hi my dear friends\(date)"
+        let msg = "Download ShowTalent App \(date)"
         let urlWhats = "whatsapp://send?text=\(msg)"
         
         if let urlString = urlWhats.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) {
@@ -67,6 +117,29 @@ class InvitepeopleViewController: UIViewController {
             }
         }
     }
+    
+    
+    
+    @IBAction func smstapped(_ sender: Any) {
+        if(MFMessageComposeViewController.canSendText()) {
+            let controller = MFMessageComposeViewController()
+            controller.body = "Message Body"
+            controller.recipients = []
+            controller.messageComposeDelegate = self
+            self.present(controller, animated: true, completion: nil)
+        }
+    }
+    
+    func messageComposeViewController(_ controller: MFMessageComposeViewController!, didFinishWith result: MessageComposeResult) {
+        //... handle sms screen actions
+        print("SMS sent")
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
+    
+    
     
     
     func fetchprofile()

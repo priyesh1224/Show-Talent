@@ -1832,6 +1832,7 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
       }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
         return 200
 //        return self.view.frame.size.height/3
     }

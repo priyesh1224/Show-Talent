@@ -95,7 +95,9 @@ class GroupsandEventsTableViewCell: UITableViewCell,UICollectionViewDelegate,UIC
         self.nodataview.layer.cornerRadius = 10
         self.nodataview.layer.borderColor = #colorLiteral(red: 0.8588235294, green: 0.8588235294, blue: 0.8588235294, alpha: 1)
         self.nodataview.layer.borderWidth = 2
-        self.nodatacreatebtn.layer.cornerRadius = 20
+        self.nodatacreatebtn.layer.cornerRadius = 5
+        self.nodatacreatebtn.layer.borderColor = #colorLiteral(red: 0.314635545, green: 0.4224303961, blue: 0.762909472, alpha: 1)
+        self.nodatacreatebtn.layer.borderWidth = 1
         if w != 0 {
             
             if let l = layout {

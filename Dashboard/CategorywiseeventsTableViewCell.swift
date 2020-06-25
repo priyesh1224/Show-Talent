@@ -25,7 +25,6 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var eventpostedin: UITextView!
     
-    
     @IBOutlet weak var eventimage: UIImageView!
     
     @IBOutlet weak var knowmorebtn: UIButton!
@@ -44,7 +43,7 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var interestedpeople: UILabel!
     
-    
+    var alreasypostedinview : UIView?
     @IBOutlet weak var sv: UIStackView!
     var timer:Timer?
     var timeLeft = 0
@@ -118,20 +117,13 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
     
     @objc func onTimerFires() {
         timeLeft = timeLeft -  1
-        
-        
-        
-        
         let (h,m,s) = secondsToHoursMinutesSeconds(seconds : self.timeLeft)
-        
         if s < 0 {
             self.timeLabel.text = "Contest over"
         }
         else {
             self.timeLabel.text = "\(h)H \(m)M \(s)S"
         }
-        
-        
 //        s = Int(timeLeft % 60)
 //        print(s)
 //        timeLeft = Int(timeLeft/60)
@@ -155,12 +147,15 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
         //                }
     }
 
-    
-    
     override func prepareForReuse() {
         super.prepareForReuse()
         timer?.invalidate()
         timer = nil
+        self.eventimage.image = #imageLiteral(resourceName: "cover-photo")
+        if let l = alreasypostedinview {
+            l.isHidden = true
+            alreasypostedinview = nil
+        }
     }
     
     
@@ -207,6 +202,9 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
                 self.eventimage.image = iim
             }
         }
+        
+        
+        
         
         
         var usefuldate = ""
@@ -548,6 +546,42 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
         }
         
         self.startenddate.text = "\(sd) \(smon)  - \(ed) \(emon)"
+        
+        
+        
+        if x.allowedtopost && x.joined {
+            self.participatebtn.setTitle("Complete your participation", for: .normal)
+            participatebtn.titleLabel?.numberOfLines = 0
+            participatebtn.titleLabel?.textAlignment = .center
+            participatebtn.titleLabel?.font = .systemFont(ofSize: 10)
+            alreasypostedinview = UIView(frame: CGRect(x: self.frame.size.width/2, y: self.frame.size.height * 0.43, width: self.frame.size.width/2, height: 30))
+                               alreasypostedinview?.layer.cornerRadius = 15
+                               alreasypostedinview?.backgroundColor = UIColor.red
+                               var imv = UIImageView(frame: CGRect(x: 4, y: 0, width: 26, height: 30))
+                               imv.image = #imageLiteral(resourceName: "Group 1744")
+                               imv.contentMode = .scaleAspectFit
+                               alreasypostedinview?.addSubview(imv)
+                               
+                               var ic = UILabel(frame: CGRect(x: 30, y: 0, width: self.frame.size.width/1.6, height: 30))
+                               ic.text = "Post Pending"
+                               ic.textColor =  UIColor.white
+                               alreasypostedinview?.addSubview(ic)
+                               self.layer.addSublayer(alreasypostedinview!.layer)
+        }
+        else if x.joined && !x.allowedtopost {
+             self.participatebtn.setTitle("Already participated", for: .normal)
+            participatebtn.titleLabel?.font = .systemFont(ofSize: 10)
+            if let l = alreasypostedinview {
+                l.isHidden = true
+            }
+        }
+        else {
+             self.participatebtn.setTitle("Participate", for: .normal)
+            participatebtn.titleLabel?.font = .systemFont(ofSize: 16)
+            if let l = alreasypostedinview {
+                           l.isHidden = true
+                       }
+        }
         
         
         

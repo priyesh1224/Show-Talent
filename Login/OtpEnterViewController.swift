@@ -474,6 +474,7 @@ class OtpEnterViewController: UIViewController , UITextFieldDelegate {
                                                 UserDefaults.standard.set(true, forKey: "needtoshowcontestdashboardtutorial")
                                                 UserDefaults.standard.set(true, forKey: "needtoshowjurydashboardtutorial")
                                                 UserDefaults.standard.set(true, forKey: "needtoshowprofiletutorial")
+                                                UserDefaults.standard.set(true, forKey: "needtoshowcategorywiseconteststutorial")
                                                 
                             
                                                 
