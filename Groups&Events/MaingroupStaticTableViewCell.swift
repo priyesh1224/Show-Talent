@@ -56,12 +56,12 @@ class MaingroupStaticTableViewCell: UITableViewCell    {
     {
         
         var uid = UserDefaults.standard.value(forKey: "refid") as! String
-        if uid == d.creator {
-            self.holderview.isHidden = false
+        if uid == d.creator.userid {
+//            self.holderview.isHidden = false
             self.createeventbtn.isHidden = false
         }
         else {
-            self.holderview.isHidden = true
+//            self.holderview.isHidden = true
             self.createeventbtn.isHidden = true
         }
 
@@ -91,11 +91,16 @@ class MaingroupStaticTableViewCell: UITableViewCell    {
         
         
         MainGroupViewController.takecount = {a in
-            self.groupmemberscount.text = "\(a) Members"
+            if a > 1 {
+                self.groupmemberscount.text = "\(a) Members"
+            }
+            else {
+                self.groupmemberscount.text = "\(a) Member"
+            }
         }
         
         var userid = UserDefaults.standard.value(forKey: "refid") as! String
-        if userid == d.creator {
+        if userid == d.creator.userid {
             self.delgroupbtn.isHidden = true
         }
         else {

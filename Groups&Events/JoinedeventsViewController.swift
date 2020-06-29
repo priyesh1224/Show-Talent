@@ -217,35 +217,9 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         insidecolors["music band"] = ct
         
         
-        for var k in 0 ..< catname.count {
-            if catname[k] == self.categoryselected.lowercased() {
-                self.currentcelltype = celltype[k]
-                self.currentpostbtncolor = postbtncolor[k]
-            }
-        }
         
         
-        
-        if let d = self.insidecolors[categoryselected.lowercased()] as? Dictionary<String,Dictionary<String,Any>> {
-            if let e  = d["\(tthemename.lowercased())"] as? Dictionary<String,Any> {
-                primarycolor = UIColor(hexString: e["primary"] as! String)
-                secondarycolor = UIColor(hexString: e["secondary"] as! String)
-                print("Category : \(categoryselected.lowercased()) , theme \(tthemename.lowercased()) primary color : \( e["primary"] as! String) secondary color \(e["secondary"] as! String)")
-            }
-            else {
-                for var k in 0 ..< self.catname.count {
-                    if categoryselected.lowercased() == catname[k]
-                    {
-                        primarycolor = UIColor(hexString: primarycoloroptions[k])
-                        secondarycolor = UIColor(hexString: secondarycoloroptions[k])
-                                        print("Category : \(categoryselected.lowercased()) , theme \(tthemename.lowercased()) primary color : \( primarycoloroptions[k]) secondary color \(secondarycoloroptions[k])")
-                    }
-                }
-            }
-        }
-        
-        
-        self.setTableViewBackgroundGradient(sender: self.table, primarycolor, secondarycolor)
+       
         
         backbtnbehindview.backgroundColor = UIColor.white
         table.delegate = self
@@ -271,8 +245,8 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             self.eventsummary { (answ) in
                 if answ {
                     
-  
                     
+                    self.paintthemecolor()
                     
                     
                     if self.timetopublish {
@@ -358,6 +332,41 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         
         
 
+    }
+    
+    
+    func paintthemecolor()
+    {
+        for var k in 0 ..< catname.count {
+                   if catname[k] == self.categoryselected.lowercased() {
+                       
+                       self.currentcelltype = celltype[k]
+                       self.currentpostbtncolor = postbtncolor[k]
+                   }
+               }
+               
+               
+               
+               if let d = self.insidecolors[categoryselected.lowercased()] as? Dictionary<String,Dictionary<String,Any>> {
+                   if let e  = d["\(tthemename.lowercased())"] as? Dictionary<String,Any> {
+                       primarycolor = UIColor(hexString: e["primary"] as! String)
+                       secondarycolor = UIColor(hexString: e["secondary"] as! String)
+                       print("Category : \(categoryselected.lowercased()) , theme \(tthemename.lowercased()) primary color : \( e["primary"] as! String) secondary color \(e["secondary"] as! String)")
+                   }
+                   else {
+                       for var k in 0 ..< self.catname.count {
+                           if categoryselected.lowercased() == catname[k]
+                           {
+                               primarycolor = UIColor(hexString: primarycoloroptions[k])
+                               secondarycolor = UIColor(hexString: secondarycoloroptions[k])
+                                               print("Category : \(categoryselected.lowercased()) , theme \(tthemename.lowercased()) primary color : \( primarycoloroptions[k]) secondary color \(secondarycoloroptions[k])")
+                           }
+                       }
+                   }
+               }
+               
+               
+               self.setTableViewBackgroundGradient(sender: self.table, primarycolor, secondarycolor)
     }
     
     
@@ -941,6 +950,9 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                     if let cn = each["ThemeId"] as? Int {
                         self.themeid = cn
                     }
+                    if let cn = each["ThemeName"] as? String {
+                        self.tthemename = cn.lowercased()
+                    }
                     if let cn = each["PerformanceTypeId"] as? Int {
                         self.performancetypeid = cn
                     }
@@ -1323,16 +1335,53 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
 
                         }
                         else if a.lowercased() == "contest share" {
-                            if let iid = self.eventjoined?.contestid as? Int {
+                            let alert = UIAlertController(title: "Share Contest", message: "", preferredStyle: .actionSheet)
+                            alert.addAction(UIAlertAction(title: "Share in Group", style: .default, handler: { _ in
+                                if let iid = self.eventjoined?.contestid as? Int {
+                                    
                                 
-                            
-                            self.ownereventid = iid
-                            self.sharethiscontest { (ans) in
-                                if ans {
-                                    self.performSegue(withIdentifier: "contestshare", sender: nil)
+                                self.ownereventid = iid
+                                self.sharethiscontest { (ans) in
+                                    if ans {
+                                        self.performSegue(withIdentifier: "contestshare", sender: nil)
+                                    }
                                 }
-                            }
-                            }
+                                }
+
+                            }))
+                            alert.addAction(UIAlertAction(title: "Share in Social Media", style: .default, handler: { _ in
+                                let firstActivityItem = "Join this contest \(self.eventjoined?.contestname.capitalized ?? "")"
+                                let secondActivityItem : NSURL = NSURL(string: "http//:urlyouwant")!
+                                // If you want to put an image
+                                let image : UIImage = #imageLiteral(resourceName: "Group 1358")
+
+                                let activityViewController : UIActivityViewController = UIActivityViewController(
+                                    activityItems: [firstActivityItem, secondActivityItem, image], applicationActivities: nil)
+
+                                // This lines is for the popover you need to show in iPad
+//                                activityViewController.popoverPresentationController?.sourceView = (sender as! UIButton)
+
+                                // This line remove the arrow of the popover to show in iPad
+//                                activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.allZeros
+//                                activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
+
+                                // Anything you want to exclude
+                                activityViewController.excludedActivityTypes = [
+                                    UIActivity.ActivityType.postToWeibo,
+                                    UIActivity.ActivityType.print,
+                                    UIActivity.ActivityType.assignToContact,
+                                    UIActivity.ActivityType.saveToCameraRoll,
+                                    UIActivity.ActivityType.addToReadingList,
+                                    UIActivity.ActivityType.postToFlickr,
+                                    UIActivity.ActivityType.postToVimeo,
+                                    UIActivity.ActivityType.assignToContact,
+                                    UIActivity.ActivityType.airDrop
+                                ]
+
+                                self.present(activityViewController, animated: true, completion: nil)
+                            }))
+                            alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
                         }
                         else if a.lowercased() == "leave contest" {
                             let alert = UIAlertController(title: "Delete Contest", message: "Are you sure you want to delete/leave this contest ?", preferredStyle: .actionSheet)
@@ -1517,7 +1566,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                     
                     
                      if let e = self.eventjoined {
-                        cell.update(x : e, p: self.currentpostbtncolor,s : "#FE6F00",b : self.joined ,c : self.joinstatus , isallowed : self.isallowedtopost, timetopublish : self.timetopublish, winnerlist: self.allwinners  )
+                        cell.update(x : e, p: self.currentpostbtncolor,s : "#FE6F00",b : self.joined ,c : self.joinstatus , isallowed : self.isallowedtopost, timetopublish : self.timetopublish, winnerlist: self.allwinners , totalparticipants : self.totalparticpants )
                     }
                     return cell
                 }
@@ -2020,7 +2069,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                 return 280
             }
             else {
-                return 1300
+                return 1500
             }
             print("Getting height \(self.view.frame.size.height/2.5)")
             var nl = 0.0

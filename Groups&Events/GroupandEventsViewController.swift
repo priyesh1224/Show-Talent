@@ -2045,9 +2045,10 @@ class GroupandEventsViewController: UIViewController, UITableViewDelegate, UITab
         
         if let s = segue.destination as? JoinedeventsViewController {
             s.dangeringoingback = false
-            print("Received event")
+            print("Received event \(self.receivedevent?.allowcategory.lowercased())")
             print(self.receivedevent)
             s.eventid = self.receivedevent?.contestid ?? 0
+            s.categoryselected = self.receivedevent?.allowcategory.lowercased() ?? ""
             
         }
         if let s = segue.destination as? NewEventViewController {

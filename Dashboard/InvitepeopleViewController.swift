@@ -25,6 +25,7 @@ class InvitepeopleViewController: UIViewController , MFMessageComposeViewControl
     @IBOutlet weak var bannerview: UIView!
     var rfc = ""
     
+    @IBOutlet weak var bottomview: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +33,7 @@ class InvitepeopleViewController: UIViewController , MFMessageComposeViewControl
         notifindicator.layer.cornerRadius = 10
         outerreferalcodeview.layer.borderColor = UIColor.white.cgColor
         outerreferalcodeview.layer.borderWidth = 1
+        outerreferalcodeview.layer.cornerRadius = 5
          if self.view.frame.size.width > 330 {
         self.bannerheight.constant = self.view.frame.size.height/2.7
         }
@@ -40,6 +42,7 @@ class InvitepeopleViewController: UIViewController , MFMessageComposeViewControl
         }
         let m = self.applygradient(a: #colorLiteral(red: 0.3215686275, green: 0.3058823529, blue: 0.7803921569, alpha: 1), b: #colorLiteral(red: 0.1960784314, green: 0.4784313725, blue: 0.6666666667, alpha: 1))
         self.bannerview.layer.insertSublayer(m, at: 0)
+        self.bottomview.layer.insertSublayer(m, at: 0)
         self.referalcode.text = rfc
         fetchprofile()
         // Do any additional setup after loading the view.

@@ -210,7 +210,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
     
     @IBOutlet weak var bodtc: UIView!
     
-    @IBOutlet weak var conttandc: UITextField!
+    @IBOutlet weak var conttandc: UITextView!
     
     @IBOutlet weak var notif: UIView!
     
@@ -367,6 +367,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
         self.collection.delegate = self
         self.collection.dataSource = self
         self.datepicker.locale = Locale.init(identifier: "en_IN")
+        self.datepicker.minimumDate = Date() + 30 * 60
         print(TimeZone.knownTimeZoneIdentifiers)
         let indTimeZone = TimeZone(identifier: "Asia/Calcutta")
         self.datepicker.timeZone = indTimeZone
@@ -1081,13 +1082,13 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                     if c.timeIntervalSince(r).isLessThanOrEqualTo(0) {
                         errorcheck = true
                     }
-                    if c.timeIntervalSince(r).isLessThanOrEqualTo(60 * 60) {
+                    if c.timeIntervalSince(r).isLessThanOrEqualTo(119 * 60) {
                         errorcheck4 = true
                     }
                     if r.timeIntervalSince(Date()).isLessThanOrEqualTo(0) {
                         errorcheck2 = true
                     }
-                    if r.timeIntervalSince(Date()).isLessThanOrEqualTo(30 * 60) {
+                    if r.timeIntervalSince(Date()).isLessThanOrEqualTo(29 * 60) {
                         errorcheck3 = true
                     }
                 }
@@ -1103,7 +1104,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                             if c.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
                                         errorcheck = true
                                     }
-                        if c.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                        if c.timeIntervalSince(date2).isLessThanOrEqualTo(119 * 60) {
                                                         errorcheck4 = true
                                                     }
                         print(date2)
@@ -1113,7 +1114,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                             if (date2.timeIntervalSince(Date()  + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
                                 errorcheck2 = true
                             }
-                        if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                        if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(29 * 60)) {
                                 errorcheck3 = true
                         }
                      }
@@ -1121,13 +1122,13 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                if c.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
                                                            errorcheck = true
                                                        }
-                                                if c.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                                                if c.timeIntervalSince(date2).isLessThanOrEqualTo(119 * 60) {
                                                     errorcheck4 = true
                                                 }
                                                if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
                                                    errorcheck2 = true
                                                }
-                                                if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                                if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(29 * 60)) {
                                                     errorcheck3 = true
                                                 }
                                         }
@@ -1152,13 +1153,13 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                if date.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
                                                            errorcheck = true
                                                        }
-                                            if date.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                                            if date.timeIntervalSince(date2).isLessThanOrEqualTo(119 * 60) {
                                                 errorcheck4 = true
                                             }
                                                if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
                                                    errorcheck2 = true
                                                }
-                                            if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                            if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(29 * 60)) {
                                                     errorcheck3 = true
                                             }
                                         }
@@ -1168,13 +1169,13 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                if date.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
                                                            errorcheck = true
                                                        }
-                                            if date.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
+                                            if date.timeIntervalSince(date2).isLessThanOrEqualTo(119 * 60) {
                                                 errorcheck4 = true
                                             }
                                                if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
                                                    errorcheck2 = true
                                                }
-                                            if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                            if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(29 * 60)) {
                                                 errorcheck3 = true
                                             }
                                         }
@@ -1293,7 +1294,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                 self.present(customalert.showalert(x: "Contest Start Date should atleast be 30 minutes after the current date."), animated: true, completion: nil)
             }
             else if errorcheck4 {
-                self.present(customalert.showalert(x: "Contest End Date should atleast be 60 minutes after the Contest Start Date."), animated: true, completion: nil)
+                self.present(customalert.showalert(x: "Contest End Date should atleast be 120 minutes after the Contest Start Date."), animated: true, completion: nil)
             }
 
         else if(self.allchoosenfields["Contest Name"] == nil) {
@@ -1928,7 +1929,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                         self.present(customalert.showalert(x: "Contest Start Date should atleast be 30 minutes after the current date."), animated: true, completion: nil)
                 }
                 else if errorcheck4 {
-                        self.present(customalert.showalert(x: "Contest End Date should atleast be 60 minutes after the Contest Start Date."), animated: true, completion: nil)
+                        self.present(customalert.showalert(x: "Contest End Date should atleast be 120 minutes after the Contest Start Date."), animated: true, completion: nil)
                 }
             else if let cat = self.allchoosenfields["Category"] as? categorybrief {
                 if let invt = self.allchoosenfields["Invitation type"] as? invitationtypess {
@@ -2199,7 +2200,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
 //                        self.present(customalert.showalert(x: "Contest Start Date should atleast be 30 minutes after the current date."), animated: true, completion: nil)
 //                }
                 else if errorcheck4 {
-                        self.present(customalert.showalert(x: "Contest End Date should atleast be 60 minutes after the Contest Start Date."), animated: true, completion: nil)
+                        self.present(customalert.showalert(x: "Contest End Date should atleast be 120 minutes after the Contest Start Date."), animated: true, completion: nil)
                 }
             
             else if self.groupid == 0 {
@@ -2308,11 +2309,11 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                 
                                                 
                                                 var userid = UserDefaults.standard.value(forKey: "refid") as! String
-                                                var params : Dictionary<String,Any> = ["ContestName": contname,"AllowCategoryId":cat.categoryid,"OrganizationAllow":true,"InvitationType":invt.id,"EntryAllowed":et.id,"EntryFee":eeeen,"ContestStart":conton,"ContestLocation":contloc,"Description":contdesc,"ResultOn":reson,"ContestPrice":contprice,"ContestWinnerPriceTypeId":cpt.id,"ResultTypeId":cwt.id,"UserId":userid,"GroupId":self.groupid,"IsActive":true,"Status":true,"RunningStatusId" : 2,"PerformanceTypeId":cppt.id,"Gender":cgn.id,"ThemeId" : conth.id ,"Terms&Conditions" : ttc , "WinnerPrices" : extraparams]
+                                                var params : Dictionary<String,Any> = ["ContestName": contname,"AllowCategoryId":cat.categoryid,"OrganizationAllow":true,"InvitationType":invt.id,"EntryAllowed":et.id,"EntryFee":eeeen,"ContestStart":conton,"ContestLocation":contloc,"Description":contdesc,"ResultOn":reson,"ContestPrice":contprice,"ContestWinnerPriceTypeId":cpt.id,"ResultTypeId":cwt.id,"UserId":userid,"GroupId":self.groupid,"IsActive":true,"Status":true,"RunningStatusId" : 2,"PerformanceTypeId":cppt.id,"Gender":cgn.id,"ThemeId" : conth.id ,"TermAndCondition" : ttc , "WinnerPrices" : extraparams]
                                                 self.params = params
                                                 
                                                 
-                                                var tempparams : Dictionary<String,Any> = ["contest name" : contname, "Category" : cat.categoryname , "invitation type":invt.invitation , "Entry allowed" : et.contestentrytype , "entry fee" : eeeen , "contest start" : conton , "description" : contdesc , "result on":reson,"contest price":contprice,"contest winner price type" : cpt.winnerprice,"result type" : cwt.contestwintype,"performance type" : cppt.peroformance,"gender":cgn.gender,"theme" : conth.theme,"Terms&Conditions" : ttc , "WinnerPrices" : extraparams]
+                                                var tempparams : Dictionary<String,Any> = ["contest name" : contname, "Category" : cat.categoryname , "invitation type":invt.invitation , "Entry allowed" : et.contestentrytype , "entry fee" : eeeen , "contest start" : conton , "description" : contdesc , "result on":reson,"contest price":contprice,"contest winner price type" : cpt.winnerprice,"result type" : cwt.contestwintype,"performance type" : cppt.peroformance,"gender":cgn.gender,"theme" : conth.theme,"TermAndCondition" : ttc , "WinnerPrices" : extraparams]
                                                 self.tempparams = tempparams
                                                 
                                                 passingevent = strevent(contestid: 0, contestname: contname, allowcategoryid: cat.categoryid, allowcategory: cat.categoryname, organisationallow: false, invitationtypeid: invt.id, invitationtype: invt.invitation, entryallowed: et.id, entrytype: et.contestentrytype, entryfee: eeeen, conteststart: conton, contestlocation: "", description: contdesc, resulton: reson, contestprice: contprice, contestwinnerpricetypeid: cpt.id, contestpricetype: cpt.winnerprice, resulttypeid: cwt.id, resulttype: cwt.contestwintype, userid: userid, groupid: self.groupid, createon: "", isactive: false, status: false, runningstatusid: 2, runningstatus: "Open", juries: [], contestimage: "", termsandcondition: "\(ttc)", noofwinners: 0)

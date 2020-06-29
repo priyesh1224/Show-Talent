@@ -30,7 +30,7 @@ struct obtainhere
     var members : [groupmember]
     var totalmembers : Int
     var groupimage : String
-    var creator : String
+    var creator : groupmember
     
 }
 
@@ -71,6 +71,9 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
     @IBOutlet weak var textmessage: UITextField!
     @IBOutlet weak var downloadtract: Customlabel!
     @IBOutlet weak var groupname: UILabel!
+    
+    @IBOutlet weak var groupadmin: UITextView!
+    
     
     @IBOutlet weak var notificationindicator: UIView!
     
@@ -333,11 +336,34 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
                             members.append(groupmember(id: id, name: name, profileimage: profileimage, userid: userid))
                         }
                     }
+                    
+                    var grpcreator = groupmember(id: 0, name: "", profileimage: "", userid: "")
+                    if let g = inv["Creator"] as? Dictionary<String,Any> {
+                                                var id = 0
+                                                   var name = ""
+                                                   var profileimage = ""
+                                                   var userid = ""
+                                                   
+                                                   if let i = g["ID"] as? Int {
+                                                       id = i
+                                                   }
+                                                   if let i = g["Name"] as? String {
+                                                       name = i
+                                                   }
+                                                   if let i = g["Profile"] as? String {
+                                                       profileimage = i
+                                                   }
+                                                   if let i = g["UserId"] as? String {
+                                                       userid = i
+                                                   }
+                        grpcreator = groupmember(id: id, name: name, profileimage: profileimage, userid: userid)
+                    }
+                    
                     if let g = inv["TotalMembers"] as? Int {
                         totalmembers = g
                     }
                     
-                    self.currentinfo = obtainhere(groupid: groupid, groupname: groupname, ref: ref, belongto: belongto, createdon: createdon, otherbelong: otherbelong, youare: youare, members: members, totalmembers: totalmembers, groupimage: groupimage, creator: creator)
+                    self.currentinfo = obtainhere(groupid: groupid, groupname: groupname, ref: ref, belongto: belongto, createdon: createdon, otherbelong: otherbelong, youare: youare, members: members, totalmembers: totalmembers, groupimage: groupimage, creator: grpcreator)
                     self.groupname.text = groupname.capitalized
                     self.downloadimage(url: groupimage) { (im) in
                         if let i = im as? UIImage{
@@ -348,15 +374,16 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
                     print(self.currentinfo)
                     var uid = UserDefaults.standard.value(forKey: "refid") as! String
                            if uid == creator {
-                               self.editbtn.isHidden = false
+//                               self.editbtn.isHidden = false
                                
                            }
                            else {
-                               self.editbtn.isHidden = true
+//                               self.editbtn.isHidden = true
                               
                            }
 
                     if let d = self.currentinfo as? obtainhere {
+                        self.groupadmin.text = "Group Admin : \(d.creator.name.capitalized)"
                         self.table.reloadData()
                     }
                     
@@ -715,7 +742,7 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
             s.passbackupdatedcount = {a in
                 MainGroupViewController.takecount!(a)
             }
-            s.groupcreator = self.currentinfo?.creator ?? ""
+            s.groupcreator = self.currentinfo?.creator.userid ?? ""
             if let p = self.passedgroup as? groupcreated {
                 s.groupid = p.groupid
             }

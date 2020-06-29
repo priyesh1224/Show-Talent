@@ -339,6 +339,8 @@ class ThemePreviewViewController: UIViewController , UITableViewDelegate , UITab
     
     
     @IBAction func applythemetapped(_ sender: Any) {
+        print(self.params)
+        
         if let g = self.gotevent2 as? pretheme {
             if createmode == false {
                 self.themeselected!(g)
@@ -506,7 +508,7 @@ class ThemePreviewViewController: UIViewController , UITableViewDelegate , UITab
                 return 250
             }
             else {
-                return 1400
+                return 1600
             }
 
     }

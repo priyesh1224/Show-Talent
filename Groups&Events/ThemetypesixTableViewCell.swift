@@ -119,7 +119,7 @@ class ThemetypesixTableViewCell: UITableViewCell, UICollectionViewDelegate , UIC
         
         var ll = UICollectionViewFlowLayout()
         ll.scrollDirection = .horizontal
-        ll.itemSize = CGSize(width: 120, height: 100)
+        ll.itemSize = CGSize(width: self.jurycollection.frame.size.width, height: 100)
         jurycollection.reloadData()
         jurycollection.collectionViewLayout = ll
         jurycollection.reloadData()
@@ -132,10 +132,18 @@ class ThemetypesixTableViewCell: UITableViewCell, UICollectionViewDelegate , UIC
         }
         
         
+        self.changejurybtn.setTitleColor(UIColor.black, for: .normal)
+        self.changejurybtn.backgroundColor = UIColor.white
+        self.changejurybtn.layer.cornerRadius = 5
+        
         
     }
     func update(x:strevent,b : Bool, c : Bool , conimage : String ,winnerpricelist : [pricewinnerwise], allwinners : [juryorwinner] , participants : Int , isllowed : Bool , timetopublish : Bool , win : Int , pt : String , gen : String, needtoshowapplytheme : Bool)
     {
+        self.changejurybtn.setTitleColor(UIColor.black, for: .normal)
+              self.changejurybtn.backgroundColor = UIColor.white
+              self.changejurybtn.layer.cornerRadius = 5
+        
         currentjurylist = x.juries
         var xx  = juryorwinner(id: 1, userid: "", name: "priyesh", profile: "http://thcoreapi.maraekat.com/Upload/Profile/066af0e3-5394-4a86-9e99-acdeb9879ac5/066af0e3-5394-4a86-9e99-acdeb9879ac5.jpg")
         self.winnersprice = winnerpricelist
@@ -194,7 +202,7 @@ class ThemetypesixTableViewCell: UITableViewCell, UICollectionViewDelegate , UIC
             return CGSize(width: 100, height: 70)
         }
         else {
-            return CGSize(width: 120, height: 100)
+            return CGSize(width: self.jurycollection.frame.size.width, height: 100)
         }
     }
     
@@ -231,7 +239,7 @@ class ThemetypesixTableViewCell: UITableViewCell, UICollectionViewDelegate , UIC
     
     @IBAction func toggletermsandconditions(_ sender: Any) {
         if tandcheight.constant == 60 {
-            tandcheight.constant = 200
+            tandcheight.constant = 260
         }
         else {
             tandcheight.constant = 60

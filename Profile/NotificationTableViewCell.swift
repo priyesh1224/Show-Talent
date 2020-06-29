@@ -59,7 +59,10 @@ class NotificationTableViewCell: UITableViewCell {
             self.notiftiming.text = "You have been selected as winner in contest \(x.contestgroupname.capitalized)"
         }
         else if x.datatype.lowercased() == "contestpostlike" {
-            self.notiftiming.text = "Someone has liked your post in contest \(x.contestgroupname.capitalized)"
+            self.notiftiming.text = "\(x.likeby.capitalized) has liked your post in contest \(x.contestgroupname.capitalized)"
+        }
+        else if x.datatype.lowercased() == "winner" {
+            self.notiftiming.text = "Please choose winners of the contest : \(x.contestgroupname.capitalized)"
         }
         
         
@@ -67,16 +70,28 @@ class NotificationTableViewCell: UITableViewCell {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
         var td = tl.components(separatedBy: "T")[0]
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.dateFormat = "yyyy-MM-ddTHH:mm:ss"
         let date = dateFormatter.date(from: td ?? "")
         print(td)
         print(date)
+        
+        let today = dateFormatter.date(from: "\(Date())" ?? "")
+        
+       
         
         let monthsname = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
         let calendar = Calendar.current
         let yx = calendar.component(.year, from: date!)
         let mx = monthsname[calendar.component(.month, from: date!)]
         let dx = calendar.component(.day, from: date!)
+        let hx = calendar.component(.hour, from: date!)
+        let minx = calendar.component(.minute, from: date!)
+        
+        let yxx = calendar.component(.year, from: Date())
+        let mxx = monthsname[calendar.component(.month, from: Date())]
+        let dxx = calendar.component(.day, from: Date())
+        let hxx = calendar.component(.hour, from: Date())
+        let minxx = calendar.component(.minute, from: date!)
        
         
         self.notifdate.text = "\(mx) \(dx)"

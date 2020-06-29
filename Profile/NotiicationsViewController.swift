@@ -21,6 +21,7 @@ struct notifications
     var userid : String
     var icon : String
     var wincount : String = ""
+    var likeby : String = ""
     
 }
 
@@ -90,6 +91,7 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
                             var userid = ""
                             var icon = ""
                             var wc = ""
+                            var likeby = ""
                             
                             if let e = each["Title"] as? String {
                                 title = e
@@ -99,6 +101,10 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
                             }
                             if let ee = each["Data"] as? Dictionary<String,Any> {
                                 
+                                if let e = ee["LikeBy"] as? String {
+                                    likeby = e
+                                }
+                                
                                 if let e = ee["ContestName"] as? String {
                                     contestgroupname = e
                                 }
@@ -107,6 +113,9 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
                                 }
                                 
                                 if let e = ee["ID"] as? String {
+                                    id = e
+                                }
+                                else if let e = ee["ContestId"] as? String {
                                     id = e
                                 }
                                 if let e = ee["CategoryName"] as? String {
@@ -135,7 +144,7 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
                                 icon = e
                             }
                             
-                            var notif = notifications(title: title, body: body, datatype: datatype, contestgroupname: contestgroupname, id: id, categoryname: categoryname, contestentrytype: contestentrytype, createon: createon, userid: userid, icon: icon , wincount: wc)
+                            var notif = notifications(title: title, body: body, datatype: datatype, contestgroupname: contestgroupname, id: id, categoryname: categoryname, contestentrytype: contestentrytype, createon: createon, userid: userid, icon: icon , wincount: wc , likeby: likeby)
                             
                             self.allnotificationsfetced.append(notif)
                             
@@ -176,6 +185,7 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let x = self.allnotificationsfetced[indexPath.row]
+        print("PAssed id at tap \(x)")
         self.tappedid = x.id
         self.tappedwincount = x.wincount
         if x.datatype.lowercased() == "groupmember" {
@@ -188,7 +198,7 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
             performSegue(withIdentifier: "togroups", sender: nil)
         }
         else if x.datatype.lowercased() == "contestinvitation" {
-            performSegue(withIdentifier: "tojurycontests", sender: nil)
+            performSegue(withIdentifier: "tocontests", sender: nil)
         }
         else if x.datatype.lowercased() == "nearcontest" {
             performSegue(withIdentifier: "tonearbycontests", sender: nil)
@@ -237,6 +247,7 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
         
         if let seg = segue.destination as? JoinedeventsViewController {
             if let t = Int(self.tappedid) as? Int {
+                print("Passing ID \(t)")
                 seg.eventid = t
             }
             
@@ -245,13 +256,16 @@ class NotiicationsViewController: UIViewController , UITableViewDelegate , UITab
         if let seg = segue.destination as? MainGroupViewController {
             seg.isseguedevent = true
             if let t = Int(self.tappedid) as? Int {
-                seg.seguedeventid = 0
+                seg.seguedeventid = t
             }
             
             
         }
         if let seg = segue.destination as? JurycontestViewController {
+            
+            print("Passing TPID  \(self.tappedid)")
             if let t = Int(self.tappedid) as? Int {
+                print("Passing ID \(t)")
                 seg.contestid = t
             }
             if let t = Int(self.tappedwincount) as? Int {

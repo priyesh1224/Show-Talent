@@ -233,6 +233,7 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
                 sd = tem[2]
             }
         }
+        
 //        d = x.x.resulton
 //        if d != "" && d != " " {
 //            var arr = d.components(separatedBy: "T")

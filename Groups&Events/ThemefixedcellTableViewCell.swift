@@ -13,6 +13,7 @@ class ThemefixedcellTableViewCell: UITableViewCell, UICollectionViewDelegate , U
     
     
     
+    @IBOutlet weak var interestedpeopple: UITextView!
     
     var postpressed : ((_ x : String) -> Void)?
     var sharepressed : ((_ x : String) -> Void)?
@@ -37,9 +38,12 @@ class ThemefixedcellTableViewCell: UITableViewCell, UICollectionViewDelegate , U
     @IBOutlet weak var collection: UICollectionView!
     
     
+    @IBOutlet weak var estimatedtimestackview: UIStackView!
     
     
+    @IBOutlet weak var datewrapperview: UIView!
     
+    @IBOutlet weak var datewrapperviewhieght: NSLayoutConstraint!
     
     @IBOutlet weak var contestpostedin: UITextView!
     
@@ -174,7 +178,7 @@ class ThemefixedcellTableViewCell: UITableViewCell, UICollectionViewDelegate , U
         
         postvideobtn.layer.cornerRadius = postvideobtn.frame.size.height/2
         contestsharebtn.layer.cornerRadius = contestsharebtn.frame.size.height/2
-        
+        contestname.highlightedTextColor = UIColor.clear
         contestname.text  = x.contestname.capitalized
         contestpostedin.text = "Contest posted in \(x.categoryname.capitalized)"
         startdate.text  = "Start Date : \(x.conteststart.components(separatedBy: "T")[0])"
@@ -191,9 +195,10 @@ class ThemefixedcellTableViewCell: UITableViewCell, UICollectionViewDelegate , U
     
     
     
-    func update(x : strevent , p : String , s : String , b : Bool , c : Bool , isallowed : Bool , timetopublish : Bool , winnerlist : [juryorwinner] )
+    func update(x : strevent , p : String , s : String , b : Bool , c : Bool , isallowed : Bool , timetopublish : Bool , winnerlist : [juryorwinner] , totalparticipants : Int)
     {
         print("At time of update \(x.runningstatus.lowercased()) and \(winnerlist.count)")
+        self.interestedpeopple.text = "\(totalparticipants) People Interested"
         if x.runningstatus.lowercased() == "closed" && winnerlist.count > 0 {
         self.winnersannpuncement.clipsToBounds = true
             winnersannpuncement.isHidden = false
@@ -221,7 +226,7 @@ class ThemefixedcellTableViewCell: UITableViewCell, UICollectionViewDelegate , U
         setupTimer()
         postvideobtn.layer.cornerRadius = postvideobtn.frame.size.height/2
          contestsharebtn.layer.cornerRadius = contestsharebtn.frame.size.height/2
-        
+        contestname.highlightedTextColor = UIColor.clear
         contestname.text  = x.contestname.capitalized
         contestpostedin.text = "Contest posted in \(x.allowcategory.capitalized)"
         startdate.text  = "Start Date : \(x.conteststart.components(separatedBy: "T")[0])"
@@ -262,6 +267,10 @@ class ThemefixedcellTableViewCell: UITableViewCell, UICollectionViewDelegate , U
                 }
                 else {
                     self.postvideobtn.setTitle("Publish Contest", for: .normal)
+                    self.estimatedtimestackview.isHidden = true
+                    startdate.text  = "Start Date : \(x.conteststart.components(separatedBy: "T")[0]) | End Date : \(x.resulton.components(separatedBy: "T")[0])"
+                    enddate.text = ""
+                    datewrapperviewhieght.constant = 60
                     self.contestsharebtn.isHidden = true
                     self.postvideobtn.isHidden = false
                 }
