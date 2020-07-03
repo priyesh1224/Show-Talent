@@ -31,6 +31,7 @@ struct obtainhere
     var totalmembers : Int
     var groupimage : String
     var creator : groupmember
+    var isVerify : Bool = false
     
 }
 
@@ -74,6 +75,7 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
     
     @IBOutlet weak var groupadmin: UITextView!
     
+    @IBOutlet weak var groupverifiedview: UIView!
     
     @IBOutlet weak var notificationindicator: UIView!
     
@@ -103,6 +105,7 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
         self.getgroupposts(pg : 0)
 
 
+        
 //        CoreDataManager.shared.resetAllRecords()
         print("Received Group------------------------")
         print(self.passedgroup2)
@@ -285,6 +288,7 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
                     var totalmembers = 0
                     var groupimage = ""
                     var creator = ""
+                    var isverify = false
                     if let g = inv["GroupName"] as? String {
                                                            groupname = g
                                                        }
@@ -309,6 +313,9 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
                                                        if let g = inv["Ref_BelongGroup"] as? Int {
                                                            ref = g
                                                        }
+                    if let g = inv["IsVerify"] as? Bool {
+                        isverify = g
+                    }
                     
                     if let g = inv["Ref_UserId"] as? String {
                         creator = g
@@ -353,7 +360,7 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
                                                    if let i = g["Profile"] as? String {
                                                        profileimage = i
                                                    }
-                                                   if let i = g["UserId"] as? String {
+                                                   if let i = g["UserID"] as? String {
                                                        userid = i
                                                    }
                         grpcreator = groupmember(id: id, name: name, profileimage: profileimage, userid: userid)
@@ -363,7 +370,7 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
                         totalmembers = g
                     }
                     
-                    self.currentinfo = obtainhere(groupid: groupid, groupname: groupname, ref: ref, belongto: belongto, createdon: createdon, otherbelong: otherbelong, youare: youare, members: members, totalmembers: totalmembers, groupimage: groupimage, creator: grpcreator)
+                    self.currentinfo = obtainhere(groupid: groupid, groupname: groupname, ref: ref, belongto: belongto, createdon: createdon, otherbelong: otherbelong, youare: youare, members: members, totalmembers: totalmembers, groupimage: groupimage, creator: grpcreator , isVerify: isverify)
                     self.groupname.text = groupname.capitalized
                     self.downloadimage(url: groupimage) { (im) in
                         if let i = im as? UIImage{

@@ -64,6 +64,18 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     
     
+    @IBOutlet weak var contestdetailsunderbar: UIView!
+    
+    
+    @IBOutlet weak var detailsheight: NSLayoutConstraint!
+    
+    @IBOutlet weak var contestpostsunderbar: UIView!
+    
+    
+    @IBOutlet weak var tabletopspace: NSLayoutConstraint!
+    
+    
+    
     static var deallocateplayer : ((_ x : Bool) -> Void)?
     
     var juryeditmode = "new"
@@ -193,6 +205,8 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         if self.tthemename.lowercased() == "hip-hop" {
             self.tthemename = "hip hop"
         }
+        self.contestdetailsunderbar.backgroundColor = #colorLiteral(red: 0.2157509327, green: 0.3588763475, blue: 0.8007919192, alpha: 1)
+        self.contestpostsunderbar.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         self.showcontestdetails.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
         self.editlayer.isHidden = false
         var xt : Dictionary<String,Dictionary<String,Any>> = ["jazz" : ["primary" : "#000000" , "secondary" : "#644761"] , "hip hop" : ["primary" : "#644761" , "secondary" : "#2C1C00"] ,  "cultural dance" : ["primary" : "#171D1A" , "secondary" : "#171D1A"] ]
@@ -389,6 +403,13 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     @IBAction func showcontestdetailspressed(_ sender: Any) {
         self.tablemode = "details"
+        self.contestdetailsunderbar.backgroundColor = #colorLiteral(red: 0.2157509327, green: 0.3588763475, blue: 0.8007919192, alpha: 1)
+        self.contestpostsunderbar.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        self.coverview.isHidden = false
+        self.tabletopspace.constant = 0
+        if let p = self.player as? AVPlayer{
+            p.play()
+        }
         self.showcontestdetails.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
         self.showcontestposts.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
         self.view.layer.insertSublayer(gradientLayer, at: 0)
@@ -406,6 +427,13 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     @IBAction func showcontestpostspressed(_ sender: Any) {
         self.tablemode = "posts"
+        self.contestpostsunderbar.backgroundColor = #colorLiteral(red: 0.2157509327, green: 0.3588763475, blue: 0.8007919192, alpha: 1)
+        self.contestdetailsunderbar.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        self.coverview.isHidden = true
+        self.tabletopspace.constant = -1 * self.eventimageheight.constant 
+        if let p = self.player as? AVPlayer{
+            p.pause()
+        }
         self.showcontestdetails.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
         self.showcontestposts.setTitleColor(#colorLiteral(red: 0.2549019608, green: 0.2941176471, blue: 0.8117647059, alpha: 1), for: .normal)
         self.gradientLayer.removeFromSuperlayer()
@@ -1427,13 +1455,21 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                     
                     
                     cell.postpressed = {a in
+                        print(a)
                         if a.lowercased() == "publish contest" {
+                            print(self.eventjoined)
                             let dateFormatter = DateFormatter()
+                            let dateFormatter2 = DateFormatter()
                             dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-                            dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
-                            let date = dateFormatter.date(from: self.eventjoined?.conteststart ?? "")
-                            print(date)
-                            let today = dateFormatter.date(from: dateFormatter.string(from: Date()))
+                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
+                            dateFormatter2.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                            dateFormatter2.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303'"
+                            var date = dateFormatter.date(from: self.eventjoined?.conteststart ?? "")
+                           
+                            if let d = date as? Date {} else {date = dateFormatter2.date(from: self.eventjoined?.conteststart ?? "")}
+                             print(date)
+                            var today = dateFormatter.date(from: dateFormatter.string(from: Date()))
+                             if let d = today as? Date {} else {today = dateFormatter2.date(from: dateFormatter.string(from: Date()))}
                             print(today)
                             var errorcheck = false
                             var errorcheck3 = false
@@ -1553,6 +1589,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                             }
                         }
                         if a.lowercased() == "participate" {
+                            print("self.joined \(self.joined)")
                             if self.joined == false {
                                 print("hello  xyz")
                                 self.participate()
@@ -1678,10 +1715,17 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                         
                         let dateFormatter = DateFormatter()
                         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-                        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
-                        let date = dateFormatter.date(from: self.eventjoined?.conteststart ?? "")
+                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
+                        var date = dateFormatter.date(from: self.eventjoined?.conteststart ?? "")
+                        
+                        var today = dateFormatter.date(from: dateFormatter.string(from: Date()))
+                        
+                        let dateFormatter2 = DateFormatter()
+                        dateFormatter2.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                        dateFormatter2.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303'"
+                        if let d = date as? Date {} else {date = dateFormatter2.date(from: self.eventjoined?.conteststart ?? "")}
+                        if let d = today as? Date {} else {today = dateFormatter2.date(from: dateFormatter.string(from: Date()) ?? "")}
                         print(date)
-                        let today = dateFormatter.date(from: dateFormatter.string(from: Date()))
                         print(today)
                         var errorcheck = false
                         if let d = date as? Date {
@@ -2109,7 +2153,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             if nl < 1 || tc == 0 {
                 return (660 + (45 * 1.3))
             }
-            return (680 + (45 * nl))
+            return (280 + (45 * nl))
             }
         }
         return 700

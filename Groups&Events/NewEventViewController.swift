@@ -182,8 +182,13 @@ class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,
         var tl = self.currentevent?.resulton
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
-        let date = dateFormatter.date(from: tl ?? "")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
+        
+        var date = dateFormatter.date(from: tl ?? "")
+        let dateFormatter2 = DateFormatter()
+        dateFormatter2.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+        dateFormatter2.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303'"
+        if let d = date as? Date {} else {date = dateFormatter2.date(from: tl ?? "")}
         let today = dateFormatter.date(from: dateFormatter.string(from: Date()))
         var ttday : Date = Date()
         if let d  = date, let t = today {
@@ -340,7 +345,7 @@ class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,
         self.scroll.isHidden = false
         var reson = ""
         if let c = self.datechooser.date as? Date {
-             reson =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
+             reson =  c.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
         }
         if currenlychanging == "start" {
             modifiedstartdate = reson

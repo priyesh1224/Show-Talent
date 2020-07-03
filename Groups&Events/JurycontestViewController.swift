@@ -261,9 +261,11 @@ class JurycontestViewController: UIViewController , UITableViewDelegate , UITabl
             var t2 = self.currentevent?.conteststart
             let dateFormatter = DateFormatter()
             dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303'"
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303'"
             let date = dateFormatter.date(from: endingdata)
             let date2 = dateFormatter.date(from: t2 ?? "")
+            print(date)
+            print(date2)
             let interval = date?.timeIntervalSince(Date())
             if interval?.isLess(than: 0) ?? false {
                 var url = Constants.K_baseUrl + Constants.addwinner

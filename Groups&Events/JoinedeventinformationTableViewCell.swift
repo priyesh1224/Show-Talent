@@ -68,8 +68,12 @@ var leftcontest : ((_ pressed : Bool) -> ())?
         var tl = self.currentevent?.resulton
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
         var date = dateFormatter.date(from: tl ?? "")
+        let dateFormatter2 = DateFormatter()
+        dateFormatter2.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+        dateFormatter2.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303'"
+        if let d = date as? Date {} else {date = dateFormatter2.date(from: tl ?? "")}
         let today = dateFormatter.date(from: dateFormatter.string(from: Date()))
         var ttday : Date = Date()
         if let d  = date, let t = today {

@@ -27,12 +27,50 @@ class GroupsandEventsCollectionViewCell: UICollectionViewCell {
         self.eventimage.image = #imageLiteral(resourceName: "cover-photo")
         print("Reusing cell")
         self.eventname.text = ""
+        if let i = alreasypostedinview as? UIView {
+            i.isHidden = true
+        }
         alreasypostedinview = nil
     }
     
     
     
     func updatecell(item : groupevent, type:String) {
+        
+        print("Check size \(self.frame.size.width/1.6)")
+        
+        if item.isverify {
+        
+            alreasypostedinview = UIView(frame: CGRect(x: 16, y: 16, width: self.frame.size.width/1.6, height: 30))
+            alreasypostedinview?.layer.cornerRadius = 15
+            alreasypostedinview?.backgroundColor = UIColor.white
+            alreasypostedinview?.layer.borderWidth = 2
+            alreasypostedinview?.layer.borderColor = UIColor.green.cgColor
+            
+            
+            var imv = UIImageView(frame: CGRect(x: 8, y: 0, width: 20, height: 30))
+            imv.image = #imageLiteral(resourceName: "Group 1744")
+            imv.contentMode = .scaleAspectFit
+            alreasypostedinview?.addSubview(imv)
+            
+            var ic = UITextField(frame: CGRect(x: 40, y: 0, width: self.frame.size.width/1.6, height: 30))
+            ic.allowsEditingTextAttributes = false
+            ic.isSelected = false
+            ic.backgroundColor = UIColor.clear
+            ic.text = "Group Verified"
+            ic.font = UIFont.systemFont(ofSize: 10)
+            ic.textColor =  UIColor.green
+            alreasypostedinview?.addSubview(ic)
+            self.layer.addSublayer(alreasypostedinview!.layer)
+        }
+        else {
+            if let i = alreasypostedinview as? UIView {
+                i.isHidden = true
+            }
+        }
+ 
+        
+        
         
 
         if type == "groups" || type == "joinedgroups" {

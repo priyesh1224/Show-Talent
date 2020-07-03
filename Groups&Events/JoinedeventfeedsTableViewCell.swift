@@ -30,6 +30,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     
     @IBOutlet weak var leadcommentname: UILabel!
     
+    @IBOutlet weak var feedcover: UIStackView!
     
     
     @IBOutlet weak var leadcomment: UILabel!
@@ -87,6 +88,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     {
         
         print("Allocatin this cell")
+        print("Feed \(x)")
         
         JoinedeventsViewController.deallocateplayer = { a in
             print("Got Tapped")
@@ -158,7 +160,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         self.profileimage.layer.cornerRadius = 25
         self.feedimage.layer.cornerRadius = 10
         self.profilename.text = x.profilename.capitalized
-        self.profilecategory.text = x.category.capitalized
+        self.profilecategory.text = x.title.capitalized
         self.feeddescription.text = x.description.capitalized
         self.downloadimage(url: x.profileimg) { (im) in
             if let imm = im as? UIImage {
@@ -195,7 +197,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
                                     s.stopAnimating()
                                 }
 //                                play?.play()
-                                self.feedimage.isHidden = true
+//                                self.feedimage.isHidden = true
                             }
                             
                             
@@ -235,7 +237,6 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
             
         }
         else {
-            
             if let am = JoinedeventsViewController.holder["\(x.activitypath)"] as? UIImage {
                 self.feedimage.image = am
             }
@@ -262,7 +263,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         if let p = player {
             self.player.pause()
             self.player = nil
-            muteunmute?.setImage(#imageLiteral(resourceName: "mute"), for: .normal)
+            self.muteunmute?.setImage(#imageLiteral(resourceName: "mute"), for: .normal)
         }
          self.layerc?.removeFromSuperlayer()
 
@@ -413,7 +414,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         player = AVPlayer(playerItem: avplayeritem)
         player.automaticallyWaitsToMinimizeStalling = true
         DispatchQueue.main.async{
-            self.feedimage.isHidden = true
+//            self.feedimage.isHidden = true
         }
         avplayeritem.addObserver(self,
         forKeyPath: #keyPath(AVPlayerItem.status),
@@ -433,7 +434,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         sp?.style = .whiteLarge
         sp?.isHidden = false
         sp?.startAnimating()
-        muteunmute = UIButton(frame: CGRect(x: self.frame.size.width - 38, y: 350, width: 25, height: 20))
+        muteunmute = UIButton(frame: CGRect(x: self.frame.size.width - 38, y: 370, width: 25, height: 20))
         muteunmute?.setTitle("", for: .normal)
         muteunmute?.setImage(#imageLiteral(resourceName: "mute"), for: .normal)
         if let b = muteunmute as? UIButton {
@@ -446,12 +447,18 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
             self.layerc?.backgroundColor = UIColor.black.cgColor
             self.layerc?.videoGravity = AVLayerVideoGravity.resizeAspect
             
-            
-            self.layerc?.frame = CoreGraphics.CGRect(x: self.feedimage.frame.origin.x,
-                                              y: self.feedimage.frame.origin.y + 20,
-                                              width: self.feedimage.frame.size.width,
-                                              height: self.feedimage.frame.size.height
-            )
+            let frame = self.feedcover.convert(self.feedimage.layer.frame, to:self.contentView)
+//            self.layerc?.frame = frame
+                        self.layerc?.frame = CoreGraphics.CGRect(x: frame.origin.x,
+                                                                 y: frame.origin.y * 1,
+                                                          width: frame.size.width,
+                                                          height: frame.size.height - 10
+                        )
+//            self.layerc?.frame = CoreGraphics.CGRect(x: self.feedimage.frame.origin.x,
+//                                              y: self.feedimage.frame.origin.y + 20,
+//                                              width: self.feedimage.frame.size.width,
+//                                              height: self.feedimage.frame.size.height
+//            )
             //        layer.bounds.size.height = 170
             self.layerc?.cornerRadius = 0
             self.layerc?.masksToBounds = true
@@ -510,6 +517,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
 //                       player.play()
                        if let p = player as? AVPlayer {
                         sp?.isHidden = true
+                        self.feedimage.isHidden = true
                         p.play()
                         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5.0) {
                                                    // check if player is still playing

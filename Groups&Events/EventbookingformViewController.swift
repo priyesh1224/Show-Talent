@@ -101,7 +101,7 @@ class EventbookingformViewController: UIViewController {
     @IBAction func proceedbtn(_ sender: Any) {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
         let bookdate = dateFormatter.string(from: Date())
         print(bookdate)
         if let fn = firstname.text as? String , let ln = lastname.text as? String , let cnt = country.text as? String , let phn = phone.text as? String , let emil = email.text as? String {

@@ -29,6 +29,7 @@ class MaingroupStaticTableViewCell: UITableViewCell    {
     
     
     
+    @IBOutlet weak var groupverificationicon: UIView!
     
 
     @IBOutlet weak var postbtn: UIButton!
@@ -55,7 +56,19 @@ class MaingroupStaticTableViewCell: UITableViewCell    {
     func updatecell(d : obtainhere)
     {
         
+        if d.isVerify {
+            groupverificationicon.isHidden = false
+        groupverificationicon.layer.borderColor = UIColor.green.cgColor
+        groupverificationicon.layer.borderWidth = 1
+        groupverificationicon.layer.cornerRadius = groupverificationicon.frame.size.height/2
+        }
+        else {
+            groupverificationicon.isHidden = true
+        }
+        
         var uid = UserDefaults.standard.value(forKey: "refid") as! String
+        print("Match \(uid) and \(d.creator.userid)")
+        print("Match \(d)")
         if uid == d.creator.userid {
 //            self.holderview.isHidden = false
             self.createeventbtn.isHidden = false

@@ -1116,7 +1116,7 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
             return 110
         }
         else {
-            return self.table.frame.size.height/2.7
+            return 330
         }
     }
     
@@ -1226,13 +1226,14 @@ class EventDetailsfeedViewController: UIViewController,UITableViewDelegate,UITab
                                        contprice = c
                                    }
                                 if let c = self.allchoosenfields["Contest Start Date"] as? Date {
-                                     conton =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
+                                     conton =  c.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
                                 }
                
                                 if let c = self.allchoosenfields["Contest Description"] as? String {
                                     contdesc = c
                                 }
             
+                         
             
             var userid = UserDefaults.standard.value(forKey: "refid") as! String
                                             var params : Dictionary<String,Any> = ["ContestName": contname,"AllowCategoryId":cat.categoryid,"OrganizationAllow":true,"InvitationType":invt.id,"EntryAllowed":et.id,"EntryFee":eeeen,"ContestStart":conton,"ContestLocation":contloc,"Description":contdesc,"ResultOn":reson,"ContestPrice":contprice,"ContestWinnerPriceTypeId":cpt.id,"ResultTypeId":cwt.id,"UserId":userid,"GroupId":self.groupid,"IsActive":true,"Status":true,"RunningStatusId" : 2,"PerformanceTypeId":cppt.id,"Gender":cgn.id,"ThemeId" : conth.id]

@@ -916,7 +916,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
         
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
         let date = dateFormatter.date(from: passedevent?.resulton ?? "")
         self.allchoosenfields["Contest Result Date"] = date
         let date2 = dateFormatter.date(from: passedevent?.conteststart ?? "")
@@ -1097,8 +1097,8 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                  let dateFormatter2 = DateFormatter()
                             dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
                  dateFormatter2.locale = Locale(identifier: "en_US_POSIX")
-                            dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
-                             dateFormatter2.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303'"
+                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
+                             dateFormatter2.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303'"
                 
                      if let date2 = dateFormatter.date(from: r ?? "") as? Date {
                             if c.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
@@ -1111,10 +1111,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                         print(Date())
                         print(date2.timeIntervalSince(Date()))
                         
-                            if (date2.timeIntervalSince(Date()  + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                            if (date2.timeIntervalSince(Date() ).isLessThanOrEqualTo(0)) {
                                 errorcheck2 = true
                             }
-                        if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(29 * 60)) {
+                        if (date2.timeIntervalSince(Date()).isLessThanOrEqualTo(29 * 60)) {
                                 errorcheck3 = true
                         }
                      }
@@ -1125,10 +1125,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                 if c.timeIntervalSince(date2).isLessThanOrEqualTo(119 * 60) {
                                                     errorcheck4 = true
                                                 }
-                                               if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                               if (date2.timeIntervalSince(Date() ).isLessThanOrEqualTo(0)) {
                                                    errorcheck2 = true
                                                }
-                                                if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(29 * 60)) {
+                                                if (date2.timeIntervalSince(Date() ).isLessThanOrEqualTo(29 * 60)) {
                                                     errorcheck3 = true
                                                 }
                                         }
@@ -1146,8 +1146,8 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                     let dateFormatter2 = DateFormatter()
                                                dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
                                     dateFormatter2.locale = Locale(identifier: "en_US_POSIX")
-                                               dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
-                                                dateFormatter2.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303'"
+                                               dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
+                                                dateFormatter2.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303'"
                                     if let date = dateFormatter.date(from: c ?? "") as? Date {
                                         if let date2 = dateFormatter.date(from: r ?? "") as? Date {
                                                if date.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
@@ -1156,10 +1156,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                             if date.timeIntervalSince(date2).isLessThanOrEqualTo(119 * 60) {
                                                 errorcheck4 = true
                                             }
-                                               if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                               if (date2.timeIntervalSince(Date()).isLessThanOrEqualTo(0)) {
                                                    errorcheck2 = true
                                                }
-                                            if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(29 * 60)) {
+                                            if (date2.timeIntervalSince(Date()).isLessThanOrEqualTo(29 * 60)) {
                                                     errorcheck3 = true
                                             }
                                         }
@@ -1172,10 +1172,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                             if date.timeIntervalSince(date2).isLessThanOrEqualTo(119 * 60) {
                                                 errorcheck4 = true
                                             }
-                                               if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                               if (date2.timeIntervalSince(Date()).isLessThanOrEqualTo(0)) {
                                                    errorcheck2 = true
                                                }
-                                            if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(29 * 60)) {
+                                            if (date2.timeIntervalSince(Date() ).isLessThanOrEqualTo(29 * 60)) {
                                                 errorcheck3 = true
                                             }
                                         }
@@ -1216,10 +1216,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                     if c.timeIntervalSince(r).isLessThanOrEqualTo(60 * 60) {
                         errorcheck4 = true
                     }
-                    if r.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0) {
+                    if r.timeIntervalSince(Date() ).isLessThanOrEqualTo(0) {
                                            errorcheck2 = true
                                        }
-                    if r.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60) {
+                    if r.timeIntervalSince(Date() ).isLessThanOrEqualTo(30 * 60) {
                                                             errorcheck3 = true
                                                         }
                 }
@@ -1230,8 +1230,8 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                let dateFormatter2 = DateFormatter()
                                                           dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
                                                dateFormatter2.locale = Locale(identifier: "en_US_POSIX")
-                                                          dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
-                                                           dateFormatter2.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303'"
+                                                          dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
+                                                           dateFormatter2.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303'"
                                                if let date = dateFormatter.date(from: c ?? "") as? Date {
                                                    if let date2 = dateFormatter.date(from: r ?? "") as? Date {
                                                           if date.timeIntervalSince(date2).isLessThanOrEqualTo(0) {
@@ -1240,10 +1240,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                     if date.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
                                                         errorcheck4 = true
                                                     }
-                                                          if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                                          if (date2.timeIntervalSince(Date()).isLessThanOrEqualTo(0)) {
                                                               errorcheck2 = true
                                                           }
-                                                    if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                                    if (date2.timeIntervalSince(Date()).isLessThanOrEqualTo(30 * 60)) {
                                                                 errorcheck3 = true
                                                         }
                                                    }
@@ -1256,10 +1256,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                     if date.timeIntervalSince(date2).isLessThanOrEqualTo(60 * 60) {
                                                             errorcheck4 = true
                                                     }
-                                                          if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(0)) {
+                                                          if (date2.timeIntervalSince(Date()).isLessThanOrEqualTo(0)) {
                                                               errorcheck2 = true
                                                           }
-                                                    if (date2.timeIntervalSince(Date() + (5.5 * 60 * 60)).isLessThanOrEqualTo(30 * 60)) {
+                                                    if (date2.timeIntervalSince(Date()).isLessThanOrEqualTo(30 * 60)) {
                                                             errorcheck3 = true
                                                     }
                                                    }
@@ -1618,22 +1618,34 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
         }
         else if self.dropdownselectedtype == "Contest Start Date" || self.dropdownselectedtype == "Contest Result Date" {
             print("Selected \(self.dropdownselectedtype)")
-            self.allchoosenfields[self.dropdownselectedtype] = self.datepicker.date + (5.5 * 60 * 60 )
-            selectedval = (self.datepicker.date  + (5.5 * 60 * 60 )).description.components(separatedBy: "+")[0]
-            self.alldatainsync[self.dropdownselectedtype] = selectedval
-            if isineditmode {
-                self.allchoosenfields[self.dropdownselectedtype] = (self.datepicker.date + (5.5 * 60 * 60 )).string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
+            self.datepicker.date = self.datepicker.date + (5.5 * 60 * 60)
+            if let dd = self.datepicker.date as? Date {
+                
+                print("Date check self.datepicker.date \(self.datepicker.date)")
+                print("Date check dd \(dd)")
+                let dateFormatter = DateFormatter()
+//                dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss +0000"
+                let ddt = dateFormatter.date(from: "\(dd + (5.5 * 60 * 60))")
+                print("Date check ddt \(ddt)")
+
+                self.allchoosenfields[self.dropdownselectedtype] = ddt
+                selectedval = (ddt)?.description.components(separatedBy: "+")[0] as? String ?? ""
+                print("Date check selected value \(selectedval)")
+                self.alldatainsync[self.dropdownselectedtype] = selectedval
+                if isineditmode {
+                    self.allchoosenfields[self.dropdownselectedtype] = (ddt)?.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
+                }
+                else {
+                    self.allchoosenfields[self.dropdownselectedtype] = ddt
+                }
+                if self.dropdownselectedtype == "Contest Start Date" {
+                    self.startdatebtn.setTitle(selectedval, for: .normal)
+                }
+                else if self.dropdownselectedtype == "Contest Result Date" {
+                    self.enddatebtn.setTitle(selectedval, for: .normal)
+                }
             }
-            else {
-                self.allchoosenfields[self.dropdownselectedtype] = self.datepicker.date + (5.5 * 60 * 60 )
-            }
-            if self.dropdownselectedtype == "Contest Start Date" {
-                self.startdatebtn.setTitle(selectedval, for: .normal)
-            }
-            else if self.dropdownselectedtype == "Contest Result Date" {
-                self.enddatebtn.setTitle(selectedval, for: .normal)
-            }
-            
         }
         print(self.alldatainsync)
         self.customview.isHidden = true
@@ -1842,34 +1854,74 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
              var userid = UserDefaults.standard.value(forKey: "refid") as! String
             var reson = ""
             var conton = ""
+            if let c = self.allchoosenfields["Contest Result Date"] as? Date {
+                           var ce = c - (5.5 * 60 * 60)
+                           reson =  ce.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
+                        self.allchoosenfields["Contest Result Date"] = reson
+                           print(reson)
+            }
+            else if let c =  self.allchoosenfields["Contest Result Date"] as? String {
+                    print(c)
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
+                    var date = dateFormatter.date(from: c ?? "") ?? Date()
+                    print(date)
+                    date = date - (5.5 * 60 * 60)
+                    reson = date.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
+                self.allchoosenfields["Contest Result Date"] = reson
+            }
             
+            
+            if let c = self.allchoosenfields["Contest Start Date"] as? Date {
+                           var ce = c - (5.5 * 60 * 60)
+                           conton =  ce.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
+                        self.allchoosenfields["Contest Start Date"] = conton
+                           print(conton)
+            }
+            else if let c =  self.allchoosenfields["Contest Start Date"] as? String {
+                    print(c)
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
+                    var date = dateFormatter.date(from: c ?? "") ?? Date()
+                    print(date)
+                    date = date - (5.5 * 60 * 60)
+                    conton = date.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
+                self.allchoosenfields["Contest Start Date"] = conton
+            }
            
             print(self.allchoosenfields["Contest Result Date"])
             print(self.allchoosenfields["Contest Start Date"])
+            
             if let c = self.allchoosenfields["Contest Result Date"] as? Date {
-                reson =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
+                reson =  c.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
             }
             else if let c =  self.allchoosenfields["Contest Result Date"] as? String {
                 reson = c
             }
             if reson == "" {
                 if let c = self.allchoosenfields["Contest Result Date"] as? Date {
-                    reson =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303'")
+                    reson =  c.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303'")
                     reson = "\(reson)Z"
                 }
             }
             if let c = self.allchoosenfields["Contest Start Date"] as? Date {
-                conton =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
+                conton =  c.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
             }
             else if let c =  self.allchoosenfields["Contest Start Date"] as? String {
                 conton = c
             }
             if conton == "" {
                 if let c = self.allchoosenfields["Contest Start Date"] as? Date {
-                conton =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303'")
+                conton =  c.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303'")
                 conton = "\(conton)Z"
                 }
             }
+            
+            print(reson)
+            print(conton)
+            
             var errorcheck = false
             var errorcheck2 = false
             var errorcheck3 = false
@@ -1896,7 +1948,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                    if let r = self.allchoosenfields["Contest Start Date"] as? String {
                                                let dateFormatter = DateFormatter()
                                                dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-                                               dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+                                               dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
                                                let date = dateFormatter.date(from: c ?? "")
                                                let date2 = dateFormatter.date(from: r ?? "")
                                        if date!.timeIntervalSince(date2!).isLessThanOrEqualTo(0) {
@@ -2094,7 +2146,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                     if let r = self.allchoosenfields["Contest Start Date"] as? String {
                                 let dateFormatter = DateFormatter()
                                 dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-                                dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+                                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
                                 let date = dateFormatter.date(from: c ?? "")
                                 let date2 = dateFormatter.date(from: r ?? "")
                         if date!.timeIntervalSince(date2!).isLessThanOrEqualTo(0) {
@@ -2287,9 +2339,13 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                 if let c = self.allchoosenfields["Contest Location"] as? String {
                                                     contloc = c
                                                 }
+                                                print(self.allchoosenfields["Contest Result Date"])
                                                 if let c = self.allchoosenfields["Contest Result Date"] as? Date {
-                                                    reson =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
+                                                    var ce = c - (5.5 * 60 * 60)
+                                                    reson =  ce.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
+                                                    print(reson)
                                                 }
+                                                    
                                                 else if let c =  self.allchoosenfields["Contest Result Date"] as? String {
                                                                reson = c
                                                            }
@@ -2297,7 +2353,10 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
                                                     contprice = c
                                                 }
                                                 if let c = self.allchoosenfields["Contest Start Date"] as? Date {
-                                                    conton =  c.string(format: "yyyy-MM-dd'T'hh:mm:ss'.303Z'")
+                                                    var ce = c - (5.5 * 60 * 60)
+                                                    conton =  ce.string(format: "yyyy-MM-dd'T'HH:mm:ss'.303Z'")
+                                                    print(conton)
+                                                    
                                                 }
                                                 else if let c =  self.allchoosenfields["Contest Start Date"] as? String {
                                                                conton = c
@@ -2904,7 +2963,7 @@ class ModifiedcontestcreateViewController: UIViewController , UIPickerViewDelega
             
             let dateFormatter = DateFormatter()
             dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
             let date = dateFormatter.date(from: x.resulton ?? "")
             self.allchoosenfields["Contest Result Date"] = date
             let date2 = dateFormatter.date(from: x.conteststart ?? "")
