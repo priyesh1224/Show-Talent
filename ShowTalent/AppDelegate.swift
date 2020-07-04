@@ -16,6 +16,7 @@ import UserNotifications
 
 
 
+
 @UIApplicationMain
  class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -26,6 +27,8 @@ import UserNotifications
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
       
+        
+        JWPlayerController.setPlayerKey("vKu6uQjxb/HQ24puWFvCEgYoB3fCR+V+jvb4Q8pgCQ577PXPQlFOJG/aMgCSIrzR") 
       
          IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = false

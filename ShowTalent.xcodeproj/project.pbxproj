@@ -158,6 +158,11 @@
 		84A3640A23D56CA4006A9A42 /* TalentshowcaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A3640923D56CA4006A9A42 /* TalentshowcaseTableViewCell.swift */; };
 		84A3640C23D56CBC006A9A42 /* TalentshowcaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A3640B23D56CBC006A9A42 /* TalentshowcaseCollectionViewCell.swift */; };
 		84A3640E23D5B252006A9A42 /* Talentshowcase2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A3640D23D5B252006A9A42 /* Talentshowcase2ViewController.swift */; };
+		84A83D0324AF508C00117C54 /* JWPlayer_iOS_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A83D0224AF508C00117C54 /* JWPlayer_iOS_SDK.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		84A83D0424AF508C00117C54 /* JWPlayer_iOS_SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84A83D0224AF508C00117C54 /* JWPlayer_iOS_SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		84A83D2C24AF589E00117C54 /* JWPlayer_iOS_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A83D2B24AF589E00117C54 /* JWPlayer_iOS_SDK.framework */; };
+		84A83D2E24AF5ACF00117C54 /* JWTryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A83D2D24AF5ACF00117C54 /* JWTryViewController.swift */; };
+		84A83D3024AF70FD00117C54 /* JWTryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A83D2F24AF70FD00117C54 /* JWTryTableViewCell.swift */; };
 		84A8DF8D23D8044C0054FE6B /* GroupsandEventsContactvc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A8DF8C23D8044C0054FE6B /* GroupsandEventsContactvc.swift */; };
 		84A8DF8F23D80B370054FE6B /* TalentContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A8DF8E23D80B370054FE6B /* TalentContactTableViewCell.swift */; };
 		84A8DF9123D80B4E0054FE6B /* PhoneContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A8DF9023D80B4E0054FE6B /* PhoneContactTableViewCell.swift */; };
@@ -206,6 +211,20 @@
 		A4F4657A2441C6C800617315 /* CoinsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F465792441C6C800617315 /* CoinsViewController.swift */; };
 		A4F4657C2441C6DB00617315 /* CoinsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F4657B2441C6DB00617315 /* CoinsTableViewCell.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		84A83D0524AF508C00117C54 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				84A83D0424AF508C00117C54 /* JWPlayer_iOS_SDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		180185B623265E71002C6A19 /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
@@ -361,6 +380,48 @@
 		84A3640923D56CA4006A9A42 /* TalentshowcaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentshowcaseTableViewCell.swift; sourceTree = "<group>"; };
 		84A3640B23D56CBC006A9A42 /* TalentshowcaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentshowcaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		84A3640D23D5B252006A9A42 /* Talentshowcase2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Talentshowcase2ViewController.swift; sourceTree = "<group>"; };
+		84A83D0124AF506100117C54 /* JWPlayer-iOS-SDK-cocoapod-master */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "JWPlayer-iOS-SDK-cocoapod-master"; path = "../../../Downloads/JWPlayer-iOS-SDK-cocoapod-master"; sourceTree = "<group>"; };
+		84A83D0224AF508C00117C54 /* JWPlayer_iOS_SDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JWPlayer_iOS_SDK.framework; path = "../../../Downloads/JWPlayer-iOS-SDK-cocoapod-master/JWPlayer_iOS_SDK.framework"; sourceTree = "<group>"; };
+		84A83D0624AF516100117C54 /* JWPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWPlayerController.h; sourceTree = "<group>"; };
+		84A83D0724AF51FA00117C54 /* ShowTalent-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ShowTalent-Bridging-Header.h"; sourceTree = "<group>"; };
+		84A83D0824AF57B000117C54 /* JWTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWTrack.h; sourceTree = "<group>"; };
+		84A83D0924AF57B000117C54 /* JWCastingDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWCastingDevice.h; sourceTree = "<group>"; };
+		84A83D0A24AF57B100117C54 /* JWAdCompanion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWAdCompanion.h; sourceTree = "<group>"; };
+		84A83D0B24AF57B200117C54 /* JWPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JWPlayerController.h; path = "../../../Downloads/JWPlayer-iOS-SDK-cocoapod-master/JWPlayer_iOS_SDK.framework/Headers/JWPlayerController.h"; sourceTree = "<group>"; };
+		84A83D0C24AF57B200117C54 /* JWExternalMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWExternalMetadata.h; sourceTree = "<group>"; };
+		84A83D0D24AF57B300117C54 /* JWTooltipsStyling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWTooltipsStyling.h; sourceTree = "<group>"; };
+		84A83D0E24AF57B400117C54 /* JWSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWSource.h; sourceTree = "<group>"; };
+		84A83D0F24AF57B400117C54 /* JWAdBreak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWAdBreak.h; sourceTree = "<group>"; };
+		84A83D1024AF57B500117C54 /* JWPlaylistItemDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWPlaylistItemDelegate.h; sourceTree = "<group>"; };
+		84A83D1124AF57B600117C54 /* JWCastingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWCastingDelegate.h; sourceTree = "<group>"; };
+		84A83D1224AF57B600117C54 /* JWCaptionStyling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWCaptionStyling.h; sourceTree = "<group>"; };
+		84A83D1324AF57B700117C54 /* JWFreewheelConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWFreewheelConfig.h; sourceTree = "<group>"; };
+		84A83D1424AF57B800117C54 /* JWGoogimaDaiConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWGoogimaDaiConfig.h; sourceTree = "<group>"; };
+		84A83D1524AF57B900117C54 /* JWPlaylistItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWPlaylistItem.h; sourceTree = "<group>"; };
+		84A83D1624AF57BA00117C54 /* JWAVPlayerAnalyticsDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWAVPlayerAnalyticsDelegate.h; sourceTree = "<group>"; };
+		84A83D1724AF57BB00117C54 /* JWMenusStyling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWMenusStyling.h; sourceTree = "<group>"; };
+		84A83D1824AF57BC00117C54 /* JWDrmDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWDrmDataSource.h; sourceTree = "<group>"; };
+		84A83D1924AF57BD00117C54 /* JWPlayerError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWPlayerError.h; sourceTree = "<group>"; };
+		84A83D1A24AF57BD00117C54 /* JWFriendlyAdObstructions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWFriendlyAdObstructions.h; sourceTree = "<group>"; };
+		84A83D1B24AF57BE00117C54 /* JWAdConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWAdConfig.h; sourceTree = "<group>"; };
+		84A83D1C24AF57BE00117C54 /* JWExperimentalAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWExperimentalAPI.h; sourceTree = "<group>"; };
+		84A83D1D24AF57C000117C54 /* JWCastController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWCastController.h; sourceTree = "<group>"; };
+		84A83D1E24AF57C000117C54 /* JWButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWButton.h; sourceTree = "<group>"; };
+		84A83D1F24AF57C100117C54 /* JWSkinStyling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWSkinStyling.h; sourceTree = "<group>"; };
+		84A83D2024AF57C200117C54 /* JWTimesliderStyling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWTimesliderStyling.h; sourceTree = "<group>"; };
+		84A83D2124AF57C200117C54 /* JWControlbarStyling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWControlbarStyling.h; sourceTree = "<group>"; };
+		84A83D2224AF57C300117C54 /* JWAdEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWAdEvent.h; sourceTree = "<group>"; };
+		84A83D2324AF57C400117C54 /* JWRelatedEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWRelatedEvent.h; sourceTree = "<group>"; };
+		84A83D2424AF57C500117C54 /* JWEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWEvent.h; sourceTree = "<group>"; };
+		84A83D2524AF57C500117C54 /* JWConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWConfig.h; sourceTree = "<group>"; };
+		84A83D2624AF57C500117C54 /* JWPlayer-iOS-SDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JWPlayer-iOS-SDK.h"; sourceTree = "<group>"; };
+		84A83D2724AF57C600117C54 /* JWLogo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWLogo.h; sourceTree = "<group>"; };
+		84A83D2824AF57C700117C54 /* JWRelatedConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWRelatedConfig.h; sourceTree = "<group>"; };
+		84A83D2924AF57C700117C54 /* JWAdRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWAdRules.h; sourceTree = "<group>"; };
+		84A83D2A24AF57C700117C54 /* JWPlayerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWPlayerDelegate.h; sourceTree = "<group>"; };
+		84A83D2B24AF589E00117C54 /* JWPlayer_iOS_SDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = JWPlayer_iOS_SDK.framework; sourceTree = "<group>"; };
+		84A83D2D24AF5ACF00117C54 /* JWTryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWTryViewController.swift; sourceTree = "<group>"; };
+		84A83D2F24AF70FD00117C54 /* JWTryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JWTryTableViewCell.swift; sourceTree = "<group>"; };
 		84A8DF8C23D8044C0054FE6B /* GroupsandEventsContactvc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsandEventsContactvc.swift; sourceTree = "<group>"; };
 		84A8DF8E23D80B370054FE6B /* TalentContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TalentContactTableViewCell.swift; sourceTree = "<group>"; };
 		84A8DF9023D80B4E0054FE6B /* PhoneContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneContactTableViewCell.swift; sourceTree = "<group>"; };
@@ -418,6 +479,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2298BB1EC872E10040905964 /* Pods_ShowTalent.framework in Frameworks */,
+				84A83D0324AF508C00117C54 /* JWPlayer_iOS_SDK.framework in Frameworks */,
+				84A83D2C24AF589E00117C54 /* JWPlayer_iOS_SDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +498,46 @@
 		18D018D22318F9B2003AC6DC = {
 			isa = PBXGroup;
 			children = (
+				84A83D2F24AF70FD00117C54 /* JWTryTableViewCell.swift */,
+				84A83D2D24AF5ACF00117C54 /* JWTryViewController.swift */,
+				84A83D2B24AF589E00117C54 /* JWPlayer_iOS_SDK.framework */,
+				84A83D2524AF57C500117C54 /* JWConfig.h */,
+				84A83D2124AF57C200117C54 /* JWControlbarStyling.h */,
+				84A83D1824AF57BC00117C54 /* JWDrmDataSource.h */,
+				84A83D2424AF57C500117C54 /* JWEvent.h */,
+				84A83D1C24AF57BE00117C54 /* JWExperimentalAPI.h */,
+				84A83D0C24AF57B200117C54 /* JWExternalMetadata.h */,
+				84A83D1324AF57B700117C54 /* JWFreewheelConfig.h */,
+				84A83D1A24AF57BD00117C54 /* JWFriendlyAdObstructions.h */,
+				84A83D1424AF57B800117C54 /* JWGoogimaDaiConfig.h */,
+				84A83D2724AF57C600117C54 /* JWLogo.h */,
+				84A83D1724AF57BB00117C54 /* JWMenusStyling.h */,
+				84A83D2624AF57C500117C54 /* JWPlayer-iOS-SDK.h */,
+				84A83D0624AF516100117C54 /* JWPlayerController.h */,
+				84A83D0F24AF57B400117C54 /* JWAdBreak.h */,
+				84A83D0A24AF57B100117C54 /* JWAdCompanion.h */,
+				84A83D1B24AF57BE00117C54 /* JWAdConfig.h */,
+				84A83D2224AF57C300117C54 /* JWAdEvent.h */,
+				84A83D2924AF57C700117C54 /* JWAdRules.h */,
+				84A83D1624AF57BA00117C54 /* JWAVPlayerAnalyticsDelegate.h */,
+				84A83D1E24AF57C000117C54 /* JWButton.h */,
+				84A83D1224AF57B600117C54 /* JWCaptionStyling.h */,
+				84A83D1D24AF57C000117C54 /* JWCastController.h */,
+				84A83D1124AF57B600117C54 /* JWCastingDelegate.h */,
+				84A83D0924AF57B000117C54 /* JWCastingDevice.h */,
+				84A83D0B24AF57B200117C54 /* JWPlayerController.h */,
+				84A83D2A24AF57C700117C54 /* JWPlayerDelegate.h */,
+				84A83D1924AF57BD00117C54 /* JWPlayerError.h */,
+				84A83D1524AF57B900117C54 /* JWPlaylistItem.h */,
+				84A83D1024AF57B500117C54 /* JWPlaylistItemDelegate.h */,
+				84A83D2824AF57C700117C54 /* JWRelatedConfig.h */,
+				84A83D2324AF57C400117C54 /* JWRelatedEvent.h */,
+				84A83D1F24AF57C100117C54 /* JWSkinStyling.h */,
+				84A83D0E24AF57B400117C54 /* JWSource.h */,
+				84A83D2024AF57C200117C54 /* JWTimesliderStyling.h */,
+				84A83D0D24AF57B300117C54 /* JWTooltipsStyling.h */,
+				84A83D0824AF57B000117C54 /* JWTrack.h */,
+				84A83D0724AF51FA00117C54 /* ShowTalent-Bridging-Header.h */,
 				840AE2BD249A3BE30076FA9F /* InternetCheck.swift */,
 				849F5551249642A200FF06F7 /* GoogleService-Info.plist */,
 				A4B091982445C86100F59A29 /* Offer and help */,
@@ -739,6 +842,8 @@
 		FFF55B7A991FA76C17A9C076 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				84A83D0224AF508C00117C54 /* JWPlayer_iOS_SDK.framework */,
+				84A83D0124AF506100117C54 /* JWPlayer-iOS-SDK-cocoapod-master */,
 				C0F3C1F740DD809F2CA589FF /* Pods_ShowTalent.framework */,
 			);
 			name = Frameworks;
@@ -756,6 +861,7 @@
 				18D018D82318F9B2003AC6DC /* Frameworks */,
 				18D018D92318F9B2003AC6DC /* Resources */,
 				86AA32A73332467FAD9D334F /* [CP] Embed Pods Frameworks */,
+				84A83D0524AF508C00117C54 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1004,6 +1110,7 @@
 				84A8DF8D23D8044C0054FE6B /* GroupsandEventsContactvc.swift in Sources */,
 				840AE2BE249A3BE30076FA9F /* InternetCheck.swift in Sources */,
 				A486037F2473CCC90021FE87 /* AllyourjuryCollectionViewCell.swift in Sources */,
+				84A83D2E24AF5ACF00117C54 /* JWTryViewController.swift in Sources */,
 				A46BCF672472A03400988B13 /* ThemetypetwoTableViewCell.swift in Sources */,
 				A4B0919E2445C8BA00F59A29 /* OfferTableViewCell.swift in Sources */,
 				A4D998E12464BE8700C1E7D5 /* PrethemefetchCollectionViewCell.swift in Sources */,
@@ -1074,6 +1181,7 @@
 				18AD7E692328C66200904E21 /* Constants.swift in Sources */,
 				848C235623DB0BCB007043B7 /* AllcommentsTableViewCell.swift in Sources */,
 				A4ADF390243F4A300013722A /* InvitepeopleViewController.swift in Sources */,
+				84A83D3024AF70FD00117C54 /* JWTryTableViewCell.swift in Sources */,
 				180C7B9D2421E7E40033A3AE /* CustomeventinfoViewController.swift in Sources */,
 				849CA0AB23F2641700AB49CD /* Model.xcdatamodeld in Sources */,
 				A4B0919C2445C8AD00F59A29 /* HelpTableViewCell.swift in Sources */,
@@ -1159,6 +1267,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "ShowTalent-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1213,6 +1322,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "ShowTalent-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1226,7 +1336,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VQVG8BVT62;
+				DEVELOPMENT_TEAM = 4CNB6XNDLH;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = ShowTalent/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1249,7 +1363,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = VQVG8BVT62;
+				DEVELOPMENT_TEAM = 4CNB6XNDLH;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = ShowTalent/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

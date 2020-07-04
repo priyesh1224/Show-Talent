@@ -2198,9 +2198,12 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
             if let p = cell.player  {
                 p.isMuted = true
                 p.pause()
-//                cell.player = nil
+                cell.player = nil
+                
             }
-            
+            if let c = cell.layerc {
+                cell.layerc?.removeFromSuperlayer()
+            }
         }
     }
     
