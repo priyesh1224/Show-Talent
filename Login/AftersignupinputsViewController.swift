@@ -60,6 +60,9 @@ class AftersignupinputsViewController: UIViewController,UIPickerViewDelegate,UIP
         genderpicker.dataSource = self
         self.spinner.isHidden = true
         self.spinner.stopAnimating()
+        var d = Date()
+        
+        self.dobpicker.setDate(d, animated: true)
         
         if let fn = UserDefaults.standard.value(forKey: "firstname") as? String {
             self.firstname.text = fn
@@ -138,6 +141,9 @@ class AftersignupinputsViewController: UIViewController,UIPickerViewDelegate,UIP
     
     
     @IBAction func changedobpressed(_ sender: UIButton) {
+        var d = Date()
+        
+        self.dobpicker.setDate(d, animated: false)
         self.genderpicker.isHidden = true
         self.dobpicker.isHidden = false
         self.popupview.isHidden = false
@@ -155,16 +161,22 @@ class AftersignupinputsViewController: UIViewController,UIPickerViewDelegate,UIP
                var longi = CLLocationDegrees(exactly: 0)
                
                locationManager.requestWhenInUseAuthorization()
-               var currentLoc: CLLocation!
+               var currentLoc: CLLocation?
                if(CLLocationManager.authorizationStatus() == .authorizedWhenInUse ||
                CLLocationManager.authorizationStatus() == .authorizedAlways) {
                   currentLoc = locationManager.location
-                   if let l = currentLoc.coordinate.latitude as? CLLocationDegrees {
-                       lat = l
-                   }
-                   if let lo = currentLoc.coordinate.longitude as? CLLocationDegrees {
-                       longi = lo
-                   }
+                if let ll = currentLoc as? CLLocation {
+                    if let cc = currentLoc?.coordinate as? CLLocationCoordinate2D {
+                       if let l = cc.latitude as? CLLocationDegrees {
+                           lat = l
+                       }
+                       if let lo = cc.longitude as? CLLocationDegrees {
+                           longi = lo
+                       }
+                    }
+                }
+                    
+            
                   
                    
                }

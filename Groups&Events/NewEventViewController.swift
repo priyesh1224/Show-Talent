@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import AVKit
+import CLImageEditor
 
 
 struct juryorwinner
@@ -23,7 +24,7 @@ struct juryorwinner
 
 
 
-class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,UINavigationControllerDelegate,CLImageEditorDelegate {
     
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
@@ -980,7 +981,7 @@ class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,
     var imgtypes : [String] = []
     var videopath : NSURL?
     var generatedsnapshot : UIImage?
-    
+    var selectedimage : UIImage?
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         
@@ -1007,10 +1008,20 @@ class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,
         if let mt = info[.mediaType] as? String {
             
             if mt == "public.image" {
-                if let image = info[.editedImage] as? UIImage {
-                    uploadeventphoto(img : [image])
-                    
-                }
+                 if let image = info[.editedImage] as? UIImage {
+                                           let editor = CLImageEditor(image: image)
+                                       editor?.delegate = self
+                                       selectedimage = image
+                                       
+                                       
+                                       picker.dismiss(animated: true) {
+                                           self.present(editor!, animated: true, completion: nil)
+                                       }
+                                       
+                                       
+                                      
+                                          
+                                      }
                 
             }
                 
@@ -1023,9 +1034,10 @@ class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,
                     self.videopath = mediaurl
                     self.uploadvideoforevent()
                 }
+                self.pc?.dismiss(animated: true, completion: nil)
             }
         }
-        self.pc?.dismiss(animated: true, completion: nil)
+        
         
         
         
@@ -1066,6 +1078,17 @@ class NewEventViewController: UIViewController ,UIImagePickerControllerDelegate,
 //        }
         
         
+    }
+    
+    
+    func imageEditor(_ editor: CLImageEditor!, didFinishEditingWith image: UIImage!) {
+        uploadeventphoto(img: [image])
+        editor.dismiss(animated: true, completion: nil)
+        
+    }
+
+    func imageEditorDidCancel(_ editor: CLImageEditor!) {
+        editor.dismiss(animated: true, completion: nil)
     }
     
     

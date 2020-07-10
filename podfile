@@ -12,6 +12,10 @@ pod 'Firebase/Analytics'
 pod "Macaw", "0.9.5"
 pod "FLAnimatedImage"
 pod "Reachability"
+pod 'CLImageEditor/AllTools'
+pod 'YPImagePicker'
+pod 'VideoEditorSDK'
+
 
 
 end

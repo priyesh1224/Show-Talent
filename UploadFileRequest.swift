@@ -820,12 +820,12 @@ class ImageUploadRequest {
                         print("Response String")
                         print(response)
                         print(response.result)
-                        
-                        print(response.result.value)
+                        print("Check this")
+                        print(response.result.isSuccess)
                         if response.result.isSuccess {
                             var jsondata = response.result.value as? NSDictionary
-                            
-                            completion(jsondata , nil)
+                            var x = NSDictionary(object: "done", forKey: "status" as NSCopying)
+                            completion(x , nil)
                             //                                if response.result == "SUCCESS:"
                             //                                {
                             //                                  print("DATA UPLOAD SUCCESSFULLY")

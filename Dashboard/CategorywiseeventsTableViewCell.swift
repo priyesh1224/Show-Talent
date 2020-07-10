@@ -57,7 +57,7 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
         var tl = self.currentevent?.x.resulton
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss'.303Z'"
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'.303Z'"
         var date = dateFormatter.date(from: tl ?? "")
         let today = dateFormatter.date(from: dateFormatter.string(from: Date()))
         var ttday : Date = Date()
@@ -111,18 +111,19 @@ class CategorywiseeventsTableViewCell: UITableViewCell {
         
     }
     
-    func secondsToHoursMinutesSeconds (seconds : Int) -> (Int, Int, Int) {
-        return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
+    func secondsToHoursMinutesSeconds (seconds : Int) -> (Int, Int, Int, Int) {
+//        return (seconds / (3600 * 24) f,(seconds % (3600 * 24)) / 3600, ((seconds  % (24 * 3600 * 3600)) / 60 ) , (seconds % (24 * 3600 * 3600 * 60)) / 60)
+        return ((seconds / 86400), (seconds % 86400) / 3600 , (seconds % 3600) / 60 , (seconds % 3600) % 60)
     }
     
     @objc func onTimerFires() {
         timeLeft = timeLeft -  1
-        let (h,m,s) = secondsToHoursMinutesSeconds(seconds : self.timeLeft)
+        let (d,h,m,s) = secondsToHoursMinutesSeconds(seconds : self.timeLeft)
         if s < 0 {
             self.timeLabel.text = "Contest over"
         }
         else {
-            self.timeLabel.text = "\(h)H \(m)M \(s)S"
+            self.timeLabel.text = "\(d)D \(h)H \(m)M \(s)S"
         }
 //        s = Int(timeLeft % 60)
 //        print(s)

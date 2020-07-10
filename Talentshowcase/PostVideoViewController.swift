@@ -9,6 +9,7 @@
 import UIKit
 import MobileCoreServices
 import AVKit
+import CLImageEditor
 
 struct categorybrief {
     var categoryid : Int
@@ -16,7 +17,7 @@ struct categorybrief {
 }
 
 
-class PostVideoViewController : UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITableViewDelegate,UITableViewDataSource  {
+class PostVideoViewController : UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITableViewDelegate,UITableViewDataSource , CLImageEditorDelegate  {
    
     // implment  UIDocumentMenuDelegate,UIDocumentPickerDelegate when ready to use icloud kit
     
@@ -350,7 +351,9 @@ class PostVideoViewController : UIViewController,UIImagePickerControllerDelegate
                   
                 print(img)
         
+        
         request.uploadgroupIcontry(imagesdata: img, params: params, extensiontype: self.imgtypes) { (response, err) in
+            
             if response != nil{
                 
                                         print(response)
@@ -361,7 +364,7 @@ class PostVideoViewController : UIViewController,UIImagePickerControllerDelegate
                                            print("Image Uploaded Sucessfully")
                                         DispatchQueue.main.async {
                                             self.pickercontroller.dismiss(animated: true) {
-                        //                        self.dismiss(animated: true, completion: nil)
+                                                self.dismiss(animated: true, completion: nil)
                                             }
                                         }
                 
@@ -732,7 +735,7 @@ class PostVideoViewController : UIViewController,UIImagePickerControllerDelegate
     
     
     
-    
+    var selectedimage : UIImage?
     
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -762,8 +765,16 @@ class PostVideoViewController : UIViewController,UIImagePickerControllerDelegate
             
             if mt == "public.image" {
                 if let image = info[.editedImage] as? UIImage {
-                    self.showviewimage.image = image
-                     self.img.append(image)
+          
+                    
+                                        let editor = CLImageEditor(image: image)
+                                           editor?.delegate = self
+                                           selectedimage = image
+                                           
+                                           self.showviewimage.image = image
+                                           picker.dismiss(animated: true) {
+                                               self.present(editor!, animated: true, completion: nil)
+                                           }
                     
                 }
 
@@ -776,12 +787,43 @@ class PostVideoViewController : UIViewController,UIImagePickerControllerDelegate
                     }
                     self.videopath = mediaurl
                 }
+                self.pickercontroller.dismiss(animated: true, completion: nil)
             }
         }
-        self.pickercontroller.dismiss(animated: true, completion: nil)
         
         
     }
+    
+    
+    func imageEditor(_ editor: CLImageEditor!, didFinishEditingWith image: UIImage!) {
+            
+        self.img.insert(image, at: 0)
+           self.showviewimage.image = image
+        self.tfdata = self.videodescription.text ?? ""
+        self.ttfdata = self.videotitle.text ?? ""
+        DispatchQueue.global(qos: .background).async {
+            if self.iseventpost == false {
+                self.UploadImage()
+            }
+            else {
+                self.uploadimageforevent()
+            }
+        
+        }
+//        DispatchQueue.main.async {
+//            self.dismiss(animated: true, completion: nil)
+//        }
+           editor.dismiss(animated: true, completion: nil)
+           
+       }
+
+       func imageEditorDidCancel(_ editor: CLImageEditor!) {
+           if let im = selectedimage as? UIImage {
+            self.img.append(im)
+                  self.showviewimage.image = im
+           }
+       }
+    
 
     func videoSnapshot(filePathLocal:URL) -> UIImage? {
            do
@@ -810,20 +852,20 @@ class PostVideoViewController : UIViewController,UIImagePickerControllerDelegate
                 self.img[0] = im
 
                 if self.img.count > 0 {
-                    self.tfdata = self.videodescription.text ?? ""
-                    self.ttfdata = self.videotitle.text ?? ""
-                    DispatchQueue.global(qos: .background).async {
-                        if self.iseventpost == false {
-                            self.UploadImage()
-                        }
-                        else {
-                            self.uploadimageforevent()
-                        }
-                    
-                    }
-                    DispatchQueue.main.async {
-                        self.dismiss(animated: true, completion: nil)
-                    }
+//                    self.tfdata = self.videodescription.text ?? ""
+//                    self.ttfdata = self.videotitle.text ?? ""
+//                    DispatchQueue.global(qos: .background).async {
+//                        if self.iseventpost == false {
+//                            self.UploadImage()
+//                        }
+//                        else {
+//                            self.uploadimageforevent()
+//                        }
+//
+//                    }
+//                    DispatchQueue.main.async {
+//                        self.dismiss(animated: true, completion: nil)
+//                    }
                                     
   
 

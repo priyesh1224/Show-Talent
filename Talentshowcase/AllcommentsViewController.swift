@@ -34,7 +34,7 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
     var tappedcommentlist : [comment] = []
     var commentposted: ((_ status: comment?,_ postid : Int) -> ())?
 
-    
+    var allrecentlikes : [groupmember] = []
     var alllikes : [like] = []
     var allviews : [String] = []
     var allcomments : [commentinfo] = []
@@ -71,11 +71,15 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
         
         if mode == "comments" {
 //            fetchdata()
+           
             print(tappedcommentlist)
             table.reloadData()
         }
         else if mode == "likes" {
             print("Likes data")
+           
+            print(allrecentlikes)
+            table.reloadData()
         }
         self.commentfield.delegate = self
        
@@ -85,6 +89,7 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
         if mode == "views" || mode == "likes" {
             self.commentfield.isHidden = true
             self.postbtn.isHidden = true
+             self.cancelbtn.isHidden = true
         }
     
         
@@ -445,7 +450,7 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if mode == "likes" {
-            return self.alllikes.count
+            return self.allrecentlikes.count
         }
         else if mode == "views" {
             return self.allviews.count
@@ -543,7 +548,7 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
             if let cell = tableView.dequeueReusableCell(withIdentifier: "allcommentscell", for: indexPath) as? AllcommentsTableViewCell {
                 
                 
-                cell.updatecell2(x: alllikes[indexPath.row] , rs : currentrunningstatus)
+                cell.updatecell2(x: allrecentlikes[indexPath.row] , rs : currentrunningstatus)
                 return cell
             }
         }
@@ -560,8 +565,12 @@ class AllcommentsViewController: UIViewController, UITableViewDelegate,UITableVi
 //            else{
 //                return self.table.frame.size.height/5
 //            }
+            return 200
         }
-        return 200
+        else  {
+            return 120
+        }
+        return 100
     }
     
 //    func goEdit(newtextc:String){

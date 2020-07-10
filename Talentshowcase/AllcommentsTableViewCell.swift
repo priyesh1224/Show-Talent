@@ -113,16 +113,20 @@ class AllcommentsTableViewCell: UITableViewCell {
     
     
     
-    func updatecell2(x: like , rs : String) {
+    func updatecell2(x: groupmember , rs : String) {
+        self.editcommentpressed.isHidden = true
         self.deletecommentpressed.isHidden = true
+        self.imageuser.layer.cornerRadius = self.imageuser.frame.size.height/2
         self.replybtn.isHidden = true
-        username.text = x.profilename.capitalized
+        username.text = x.name.capitalized
         comment.isHidden = true
         print("Image")
         print(x.profileimage)
         if x.profileimage != "http://thcoreapi.maraekat.com/" {
             downloadprofileimage(url: x.profileimage) { (uim) in
-                self.imageuser.image = uim
+                if let i = uim as? UIImage {
+                    self.imageuser.image = i
+                }
             }
         }
         

@@ -289,8 +289,11 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
     func uploaddocumentstoverify()
     {
         
-        if self.im1.image == nil && self.im2.image == nil && self.im3.image == nil {
+        if self.im1.image == nil && self.im2.image == nil && self.im3.image == nil && self.selectedauthority?.id == 2 {
             self.present(customalert.showalert(x: "You need to upload atleast one document"), animated: true, completion: nil)
+        }
+        else if self.im1.image == nil && self.im2.image == nil && self.im3.image == nil && self.selectedauthority?.id != 2 {
+            
         }
         else {
         
@@ -558,10 +561,12 @@ class CreateNewGroupViewController: UIViewController,UIPickerViewDelegate , UIPi
         var allow = true
         
         if let y = self.selectedauthority?.id as? Int {
+            print("Hi I am \(y)")
             if y == 2 {
                 if image1 == nil && image2 == nil && image3 == nil {
                     allow = false
                     self.present(customalert.showalert(x: "You need to upload atleast one document if you are an authorized person."), animated: true, completion: nil)
+                     self.createbottombtn.isEnabled = true
                 }
                
             }

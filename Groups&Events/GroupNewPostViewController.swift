@@ -8,8 +8,9 @@
 
 import UIKit
 import AVKit
+import CLImageEditor
 
-class GroupNewPostViewController: UIViewController , UIImagePickerControllerDelegate,UINavigationControllerDelegate{
+class GroupNewPostViewController: UIViewController , UIImagePickerControllerDelegate,UINavigationControllerDelegate , CLImageEditorDelegate{
     
     @IBOutlet weak var progresslabel: UILabel!
     
@@ -50,6 +51,7 @@ class GroupNewPostViewController: UIViewController , UIImagePickerControllerDele
         
 
     }
+    var selectedimage : UIImage?
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if picker.sourceType == .photoLibrary {
@@ -76,8 +78,17 @@ class GroupNewPostViewController: UIViewController , UIImagePickerControllerDele
                    
                    if mt == "public.image" {
                        if let image = info[.editedImage] as? UIImage {
-                           self.groupimage.image = image
-                            self.imgs.append(image)
+                            let editor = CLImageEditor(image: image)
+                        editor?.delegate = self
+                        selectedimage = image
+                        
+                        self.groupimage.image = image
+                        picker.dismiss(animated: true) {
+                            self.present(editor!, animated: true, completion: nil)
+                        }
+                        
+                        
+                       
                            
                        }
 
@@ -90,12 +101,27 @@ class GroupNewPostViewController: UIViewController , UIImagePickerControllerDele
                             self.groupimage.image = im
                         }
                        }
+                    self.imp.dismiss(animated: true, completion: nil)
                    }
                }
-               self.imp.dismiss(animated: true, completion: nil)
+               
+        
+    }
+    
+    
+    func imageEditor(_ editor: CLImageEditor!, didFinishEditingWith image: UIImage!) {
+         self.imgs.append(image)
+        self.groupimage.image = image
+        editor.dismiss(animated: true, completion: nil)
         
     }
 
+    func imageEditorDidCancel(_ editor: CLImageEditor!) {
+        if let im = selectedimage as? UIImage {
+         self.imgs.append(im)
+               self.groupimage.image = im
+        }
+    }
     @IBAction func chooseimage(_ sender: UIButton) {
         if type == "Image" {
             let alert = UIAlertController(title: "Choose \(self.type.capitalized)", message: nil, preferredStyle: .actionSheet)

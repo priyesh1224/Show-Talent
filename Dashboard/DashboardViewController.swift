@@ -126,6 +126,12 @@ class DashboardViewController: UIViewController,UITableViewDelegate,UITableViewD
 //        DashboardViewController.trendingimageslist.removeAll()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if !InternetCheck.isConnectedToNetwork() {
+        self.present(customalert.showalert(x: "Sorry you are not connected to internet."), animated: true, completion: nil)
+           }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.spinner.isHidden = false

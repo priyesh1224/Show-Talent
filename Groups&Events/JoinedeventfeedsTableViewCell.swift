@@ -11,7 +11,7 @@ import AVKit
 import Alamofire
 
 
-class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
+class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate  {
 
     @IBOutlet weak var profileimage: UIImageView!
     
@@ -21,7 +21,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     
     @IBOutlet weak var likebtn: UIButton!
     
-    @IBOutlet weak var likecount: UILabel!
+    @IBOutlet weak var likecount: UIButton!
     
    
     
@@ -77,6 +77,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
     var commentslist : [comment] = []
     var sendbackactivityid : ((_ x : Int) -> Void)?
      var tryingtolikeclosedcontest : ((_ x : Bool) -> Void)?
+    var likecounttapped : ((_ x : Bool , _ y : [groupmember]) -> Void)?
     var sendbackactualcomments : ((_ x : Int , _ y : [comment]) -> Void)?
     var currentrunningstatus = ""
     
@@ -134,7 +135,9 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         
         commentslist = x.comments
         self.currentpost = x
-        self.likecount.text = "\(x.likes)"
+        self.likecount.setTitle("\(x.likes)", for: .normal)
+       
+        
         let userid = UserDefaults.standard.value(forKey: "refid") as! String
         var found = false
         for each in x.likebyme {
@@ -253,6 +256,15 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
         
         
     }
+    
+    
+    
+   
+    @IBAction func likecounttapped(_ sender: Any) {
+        self.likecounttapped!(true ,  self.currentpost?.recentlikes ?? [])
+    }
+    
+    
     
     
     override func prepareForReuse() {
@@ -613,7 +625,8 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
                            if lk == 0 {
                            
     //                        self.likeicon.setImage(#imageLiteral(resourceName: "like"), for: .normal)
-                            self.likecount.text = "\(Int(self.likecount.text!)! - 1)"
+                            self.likecount.setTitle("\(Int(self.likecount.titleLabel?.text! ?? "1")! - 1)", for: .normal)
+                           
                             self.likebtn.isEnabled = true
                             self.likestatus = false
                             self.togglelike!(self.currentpost!, false)
@@ -622,7 +635,7 @@ class JoinedeventfeedsTableViewCell: UITableViewCell , AVAudioPlayerDelegate {
                            }
                            else {
 
-                            self.likecount.text = "\(Int(self.likecount.text!)! + 1)"
+                            self.likecount.setTitle("\(Int(self.likecount.titleLabel?.text! ?? "0")! + 1)", for: .normal)
                                self.likebtn.isEnabled = true
                             
                             self.likestatus = true

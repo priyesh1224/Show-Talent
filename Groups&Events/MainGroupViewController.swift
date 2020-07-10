@@ -690,8 +690,8 @@ class MainGroupViewController: UIViewController,UITableViewDelegate,UITableViewD
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
-            if(self.view.frame.size.height/3 < 400) {
-                return 400
+            if(self.view.frame.size.height/3 < 450) {
+                return 450
             }
             return self.view.frame.size.height/2.8
         }

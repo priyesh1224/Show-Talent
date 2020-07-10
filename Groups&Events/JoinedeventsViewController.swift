@@ -51,6 +51,7 @@ struct feeds {
     var likebyme : [like]
     var comments : [comment]
     var totalreview : Int
+    var recentlikes : [groupmember] = []
 }
 
 struct pricewinnerwise
@@ -79,7 +80,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     static var deallocateplayer : ((_ x : Bool) -> Void)?
     
     var juryeditmode = "new"
-    
+    var commentmode = "comments"
     var tablemode = "details"
     static var cachepostvideo = NSCache<NSString,AVURLAsset>()
     
@@ -117,6 +118,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     var genderid = 0
     var tappedpostid = 0
     var tappedcommentlist : [comment] = []
+    var recentlikes : [groupmember] = []
     var player : AVPlayer!
     var avplayeritem : AVPlayerItem!
     
@@ -683,7 +685,28 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                            var contestid = 0
                         var totalreview = 0
                             var lbyme = false
+                        var allrecentslikes : [groupmember] = []
                         var cmmmt : [comment] = []
+                        if let p = each["RecentLike"] as? [Dictionary<String,Any>] {
+                            for each in p {
+                                var pname = ""
+                                var pim = ""
+                                var uid = ""
+                                if let f = each["ProfilName"] as? String {
+                                    pname = f
+                                }
+                                if let f = each["ProfileImage"] as? String {
+                                    pim = f
+                                }
+                                if let f = each["UserID"] as? String {
+                                    uid = f
+                                }
+                                var x = groupmember(id: allrecentslikes.count + 1, name: pname, profileimage: pim, userid: uid)
+                                print(x)
+                                allrecentslikes.append(x)
+                            }
+                            
+                        }
                         if let p = each["Id"] as? String {
                             profileimg = p
                         }
@@ -900,7 +923,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                         
                        
                         
-                        var x = feeds(id: id, profileimg: profileimg, profilename: profilename, thumbnail: thumbnail, acticityid: acticityid, userid: userid, activitypath: activitypath, type: type, category: category, views: views, likes: likes, title: title, description: description, publishedon: publishedon, categoryid: categoryid, contestid: contestid, likedbyme: currstatus, likebyme: liketobepassed, comments: cmmmt, totalreview: totalreview)
+                        var x = feeds(id: id, profileimg: profileimg, profilename: profilename, thumbnail: thumbnail, acticityid: acticityid, userid: userid, activitypath: activitypath, type: type, category: category, views: views, likes: likes, title: title, description: description, publishedon: publishedon, categoryid: categoryid, contestid: contestid, likedbyme: currstatus, likebyme: liketobepassed, comments: cmmmt, totalreview: totalreview , recentlikes: allrecentslikes)
                         self.allfeeds.append(x)
                         
                         
@@ -1707,7 +1730,10 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         }
         else if indexPath.section == 0 && tablemode == "details" {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "joininfocell", for: indexPath) as? JoinedeventinformationTableViewCell {
-
+                
+                
+                
+                
 
 
                 cell.publishcontest = { a in
@@ -1948,6 +1974,16 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                 cell.updatecell(x : self.allfeeds[indexPath.row] , y : makevideoefetch , runningstatus : rs.lowercased())
 
                 
+                cell.likecounttapped = { a , b in
+                    if a {
+                        self.recentlikes = b
+                        self.commentmode = "likes"
+                        self.performSegue(withIdentifier: "showallcomments", sender: nil)
+                    }
+                }
+
+                
+                
                 
                 cell.tryingtolikeclosedcontest = { a in
                     if a {
@@ -1959,6 +1995,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
                 cell.sendbackactualcomments = {a,b in
                         self.tappedpostid = a
                         self.tappedcommentlist = b
+                    self.commentmode = "comments"
                         self.performSegue(withIdentifier: "showallcomments", sender: nil)
                     
                 }
@@ -2209,6 +2246,7 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? JoinedeventfeedsTableViewCell {
+            
             if let p = cell.player  {
                 
                 p.isMuted = !p.isMuted
@@ -2385,13 +2423,20 @@ class JoinedeventsViewController: UIViewController , UITableViewDelegate,UITable
         }
         
         if let seg = segue.destination as? AllcommentsViewController {
-            seg.postid = tappedpostid
-            seg.tappedcommentlist = self.tappedcommentlist
-            var rs = ""
-            if let x = self.eventjoined as? strevent {
-                rs = x.runningstatus
+            seg.mode = self.commentmode
+            if commentmode == "comments" {
+                seg.postid = tappedpostid
+                seg.tappedcommentlist = self.tappedcommentlist
+                
+                var rs = ""
+                if let x = self.eventjoined as? strevent {
+                    rs = x.runningstatus
+                }
+                seg.currentrunningstatus = rs.lowercased()
             }
-            seg.currentrunningstatus = rs.lowercased()
+            else {
+                seg.allrecentlikes = self.recentlikes
+            }
             seg.sendbackupdatedlist = {a,b in
                 print("Setting : ")
                 print(a)
